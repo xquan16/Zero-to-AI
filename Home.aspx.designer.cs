@@ -11,7 +11,7 @@ namespace Zero_to_AI
 {
 
 
-    public partial class About
+    public partial class Home
     {
     }
 }

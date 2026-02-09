@@ -1,0 +1,195 @@
+﻿/* =========================================
+   1. CSS VARIABLES
+   ========================================= */
+:root {
+    /* --- LIGHT MODE --- */
+    --bg-sidebar: #0096FF; /* Bright Blue */
+    --bg-topbar: #0077CC; /* Darker Blue (The Roof) */
+    --bg-body: #ffffff; /* White Workspace */
+
+    --text-main: #000000;
+    --text-sidebar: #ffffff;
+    --text-topbar: #ffffff;
+    --sidebar-width: 260px;
+    --sidebar-collapsed: 70px; /* Width when closed */
+    --header-height: 60px; /* Fixed Header Height */
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+    /* --- DARK MODE --- */
+    --bg-sidebar: #0F52BA; /* Sapphire Blue */
+    --bg-topbar: #0A3A7A; /* Deep Navy (The Roof) */
+    --bg-body: #000000; /* Black Workspace */
+
+    --text-main: #ffffff;
+    --text-sidebar: #ffffff;
+    --text-topbar: #d1d5db; /* Soft White */
+}
+
+/* =========================================
+   2. LAYOUT ENGINE (HEADER DOMINANT)
+   ========================================= */
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    overflow: hidden; /* Prevent double scrollbars */
+}
+
+/* The Parent Container (Vertical Stack) */
+form#form1 {
+    display: flex;
+    flex-direction: column; /* Stack: Header on top, Content below */
+    height: 100vh;
+    width: 100%;
+}
+
+/* =========================================
+   3. TOP BAR (LAYER 1 - THE ROOF)
+   ========================================= */
+.top-bar {
+    height: var(--header-height);
+    background-color: var(--bg-topbar);
+    color: var(--text-topbar);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    /* CRITICAL: This makes it sit ON TOP of everything */
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    flex-shrink: 0; /* Never shrink */
+    position: relative;
+}
+
+.brand-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+}
+
+.brand-link {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between logo and text */
+    text-decoration: none; /* KILLS THE UNDERLINE */
+    color: white !important; /* FORCES WHITE TEXT */
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.brand-link:hover {
+    opacity: 0.8; /* Slight fade when you hover, so users know it's clickable */
+    color: white; /* Keeps it white on hover */
+}
+
+/* =========================================
+   4. WORKSPACE (LAYER 2 - SIDEBAR + CONTENT)
+   ========================================= */
+.layout-container {
+    display: flex; /* Row layout for Sidebar & Content */
+    flex: 1; /* Fill all remaining height */
+    overflow: hidden; /* Contain the internal scrollbar */
+    position: relative;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--bg-sidebar);
+    color: var(--text-sidebar);
+    display: flex;
+    flex-direction: column;
+    transition: width var(--transition);
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-shrink: 0;
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed);
+}
+
+/* Hide text labels when collapsed */
+.sidebar.collapsed span {
+    display: none;
+}
+
+.sidebar.collapsed i {
+    font-size: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+
+/* MAIN CONTENT */
+.main-content {
+    flex: 1; /* Grow to fill space */
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-body);
+    position: relative;
+}
+
+.content-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px;
+}
+
+/* =========================================
+   5. UI ELEMENTS
+   ========================================= */
+.btn-icon {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: 0.2s;
+}
+
+.btn-icon:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.menu {
+    padding: 10px 0;
+}
+
+.menu li a {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    color: rgba(255,255,255,0.9);
+    white-space: nowrap;
+    border-left: 4px solid transparent;
+}
+
+    .menu li a:hover {
+        background: rgba(0,0,0,0.1);
+    }
+
+.menu li i {
+    width: 30px;
+    margin-right: 10px;
+    text-align: center;
+}
