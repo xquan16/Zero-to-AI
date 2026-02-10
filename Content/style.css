@@ -1,17 +1,22 @@
-﻿/* =========================================
-   1. CSS VARIABLES
-   ========================================= */
+﻿/* ----------------------- Site.Master ------------------------------- */
+    /* CSS VARIABLES */
 :root {
     /* --- LIGHT MODE --- */
     --bg-sidebar: #0096FF; /* Bright Blue */
     --bg-topbar: #0077CC; /* Darker Blue (The Roof) */
     --bg-body: #ffffff; /* White Workspace */
+    --bg-card: #f4f6f8;
 
     --text-main: #000000;
     --text-sidebar: #ffffff;
     --text-topbar: #ffffff;
-    --sidebar-width: 260px;
-    --sidebar-collapsed: 70px; /* Width when closed */
+    --text-muted: #636e72; /* Added for grey text */
+
+    --border-color: #e0e0e0; /* Added for card borders */
+    --shadow: 0 4px 12px rgba(0,0,0,0.08); /* Stronger shadow */
+
+    --sidebar-width: 200px;
+    --sidebar-collapsed: 60px; /* Width when closed */
     --header-height: 60px; /* Fixed Header Height */
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -20,176 +25,334 @@
     /* --- DARK MODE --- */
     --bg-sidebar: #0F52BA; /* Sapphire Blue */
     --bg-topbar: #0A3A7A; /* Deep Navy (The Roof) */
-    --bg-body: #000000; /* Black Workspace */
+    --bg-body: #121212; /* Black Workspace */
+    --bg-card: #1e1e1e;
 
     --text-main: #ffffff;
     --text-sidebar: #ffffff;
     --text-topbar: #d1d5db; /* Soft White */
+    --text-muted: #b2bec3;
+
+    --border-color: #333333;
+    --shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
-/* =========================================
-   2. LAYOUT ENGINE (HEADER DOMINANT)
-   ========================================= */
-* {
-    box-sizing: border-box;
-}
-
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: var(--bg-body);
-    color: var(--text-main);
-    overflow: hidden; /* Prevent double scrollbars */
-}
-
-/* The Parent Container (Vertical Stack) */
-form#form1 {
-    display: flex;
-    flex-direction: column; /* Stack: Header on top, Content below */
-    height: 100vh;
-    width: 100%;
-}
-
-/* =========================================
-   3. TOP BAR (LAYER 1 - THE ROOF)
-   ========================================= */
-.top-bar {
-    height: var(--header-height);
-    background-color: var(--bg-topbar);
-    color: var(--text-topbar);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    /* CRITICAL: This makes it sit ON TOP of everything */
-    z-index: 1000;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    flex-shrink: 0; /* Never shrink */
-    position: relative;
-}
-
-.brand-area {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-}
-
-.brand-link {
-    display: flex;
-    align-items: center;
-    gap: 15px; /* Space between logo and text */
-    text-decoration: none; /* KILLS THE UNDERLINE */
-    color: white !important; /* FORCES WHITE TEXT */
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.brand-link:hover {
-    opacity: 0.8; /* Slight fade when you hover, so users know it's clickable */
-    color: white; /* Keeps it white on hover */
-}
-
-/* =========================================
-   4. WORKSPACE (LAYER 2 - SIDEBAR + CONTENT)
-   ========================================= */
-.layout-container {
-    display: flex; /* Row layout for Sidebar & Content */
-    flex: 1; /* Fill all remaining height */
-    overflow: hidden; /* Contain the internal scrollbar */
-    position: relative;
-}
-
-/* SIDEBAR */
-.sidebar {
-    width: var(--sidebar-width);
-    background-color: var(--bg-sidebar);
-    color: var(--text-sidebar);
-    display: flex;
-    flex-direction: column;
-    transition: width var(--transition);
-    overflow-y: auto;
-    overflow-x: hidden;
-    flex-shrink: 0;
-}
-
-.sidebar.collapsed {
-    width: var(--sidebar-collapsed);
-}
-
-/* Hide text labels when collapsed */
-.sidebar.collapsed span {
-    display: none;
-}
-
-.sidebar.collapsed i {
-    font-size: 20px;
-    text-align: center;
-    width: 100%;
-}
-
-
-/* MAIN CONTENT */
-.main-content {
-    flex: 1; /* Grow to fill space */
-    display: flex;
-    flex-direction: column;
-    background-color: var(--bg-body);
-    position: relative;
-}
-
-.content-scroll {
-    flex: 1;
-    overflow-y: auto;
-    padding: 30px;
-}
-
-/* =========================================
-   5. UI ELEMENTS
-   ========================================= */
-.btn-icon {
-    background: rgba(255,255,255,0.15);
-    border: none;
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    transition: 0.2s;
-}
-
-.btn-icon:hover {
-    background: rgba(255,255,255,0.3);
-}
-
-.menu {
-    padding: 10px 0;
-}
-
-.menu li a {
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    color: rgba(255,255,255,0.9);
-    white-space: nowrap;
-    border-left: 4px solid transparent;
-}
-
-    .menu li a:hover {
-        background: rgba(0,0,0,0.1);
+    /* Layout */
+    * {
+        box-sizing: border-box;
     }
 
-.menu li i {
-    width: 30px;
-    margin-right: 10px;
-    text-align: center;
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Segoe UI', sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        overflow: hidden; /* Prevent double scrollbars */
+    }
+
+    /* The Parent Container (Vertical Stack) */
+    form#form1 {
+        display: flex;
+        flex-direction: column; /* Stack: Header on top, Content below */
+        height: 100vh;
+        width: 100%;
+    }
+
+
+    /* TOP BAR */
+    .top-bar {
+        height: var(--header-height);
+        background-color: var(--bg-topbar);
+        color: var(--text-topbar);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 12px;
+        /* CRITICAL: This makes it sit ON TOP of everything */
+        z-index: 1000;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        flex-shrink: 0; /* Never shrink */
+        position: relative;
+    }
+
+    .brand-area {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 30px;
+        font-weight: bold;
+        color: white;
+    }
+
+    .brand-link {
+        display: flex;
+        align-items: center;
+        gap: 15px; /* Space between logo and text */
+        text-decoration: none; /* KILLS THE UNDERLINE */
+        color: white !important; /* FORCES WHITE TEXT */
+        font-size: 25px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .brand-link:hover {
+        opacity: 0.8; /* Slight fade when you hover, so users know it's clickable */
+        color: white; /* Keeps it white on hover */
+    }
+
+/* ----------------------- Sidebar + Main Area ------------------------------- */
+    /* Sidebar + Main) */
+    .layout-container {
+        display: flex; /* Row layout for Sidebar & Content */
+        flex: 1; /* Fill all remaining height */
+        overflow: hidden; /* Contain the internal scrollbar */
+        position: relative;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: var(--sidebar-width);
+        background-color: var(--bg-sidebar);
+        color: var(--text-sidebar);
+        display: flex;
+        flex-direction: column;
+        transition: width var(--transition);
+        overflow-y: auto;
+        overflow-x: hidden;
+        flex-shrink: 0;
+    }
+
+    .sidebar.collapsed {
+        width: var(--sidebar-collapsed);
+    }
+
+    /* Hide text labels when collapsed */
+    .sidebar.collapsed span {
+        display: none;
+    }
+
+    .sidebar.collapsed i {
+        font-size: 20px;
+        text-align: center;
+        width: 100%;
+    }
+
+    /* Main Content */
+    .main-content {
+        flex: 1; /* Grow to fill space */
+        display: flex;
+        flex-direction: column;
+        background-color: var(--bg-body);
+        position: relative;
+    }
+
+    .content-scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 30px;
+    }
+
+
+    /* UI */
+    .btn-icon {
+        background: transparent;
+        border: none;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        transition: 0.2s;
+    }
+
+    .btn-icon:hover {
+        background: rgba(255,255,255,0.3);
+    }
+
+    .menu {
+        padding: 10px 0;
+    }
+
+    .menu li a {
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        color: rgba(255,255,255,0.9);
+        white-space: nowrap;
+        border-left: 4px solid transparent;
+    }
+
+    .menu li a:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+    .menu li i {
+        width: 30px;
+        margin-right: 10px;
+        text-align: center;
+    }
+
+/* ----------------------- Footer ------------------------------- */
+.footer {
+    padding: 40px 0 20px;
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    width: 100%; /* Ensure full width for centering */
 }
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers the copyright & links vertically */
+    justify-content: center; /* Centers them horizontally */
+    text-align: center;
+    gap: 30px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center; /* Forces links to center inside their container */
+    gap: 100px;
+    flex-wrap: wrap; /* Allows wrapping on small phones */
+}
+
+.footer-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 600; /* Makes names slightly bolder */
+    transition: color 0.2s, opacity 0.2s;
+}
+
+.footer-links a:hover {
+    color: var(--bg-sidebar); /* Change color to Blue */
+    opacity: 0.8; /* Slight fade effect instead */
+}
+
+
+/* ----------------------- Home.aspx ------------------------------- */
+.hero-section {
+    text-align: center;
+    padding: 100px 20px;
+    background-color: rgb(0, 150, 255, 0.15);
+    margin: -30px -30px 60px -30px;
+    border: none;
+}
+
+    .hero-title {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        color: var(--text-main);
+        font-weight: 800;
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        color: var(--text-muted);
+        margin-bottom: 35px;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+
+    /* Call to Action Button */
+    .cta-button {
+        padding: 16px 32px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 50px;
+        background-color: var(--bg-sidebar); /* Uses your Blue Theme */
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 150, 255, 0.4);
+        color: white; /* Keep text white */
+    }
+
+    /* Features Grid (3 Cards in a row) */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 60px;
+    }
+
+.feature-card {
+    background: var(--bg-card);
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .feature-card:hover {
+        transform: translateY(-8px);
+        /* Extra glow when hovering */
+        box-shadow: 0 12px 20px rgba(0, 150, 255, 0.2);
+        border-color: var(--bg-sidebar);
+    }
+
+    .feature-icon {
+        font-size: 45px;
+        color: var(--bg-sidebar);
+        margin-bottom: 25px;
+        display: inline-block;
+    }
+
+    .feature-title {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    .feature-desc {
+        color: var(--text-muted);
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    /* Social Proof (Stats Row) */
+    .stats-row {
+        display: flex;
+        justify-content: center;
+        gap: 60px;
+        flex-wrap: wrap;
+        padding: 40px;
+        text-align: center;
+        border-top: 1px solid var(--border-color);
+        margin-top: 20px;
+    }
+
+    .stat-item h2 {
+        font-size: 2.5rem;
+        margin: 0;
+        color: var(--text-main);
+        font-weight: 800;
+    }
+
+    .stat-item span {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }

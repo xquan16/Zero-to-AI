@@ -31,14 +31,14 @@
 
             <div>
                 <button type="button" class="btn-icon" onclick="toggleTheme()">
-                    <i class="fas fa-moon"></i>
+                    <i id="themeIcon" class="fas fa-moon" title="Dark Mode"></i>
                 </button>
             </div>
         </div>
 
 
         <div class="layout-container">    
-            <div class="sidebar" id="sidebar">
+            <div class="sidebar collapsed" id="sidebar">
                 <ul class="menu">
                     <li><a href="Home.aspx"><i class="fas fa-home"></i> <span>Home</span></a></li>
                     <li><a href="Dashboard.aspx"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
@@ -50,6 +50,17 @@
                 <div class="content-scroll">
                     <asp:ContentPlaceHolder ID="MainContent" runat="server">
                     </asp:ContentPlaceHolder>
+                    <footer class="footer">
+                        <div class="footer-content">
+                            <span>&copy; <%= DateTime.Now.Year %> Zero to AI. All rights reserved.</span>
+                            <div class="footer-links">
+                                <a href="https://xquan16.github.io/About-me/" target="_blank" rel="noopener noreferrer">CHAN XIN QUAN</a>
+                                <a href="#" target="_blank" rel="noopener noreferrer">XXX</a>
+                                <a href="#" target="_blank" rel="noopener noreferrer">XXX</a>
+                                <a href="#" target="_blank" rel="noopener noreferrer">XXX</a>
+                            </div>
+                        </div>
+                    </footer>
                 </div>
             </div>
         </div>
@@ -65,18 +76,47 @@
         // Theme Toggle
         function toggleTheme() {
             var body = document.body;
+            var icon = document.getElementById('themeIcon'); // Find the icon
             var current = body.getAttribute("data-theme");
 
             if (current === "dark") {
                 // Switch to LIGHT mode
                 body.setAttribute("data-theme", "light");
                 localStorage.setItem("theme", "light");
+
+                // Switch Icon to MOON
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                icon.setAttribute("title", "Switch to Dark Mode");
             } else {
                 // Switch to DARK mode
                 body.setAttribute("data-theme", "dark");
                 localStorage.setItem("theme", "dark");
+
+                // Switch Icon to SUN
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                icon.setAttribute("title", "Switch to Light Mode");
             }
         }
+
+        // Initialize on Load (Check saved theme & Set correct icon)
+        (function () {
+            var savedTheme = localStorage.getItem("theme");
+            var icon = document.getElementById('themeIcon');
+
+            if (savedTheme === "dark") {
+                document.body.setAttribute("data-theme", "dark");
+                // If saved as Dark, make sure icon is Sun immediately
+                if (icon) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    icon.setAttribute("title", "Switch to Light Mode");
+                }
+            } else {
+                if (icon) icon.setAttribute("title", "Switch to Dark Mode");
+            }
+        })();
     </script>
 </body>
 </html>
