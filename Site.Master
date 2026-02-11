@@ -42,8 +42,8 @@
                 <ul class="menu">
                     <li><a href="Dashboard.aspx"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
                     <li><a href="Simulations.aspx"><i class="fas fa-vial"></i> <span>Simulations</span></a></li>
-                    <li><a href="Courses.aspx"><i class="fas fa-vial"></i> <span>Courses</span></a></li>
-                    <li><a href="Quizzes.aspx"><i class="fas fa-vial"></i> <span>Quizzes</span></a></li>
+                    <li><a href="Courses.aspx"><i class="fas fa-book"></i> <span>Courses</span></a></li>
+                    <li><a href="Quizzes.aspx"><i class="fas fa-question-circle"></i> <span>Quizzes</span></a></li>
                 </ul>
             </div>
 
@@ -56,9 +56,9 @@
                             <span>&copy; <%= DateTime.Now.Year %> Zero to AI. All rights reserved.</span>
                             <div class="footer-links">
                                 <a href="https://xquan16.github.io/About-me/" target="_blank" rel="noopener noreferrer">CHAN XIN QUAN</a>
-                                <a href="#" target="_blank" rel="noopener noreferrer">XXX</a>
-                                <a href="#" target="_blank" rel="noopener noreferrer">XXX</a>
-                                <a href="#" target="_blank" rel="noopener noreferrer">XXX</a>
+                                <a href="#" target="_blank" rel="noopener noreferrer">CHEN ZHENG HAO</a>
+                                <a href="#" target="_blank" rel="noopener noreferrer">KAEMON NG</a>
+                                <a href="#" target="_blank" rel="noopener noreferrer">SAWRAW MADUB</a>
                             </div>
                         </div>
                     </footer>
