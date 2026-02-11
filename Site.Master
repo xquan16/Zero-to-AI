@@ -23,7 +23,7 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <a href="Home.aspx" class="brand-link">
-                    <img id="imgLogo" src="images/dark-logo.png" alt="Logo" style="height: 30px;" />
+                    <img id="imgLogo" src="images/logo.png" alt="Logo" style="height: 30px;" />
                     
                     <span>Zero to AI</span>
                 </a>
@@ -40,9 +40,10 @@
         <div class="layout-container">    
             <div class="sidebar collapsed" id="sidebar">
                 <ul class="menu">
-                    <li><a href="Home.aspx"><i class="fas fa-home"></i> <span>Home</span></a></li>
                     <li><a href="Dashboard.aspx"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
                     <li><a href="Simulations.aspx"><i class="fas fa-vial"></i> <span>Simulations</span></a></li>
+                    <li><a href="Courses.aspx"><i class="fas fa-vial"></i> <span>Courses</span></a></li>
+                    <li><a href="Quizzes.aspx"><i class="fas fa-vial"></i> <span>Quizzes</span></a></li>
                 </ul>
             </div>
 
