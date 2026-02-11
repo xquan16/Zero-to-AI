@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="Zero_to_AI.Site" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="ZerotoAI.Site" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,17 +22,45 @@
                 <button type="button" class="btn-icon" onclick="toggleSidebar()">
                     <i class="fas fa-bars"></i>
                 </button>
-                <a href="Home.aspx" class="brand-link">
-                    <img id="imgLogo" src="images/logo.png" alt="Logo" style="height: 30px;" />
-                    
+
+                <asp:HyperLink ID="brandLink" runat="server" NavigateUrl="~/ZerotoAI/Home.aspx" CssClass="brand-link">
+                    <asp:Image ID="appLogo" runat="server" ImageUrl="~/images/logo.png" Height="40px" AlternateText="Logo" />
                     <span>Zero to AI</span>
-                </a>
+                </asp:HyperLink>
             </div>
 
-            <div>
+            <div class="top-bar-right">
                 <button type="button" class="btn-icon" onclick="toggleTheme()">
                     <i id="themeIcon" class="fas fa-moon" title="Dark Mode"></i>
                 </button>
+
+                <asp:Panel ID="guestPanel" runat="server">
+                    <div class="auth-actions">
+                        <asp:HyperLink ID="loginBtn" runat="server" NavigateUrl="~/ZerotoAI/Login.aspx" CssClass="btn-ghost">Log In</asp:HyperLink>
+                        <asp:HyperLink ID="signupBtn" runat="server" NavigateUrl="~/ZerotoAI/Signup.aspx" CssClass="btn-solid">Sign Up</asp:HyperLink>
+                    </div>
+                </asp:Panel>
+
+                <asp:Panel ID="memberPanel" runat="server" Visible="false">
+                    <div class="user-menu-container">
+                        <button type="button" class="user-btn" onclick="toggleUserMenu()">
+                            <div class="user-info">
+                                <asp:Label ID="roleLbl" runat="server" CssClass="lbl-role"></asp:Label>
+                                <asp:Label ID="usernameLbl" runat="server" CssClass="lbl-name"></asp:Label>
+                            </div>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+
+                        <div id="userDropdown" class="dropdown-content">
+                            <asp:HyperLink ID="profileBtn" runat="server" NavigateUrl="Profile.aspx">
+                                <i class="fas fa-user-edit"></i> Edit Profile
+                            </asp:HyperLink>
+                            <asp:LinkButton ID="logoutBtn" runat="server" OnClick="logoutBtn_Click">
+                                <i class="fas fa-sign-out-alt"></i> Log Out
+                            </asp:LinkButton>
+                        </div>
+                    </div>
+                </asp:Panel>
             </div>
         </div>
 
@@ -40,10 +68,10 @@
         <div class="layout-container">    
             <div class="sidebar collapsed" id="sidebar">
                 <ul class="menu">
-                    <li><a href="Dashboard.aspx"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
-                    <li><a href="Simulations.aspx"><i class="fas fa-vial"></i> <span>Simulations</span></a></li>
-                    <li><a href="Courses.aspx"><i class="fas fa-book"></i> <span>Courses</span></a></li>
-                    <li><a href="Quizzes.aspx"><i class="fas fa-question-circle"></i> <span>Quizzes</span></a></li>
+                    <li><asp:LinkButton ID="dashboardBtn" runat="server" PostBackUrl="Dashboard.aspx"><i class="fas fa-th-large"></i> <span>Dashboard</span></asp:LinkButton></li>
+                    <li><asp:LinkButton ID="simulationsBtn" runat="server" PostBackUrl="Simulations.aspx"><i class="fas fa-vial"></i> <span>Simulations</span></asp:LinkButton></li>
+                    <li><asp:LinkButton ID="coursesBtn" runat="server" PostBackUrl="Courses.aspx"><i class="fas fa-book"></i> <span>Courses</span></asp:LinkButton></li>
+                    <li><asp:LinkButton ID="quizzesBtn" runat="server" PostBackUrl="Quizzes.aspx"><i class="fas fa-question-circle"></i> <span>Quizzes</span></asp:LinkButton></li>
                 </ul>
             </div>
 
@@ -118,6 +146,21 @@
                 if (icon) icon.setAttribute("title", "Switch to Dark Mode");
             }
         })();
+        
+        function toggleUserMenu() {
+            document.getElementById("userDropdown").classList.toggle("show");
+        }
+
+        // Close dropdown if clicked outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.user-menu-container')) {
+                var dropdown = document.getElementById("userDropdown");
+                if (dropdown && dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        }
+      
     </script>
 </body>
 </html>

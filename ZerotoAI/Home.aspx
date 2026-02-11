@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Home" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="Zero_to_AI.Home" %>
+﻿<%@ Page Title="Home" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="ZerotoAI.Home" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     </asp:Content>
@@ -6,18 +6,16 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <div class="hero-section">
-        <h1 class="hero-title">Master AI from Scratch</h1>
+        <h1 class="hero-title">Master AI from Zero</h1>
         <p class="hero-subtitle">
-            Zero to AI is the ultimate interactive platform for computer science students. 
-            Simulate neural networks, visualize data, and track your learning journey—all in one place.
+            Zero to AI is the ultimate interactive platform for computer science students and tech enthusiasts. 
+            Simulate neural networks, visualize data, and track your learning journey — all in one place.
         </p>
         
-        <a href="Dashboard.aspx" class="cta-button">
+        <a href="Login.aspx" class="cta-button">
             <i class="fas fa-rocket"></i> Get Started Now
         </a>
     </div>
-
-
 
     <div class="content-sheet">
         <div class="about-container">
@@ -31,7 +29,7 @@
                 </p>
             </div>
             <div class="about-image">
-                <img src="images/logo.png" alt="Zero to AI Logo">
+                <asp:Image ID="aboutLogo" runat="server" ImageUrl="~/images/logo.png" AlternateText="Zero to AI Logo" />
             </div>
         </div>
 

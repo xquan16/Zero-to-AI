@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace Zero_to_AI
+namespace ZerotoAI
 {
     public partial class Home : System.Web.UI.Page
     {
