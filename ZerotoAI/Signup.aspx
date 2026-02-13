@@ -30,9 +30,11 @@
     <div class="form-group">
         <asp:Label ID="passLbl" runat="server" Text="Password"></asp:Label>
         <asp:TextBox ID="passTxt" runat="server" CssClass="form-control" TextMode="Password" placeholder="••••••••"></asp:TextBox>
+        
+        <div class="form-actions-split">
+            <asp:Label ID="msgLbl" runat="server" CssClass="text-error" Visible="false"></asp:Label>
+        </div>
     </div>
-
-    <asp:Label ID="msgLbl" runat="server" Visible="false" style="display:block; margin-bottom:10px;"></asp:Label>
 
     <div class="form-group">
         <asp:Button ID="signupBtn" runat="server" Text="Create Account" CssClass="btn-primary-full" OnClick="signupBtn_Click" />

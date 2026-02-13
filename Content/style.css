@@ -1,4 +1,4 @@
-﻿/* ----------------------- Variables & Reset ------------------------------- */
+﻿/* ----------------------- Variables & Global ------------------------------- */
 :root {
     /* --- LIGHT MODE --- */
     --bg-sidebar: #0096FF; /* Bright Blue */
@@ -56,6 +56,13 @@ form#form1 {
     flex-direction: column;
     height: 100vh;
     width: 100%;
+}
+
+/* Error Message */
+.text-error {
+    color: #ff4757;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 /* ----------------------- Site.Master ------------------------------- */
@@ -391,7 +398,7 @@ form#form1 {
     background-color: var(--bg-body); /* Same background as left */
 }
 
-/* The Form Container (No Card Borders!) */
+/* The Form Container */
 .form-wrapper-large {
     width: 100%;
     max-width: 480px; /* Wider than before */
@@ -429,6 +436,28 @@ form#form1 {
         font-size: 1.1rem; /* Bigger labels */
         margin-bottom: 10px;
         font-weight: 600;
+    }
+
+.form-actions-split {
+    display: flex;
+    justify-content: space-between; /* Pushes items to Left and Right edges */
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    min-height: 20px; /* Keeps space stable */
+}
+
+/* Forgot Password Link Styling */
+.forgot-password-link {
+    font-size: 0.85rem;
+    color: var(--bg-sidebar);
+    text-decoration: none;
+    margin-left: auto; /* Pushes link to the right if error is missing */
+}
+
+    .forgot-password-link:hover {
+        color: var(--bg-sidebar);
+        text-decoration: underline;
     }
 
 /* Animations */

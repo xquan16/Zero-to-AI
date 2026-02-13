@@ -35,8 +35,8 @@ namespace ZerotoAI
                 {
                     conn.Open();
 
-                    // 1. Get the Hash, Salt, and Role for this username
-                    string query = "SELECT PasswordHash, Salt, Role FROM [Users] WHERE Username = @User";
+                    // 1. Get the Hash and Role 
+                    string query = "SELECT PasswordHash, Role, FirstName FROM [Users] WHERE Username = @User";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@User", userTxt.Text);
 
@@ -44,44 +44,32 @@ namespace ZerotoAI
                     {
                         if (reader.Read())
                         {
-                            // 2. Retrieve stored values
                             string storedHash = reader["PasswordHash"].ToString();
-                            string storedSalt = reader["Salt"].ToString();
                             string role = reader["Role"].ToString();
+                            string firstName = reader["FirstName"].ToString();
 
-                            // 3. Verify the Password
-                            // Convert the stored salt back to bytes
-                            byte[] saltBytes = Convert.FromBase64String(storedSalt);
+                            // 2. VERIFY PASSWORD 
+                            bool isValid = BCrypt.Net.BCrypt.Verify(passTxt.Text, storedHash);
 
-                            // Hash the INPUT password with the STORED salt
-                            Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(passTxt.Text, saltBytes, 10000);
-                            byte[] hashBytes = pbkdf2.GetBytes(20);
-                            string inputHash = Convert.ToBase64String(hashBytes);
-
-                            // 4. Compare the hashes
-                            if (storedHash == inputHash)
+                            if (isValid)
                             {
-                                // SUCCESS! Log them in
+                                // SUCCESS!
                                 Session["Username"] = userTxt.Text;
                                 Session["UserRole"] = role;
+                                Session["FirstName"] = firstName; // For "Hi, [Name]" labels
 
-                                // Redirect based on Role (Optional smart redirect)
                                 if (role == "Admin")
-                                    Response.Redirect("~/Admin/Dashboard.aspx");
+                                    Response.Redirect("~/Admin/AdminDashboard.aspx");
                                 else
                                     Response.Redirect("~/ZerotoAI/Home.aspx");
                             }
                             else
                             {
-                                // Password Wrong
                                 ShowError("Invalid username or password.");
                             }
                         }
                         else
                         {
-                            // Username not found
-                            // Security Tip: Don't say "User not found", say "Invalid login" 
-                            // so hackers don't know which usernames exist.
                             ShowError("Invalid username or password.");
                         }
                     }

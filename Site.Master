@@ -36,7 +36,7 @@
 
                 <asp:Panel ID="guestPanel" runat="server">
                     <div class="auth-actions">
-                        <asp:HyperLink ID="loginBtn" runat="server" NavigateUrl="~/ZerotoAI/Login.aspx" CssClass="btn-ghost">Log In</asp:HyperLink>
+                        <asp:HyperLink ID="loginBtn" runat="server" NavigateUrl="~/ZerotoAI/Login.aspx" CssClass="btn-ghost">Sign In</asp:HyperLink>
                         <asp:HyperLink ID="signupBtn" runat="server" NavigateUrl="~/ZerotoAI/Signup.aspx" CssClass="btn-solid">Sign Up</asp:HyperLink>
                     </div>
                 </asp:Panel>
