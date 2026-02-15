@@ -17,6 +17,16 @@ namespace ZerotoAI
         {
             // Clear error messages on load
             errorLbl.Visible = false;
+
+            if (!IsPostBack)
+            {
+                // Check if we were redirected here after a successful registration
+                if (Request.QueryString["register"] == "success")
+                {
+                    successLbl.Text = "Account created successfully! Please login.";
+                    successLbl.Visible = true;
+                }
+            }
         }
 
         private void ShowError(string message)
@@ -35,8 +45,8 @@ namespace ZerotoAI
                 {
                     conn.Open();
 
-                    // 1. Get the Hash and Role 
-                    string query = "SELECT PasswordHash, Role, FirstName FROM [Users] WHERE Username = @User";
+                    // 1. Get the Hash, Role, FirstName and ProfilePicture
+                    string query = "SELECT PasswordHash, Role, FirstName, ProfilePicture FROM [Users] WHERE Username = @User";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@User", userTxt.Text);
 
@@ -47,6 +57,7 @@ namespace ZerotoAI
                             string storedHash = reader["PasswordHash"].ToString();
                             string role = reader["Role"].ToString();
                             string firstName = reader["FirstName"].ToString();
+                            string profilePic = reader["ProfilePicture"] == DBNull.Value ? string.Empty : reader["ProfilePicture"].ToString();
 
                             // 2. VERIFY PASSWORD 
                             bool isValid = BCrypt.Net.BCrypt.Verify(passTxt.Text, storedHash);
@@ -57,9 +68,12 @@ namespace ZerotoAI
                                 Session["Username"] = userTxt.Text;
                                 Session["UserRole"] = role;
                                 Session["FirstName"] = firstName; // For "Hi, [Name]" labels
+                                // store profile pic (or default)
+                                Session["UserProfilePic"] = string.IsNullOrEmpty(profilePic) ? "default_user.png" : profilePic;
 
                                 if (role == "Admin")
-                                    Response.Redirect("~/Admin/AdminDashboard.aspx");
+                                    //Response.Redirect("~/Admin/AdminDashboard.aspx");
+                                    Response.Redirect("~/ZerotoAI/Home.aspx");
                                 else
                                     Response.Redirect("~/ZerotoAI/Home.aspx");
                             }

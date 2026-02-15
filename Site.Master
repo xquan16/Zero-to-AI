@@ -14,7 +14,8 @@
     </asp:ContentPlaceHolder>
 </head>
 
-<body>
+
+<body id="masterBody" runat="server">
     <form id="form1" runat="server">
 
         <div class="top-bar">
@@ -43,27 +44,29 @@
 
                 <asp:Panel ID="memberPanel" runat="server" Visible="false">
                     <div class="user-menu-container">
-                        <button type="button" class="user-btn" onclick="toggleUserMenu()">
+                        <div class="user-btn" onclick="toggleUserMenu()">
+        
+                            <asp:Image ID="imgUserProfile" runat="server" CssClass="user-avatar" ImageUrl="~/images/default_user.png" />
+
                             <div class="user-info">
-                                <asp:Label ID="roleLbl" runat="server" CssClass="lbl-role"></asp:Label>
-                                <asp:Label ID="usernameLbl" runat="server" CssClass="lbl-name"></asp:Label>
+                                <asp:Label ID="roleLbl" runat="server" CssClass="lbl-role" Text="Member"></asp:Label>
+                                <asp:Label ID="usernameLbl" runat="server" CssClass="lbl-name" Text="John Doe"></asp:Label>
                             </div>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
+        
+                            <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.7;"></i>
+                        </div>
 
                         <div id="userDropdown" class="dropdown-content">
-                            <asp:HyperLink ID="profileBtn" runat="server" NavigateUrl="Profile.aspx">
-                                <i class="fas fa-user-edit"></i> Edit Profile
-                            </asp:HyperLink>
+                            <a href="EditProfile.aspx"><i class="fas fa-user-edit"></i> Edit Profile</a>
                             <asp:LinkButton ID="logoutBtn" runat="server" OnClick="logoutBtn_Click">
-                                <i class="fas fa-sign-out-alt"></i> Log Out
+                                <i class="fas fa-sign-out-alt"></i> Logout
                             </asp:LinkButton>
                         </div>
                     </div>
                 </asp:Panel>
             </div>
         </div>
-
+            
 
         <div class="layout-container">    
             <div class="sidebar collapsed" id="sidebar">

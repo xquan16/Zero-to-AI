@@ -19,22 +19,39 @@ namespace ZerotoAI
 
         private void CheckLoginStatus()
         {
-            // Check if user is logged in (Change "UserRole" to whatever session key you plan to use)
             if (Session["UserRole"] != null)
             {
-                // Show Member Panel
+                string role = Session["UserRole"].ToString();
+                string username = Session["Username"].ToString();
+
+                roleLbl.Text = role;
+                usernameLbl.Text = username;
+
+                // Apply Theme Color
+                masterBody.Attributes["data-role"] = role.ToLower();
+
+                // --- NEW: Load Profile Picture ---
+                if (Session["UserProfilePic"] != null && !string.IsNullOrEmpty(Session["UserProfilePic"].ToString()))
+                {
+                    imgUserProfile.ImageUrl = "~/images/" + Session["UserProfilePic"].ToString();
+                }
+                else
+                {
+                    // Fallback if session is empty or null
+                    imgUserProfile.ImageUrl = "~/images/default_user.png";
+                }
+
                 guestPanel.Visible = false;
                 memberPanel.Visible = true;
-
-                // Set Labels
-                roleLbl.Text = Session["UserRole"].ToString(); // e.g., "Student"
-                usernameLbl.Text = Session["Username"].ToString(); // e.g., "Alex"
             }
             else
             {
-                // Show Guest Panel
+                // Guest Mode
                 guestPanel.Visible = true;
                 memberPanel.Visible = false;
+
+                // Remove role attribute (Default Blue)
+                masterBody.Attributes.Remove("data-role");
             }
         }
 
@@ -42,7 +59,7 @@ namespace ZerotoAI
         {
             Session.Clear();
             Session.Abandon();
-            Response.Redirect("Home.aspx");
+            Response.Redirect("Login.aspx");
         }
     }
 }

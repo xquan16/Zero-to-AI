@@ -6,6 +6,8 @@
 
     <h2>Welcome Back</h2>
 
+    <asp:Label ID="successLbl" runat="server" CssClass="text-success" Visible="false"></asp:Label>
+
     <div class="form-group">
         <asp:Label ID="userLbl" runat="server" Text="Username"></asp:Label>
         <asp:TextBox ID="userTxt" runat="server" CssClass="form-control" placeholder="Enter username"></asp:TextBox>

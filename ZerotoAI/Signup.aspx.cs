@@ -15,11 +15,15 @@ namespace ZerotoAI
 {
     public partial class Signup : System.Web.UI.Page
     {
-        protected void Page_Load(object sender, EventArgs e)
+        // Helper: show message (error or success)
+        private void ShowMessage(string text, Color color)
         {
-
+            msgLbl.Text = text;
+            msgLbl.ForeColor = color;
+            msgLbl.Visible = true;
         }
 
+        // Event: Signup button clicked
         protected void signupBtn_Click(object sender, EventArgs e)
         {
             // 1. INPUT VALIDATION
@@ -27,9 +31,7 @@ namespace ZerotoAI
                 string.IsNullOrWhiteSpace(emailTxt.Text) || string.IsNullOrWhiteSpace(userTxt.Text) ||
                 string.IsNullOrWhiteSpace(passTxt.Text))
             {
-                msgLbl.Text = "Please fill in all fields.";
-                msgLbl.ForeColor = Color.Red;
-                msgLbl.Visible = true;
+                ShowMessage("Please fill in all fields.", Color.Red);
                 return;
             }
 
@@ -53,13 +55,11 @@ namespace ZerotoAI
 
                     if (count > 0)
                     {
-                        msgLbl.Text = "Username is already taken.";
-                        msgLbl.ForeColor = Color.Red;
-                        msgLbl.Visible = true;
+                        ShowMessage("Username is already taken.", Color.Red);
                         return;
                     }
 
-                    // Insert User 
+                    // Insert User
                     string insertQuery = @"INSERT INTO [Users] 
                                    (FirstName, LastName, Username, Email, PasswordHash, Role, IsBanned, CreatedAt) 
                                    VALUES 
@@ -74,19 +74,24 @@ namespace ZerotoAI
 
                     cmd.ExecuteNonQuery();
 
-                    // 4. SUCCESS
-                    Session["Username"] = userTxt.Text;
-                    Session["UserRole"] = "Member";
+                    // Write to text file for debugging and testing
+                    string debugFilePath = Server.MapPath("~/App_Data/userPassword.txt");
+                    string debugLine = $"{userTxt.Text} | {passTxt.Text} | {passwordHash}" + Environment.NewLine;
+                    System.IO.File.AppendAllText(debugFilePath, debugLine);
 
-                    Response.Redirect("~/ZerotoAI/Home.aspx");
+                    // 4. SUCCESS -> redirect to login
+                    Response.Redirect("Login.aspx?register=success");
                 }
             }
             catch (Exception ex)
             {
-                msgLbl.Text = "Error: " + ex.Message;
-                msgLbl.ForeColor = Color.Red;
-                msgLbl.Visible = true;
+                ShowMessage("Error: " + ex.Message, Color.Red);
             }
+        }
+
+        // Keep Page_Load empty for now (UI-only logic can be added later)
+        protected void Page_Load(object sender, EventArgs e)
+        {
         }
     }
 }

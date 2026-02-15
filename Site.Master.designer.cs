@@ -24,6 +24,15 @@ namespace ZerotoAI
         protected global::System.Web.UI.WebControls.ContentPlaceHolder head;
 
         /// <summary>
+        /// masterBody control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl masterBody;
+
+        /// <summary>
         /// form1 control.
         /// </summary>
         /// <remarks>
@@ -87,6 +96,15 @@ namespace ZerotoAI
         protected global::System.Web.UI.WebControls.Panel memberPanel;
 
         /// <summary>
+        /// imgUserProfile control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image imgUserProfile;
+
+        /// <summary>
         /// roleLbl control.
         /// </summary>
         /// <remarks>
@@ -103,15 +121,6 @@ namespace ZerotoAI
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label usernameLbl;
-
-        /// <summary>
-        /// profileBtn control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink profileBtn;
 
         /// <summary>
         /// logoutBtn control.

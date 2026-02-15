@@ -140,7 +140,10 @@
     <Content Include="Content\style.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="images\1_pp.png" />
+    <Content Include="images\default_user.png" />
     <Content Include="Member\Courses.aspx" />
+    <Content Include="ZerotoAI\EditProfile.aspx" />
     <Content Include="ZerotoAI\Home.aspx" />
     <Content Include="ZerotoAI\Login.aspx" />
     <Content Include="images\logo.png" />
@@ -223,6 +226,13 @@
     </Compile>
     <Compile Include="Member\Courses.aspx.designer.cs">
       <DependentUpon>Courses.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ZerotoAI\EditProfile.aspx.cs">
+      <DependentUpon>EditProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ZerotoAI\EditProfile.aspx.designer.cs">
+      <DependentUpon>EditProfile.aspx</DependentUpon>
     </Compile>
     <Compile Include="ZerotoAI\Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
