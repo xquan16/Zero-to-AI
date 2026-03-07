@@ -178,6 +178,7 @@
     <Content Include="Auth.Master" />
     <Content Include="ZerotoAI\ResetPassword.aspx" />
     <Content Include="ZerotoAI\Signup.aspx" />
+    <Content Include="App_Data\HomePage.json" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

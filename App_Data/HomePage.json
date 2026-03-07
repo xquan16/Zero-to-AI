@@ -1,0 +1,19 @@
+{
+  "HeroTitle": "Master AI from Zero",
+  "HeroSubtitle": "Zero to AI is the ultimate interactive platform for computer science students and tech enthusiasts. Simulate neural networks, visualize data, and track your learning journey — all in one place.",
+  "CtaText": "Get Started",
+  "AboutTitle": "About Zero to AI",
+  "AboutText": "Zero to AI bridges the gap between theoretical computer science and practical application. Designed for students, by students, our platform provides a hands-on environment to experiment with machine learning algorithms, visualize complex data structures, and master the fundamentals of Artificial Intelligence without the need for expensive hardware.",
+  "Feature1Title": "Interactive Simulations",
+  "Feature1Desc": "Don't just read about AI. Build and train models directly in your browser with our visual tools.",
+  "Feature2Title": "Real-time Analytics",
+  "Feature2Desc": "Track your progress with dynamic charts. See your strengths and areas for improvement instantly.",
+  "Feature3Title": "Student Dashboard",
+  "Feature3Desc": "A personalized space to manage your courses, assignments, and upcoming deadlines efficiently.",
+  "Stat1Num": "100+",
+  "Stat1Label": "Modules",
+  "Stat2Num": "500+",
+  "Stat2Label": "Active Students",
+  "Stat3Num": "24/7",
+  "Stat3Label": "AI Support"
+}
