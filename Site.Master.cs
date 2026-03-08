@@ -11,9 +11,22 @@ namespace ZerotoAI
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            CheckLoginStatus();
+
+            // Add the Guest Popup logic ONLY if they are not logged in
+            if (Session["UserRole"] == null)
             {
-                CheckLoginStatus();
+                string loginUrl = ResolveClientUrl("~/ZerotoAI/Login.aspx");
+                string guestPopupJS = $"if(confirm('You haven\\'t logged in yet. Go to the Login page?')) {{ window.location.href='{loginUrl}'; }} return false;";
+
+                quizzesBtn.OnClientClick = guestPopupJS;
+                // coursesBtn.OnClientClick = guestPopupJS;
+                // simBtn.OnClientClick = guestPopupJS;
+            }
+            else
+            {
+                // 3. Clear the popup if they ARE logged in, so they can click normally
+                quizzesBtn.OnClientClick = "";
             }
         }
 
@@ -59,7 +72,37 @@ namespace ZerotoAI
         {
             Session.Clear();
             Session.Abandon();
-            Response.Redirect("Login.aspx");
+            Response.Redirect("~/ZerotoAI/Login.aspx");
+        }
+
+        protected void quizzesBtn_Click(object sender, EventArgs e)
+        {
+            // 1. Check if the user is a Guest
+            if (Session["UserRole"] == null)
+            {
+                Response.Redirect("~/ZerotoAI/Login.aspx");
+                return;
+            }
+
+            // 2. Read the role and redirect to the correct module
+            string role = Session["UserRole"].ToString();
+
+            if (role == "Admin")
+            {
+                Response.Redirect("~/Admin/AdminMonitorQuiz.aspx");
+            }
+            else if (role == "Editor")
+            {
+                Response.Redirect("~/Editor/EditorEditQuiz.aspx");
+            }
+            else if (role == "Member")
+            {
+                Response.Redirect("~/Member/MemberSelectQuizTopic.aspx");
+            }
+            else
+            {
+                Response.Redirect("~/ZerotoAI/Login.aspx");
+            }
         }
     }
 }

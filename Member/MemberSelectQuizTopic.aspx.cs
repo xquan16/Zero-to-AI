@@ -16,11 +16,11 @@ namespace Zero_to_AI.Member
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            //if (Session["UserName"] == null || Session["UserRole"].ToString() != "Member")
-            //{
-            //    Response.Redirect("~/Login.aspx");
-            //    return;
-            //}
+            if (Session["UserName"] == null || Session["UserRole"].ToString() != "Member")
+            {
+                Response.Redirect("~/ZerotoAI/Login.aspx");
+                return;
+            }
             if (!IsPostBack)
             {
                 LoadHistory();

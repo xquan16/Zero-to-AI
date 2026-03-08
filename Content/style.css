@@ -1590,3 +1590,172 @@ textarea.admin-edit-box {
     text-align: center;
     margin-top: 20px;
 }
+
+
+
+
+
+/* ----------------------- Admin Monitor (AdminMonitorQuiz.aspx) ------------------------------- */
+
+.dashboard-container {
+    max-width: 1100px;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+    .dashboard-container .card {
+        background: var(--bg-card);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border-color);
+    }
+
+    .dashboard-container .full-width {
+        grid-column: span 2;
+    }
+
+    .dashboard-container h3 {
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        color: var(--text-main);
+    }
+
+/* Formats the bullet points of the Quiz stats */
+.stat-box {
+    font-size: 16px;
+    line-height: 2.2;
+    color: var(--text-muted);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+    .stat-box li {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px dashed var(--border-color);
+        padding: 5px 0;
+    }
+
+    .stat-box b {
+        font-size: 18px;
+        color: var(--text-main);
+        margin-left: 10px;
+    }
+
+
+
+
+
+/* ----------------------- Editor Edit Quiz (EditorEditQuiz.aspx) ------------------------------- */
+
+.editor-container {
+    max-width: 900px;
+    margin: 30px auto;
+}
+
+/* The top bar where you select which Quiz to edit */
+.filter-bar {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--text-main);
+}
+
+.filter-label {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* The card displaying each existing question */
+.question-block {
+    background: var(--bg-card);
+    border-left: 5px solid var(--bg-sidebar); /* Uses Purple for Editor, Red for Admin! */
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.q-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+    .q-header strong {
+        font-size: 1.1rem;
+        color: var(--text-main);
+    }
+
+/* --- Form inside the Editor Page --- */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+/* The input boxes for adding new questions */
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-body);
+    color: var(--text-main);
+    font-size: 1rem;
+    transition: 0.2s;
+}
+
+    .form-input:focus {
+        border-color: var(--bg-sidebar);
+        outline: none;
+    }
+
+/* The Add Question button */
+.btn-add {
+    background: var(--bg-sidebar);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 100%;
+    font-size: 1rem;
+}
+
+    .btn-add:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+
