@@ -135,17 +135,6 @@ namespace ZerotoAI
             btnHeroCTA.Visible = !isEdit;
             txtCtaText.Visible = isEdit;
 
-            // Disable the CTA button
-            if (isEdit)
-            {
-                btnHeroCTA.Attributes["class"] = "cta-button disabled-btn";
-                btnHeroCTA.Attributes["onclick"] = "return false;"; // Truly blocks the click
-            }
-            else
-            {
-                btnHeroCTA.Attributes["class"] = "cta-button";
-                btnHeroCTA.Attributes.Remove("onclick");
-            }
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -162,6 +151,8 @@ namespace ZerotoAI
                     if (role == "Admin")
                     {
                         pnlAdminBar.Visible = true; // Show edit tools for Admin
+                        btnHeroCTA.Attributes["class"] = "cta-button";
+                        btnHeroCTA.Attributes["onclick"] = "return false;";
                     }
                     else if (role == "Member" || role == "Editor")
                     {
