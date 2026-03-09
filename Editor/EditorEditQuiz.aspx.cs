@@ -16,11 +16,11 @@ namespace Zero_to_AI.Editor
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            //if (Session["UserName"] == null || Session["UserRole"].ToString() != "Editor")
-            //{
-            //    Response.Redirect("~/Login.aspx");
-            //    return;
-            //}
+            if (Session["UserName"] == null || Session["UserRole"].ToString() != "Editor")
+            {
+                Response.Redirect("~/ZerotoAI/Login.aspx");
+                return;
+            }
 
             if (!IsPostBack)
             {
@@ -42,11 +42,11 @@ namespace Zero_to_AI.Editor
 
             using (SqlConnection con = new SqlConnection(connString))
             {
-                string sql = "INSERT INTO ActivityLogs (UserName, ActionType, Description, ActionDate) VALUES (@user, @action, @desc, GETDATE())";
+                string sql = "INSERT INTO ActivityLogs (UserName, ActionType, ActionDetails, ActionDate) VALUES (@user, @type, @detail, GETDATE())";
                 SqlCommand cmd = new SqlCommand(sql, con);
                 cmd.Parameters.AddWithValue("@user", currentUser);
-                cmd.Parameters.AddWithValue("@action", action);
-                cmd.Parameters.AddWithValue("@desc", detail);
+                cmd.Parameters.AddWithValue("@type", action);
+                cmd.Parameters.AddWithValue("@detail", detail);
 
                 con.Open();
                 cmd.ExecuteNonQuery();

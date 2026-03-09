@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MemberSelectQuizTopic.aspx.cs" Inherits="Zero_to_AI.Member.MemberSelectQuizTopic" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="QuizTopic.aspx.cs" Inherits="Zero_to_AI.Member.QuizTopic" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 
@@ -9,19 +9,19 @@
         <div class="page-subtitle">Choose a domain to challenge your skills</div>
 
         <div class="cards-wrapper">
-            <a href="MemberQuiz.aspx?topic=ML" class="topic-card border-blue">
+            <a href="Quiz.aspx?topic=ML" class="topic-card border-blue">
                 <div class="icon-circle">🧠</div>
                 <div class="card-title">Machine Learning</div>
                 <div class="card-desc">Dive into AI concepts, neural networks, and Python libraries.</div>
             </a>
 
-            <a href="MemberQuiz.aspx?topic=Robo" class="topic-card border-red">
+            <a href="Quiz.aspx?topic=Robo" class="topic-card border-red">
                 <div class="icon-circle">🤖</div>
                 <div class="card-title">Robotics</div>
                 <div class="card-desc">Explore automation, sensors, and mechanical design.</div>
             </a>
 
-            <a href="MemberQuiz.aspx?topic=All" class="topic-card border-green">
+            <a href="Quiz.aspx?topic=All" class="topic-card border-green">
                 <div class="icon-circle">🔥</div>
                 <div class="card-title">Mixed Challenge</div>
                 <div class="card-desc">Ready for the ultimate test? Mix questions from both domains!</div>

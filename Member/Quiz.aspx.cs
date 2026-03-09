@@ -10,7 +10,7 @@ using System.Configuration;
 
 namespace Zero_to_AI.Member
 {
-    public partial class MemberQuiz : System.Web.UI.Page
+    public partial class Quiz : System.Web.UI.Page
     {
         string connString = ConfigurationManager.ConnectionStrings["db"].ConnectionString;
 
@@ -166,7 +166,7 @@ namespace Zero_to_AI.Member
         }
         protected void btnBack_Click(object sender, EventArgs e)
         {
-            Response.Redirect("MemberSelectQuizTopic.aspx");
+            Response.Redirect("QuizTopic.aspx");
         }
     }
 }

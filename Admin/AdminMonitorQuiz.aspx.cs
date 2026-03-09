@@ -16,12 +16,12 @@ namespace Zero_to_AI.Admin
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Security Check
-            //if (Session["UserName"] == null || Session["UserRole"].ToString() != "Admin")
-            //{
-            //    Response.Redirect("~/Login.aspx");
-            //    return;
-            //}
+            //Security Check
+            if (Session["UserName"] == null || Session["UserRole"].ToString() != "Admin")
+            {
+                Response.Redirect("~/ZerotoAI/Login.aspx");
+                return;
+            }
 
             if (!IsPostBack)
             {

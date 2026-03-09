@@ -97,7 +97,7 @@ namespace ZerotoAI
             }
             else if (role == "Member")
             {
-                Response.Redirect("~/Member/MemberSelectQuizTopic.aspx");
+                Response.Redirect("~/Member/QuizTopic.aspx");
             }
             else
             {

@@ -39,7 +39,7 @@
                     <asp:BoundField DataField="LogID" HeaderText="ID" ItemStyle-Width="50px" />
                     <asp:BoundField DataField="UserName" HeaderText="Editor" ItemStyle-Font-Bold="true" ItemStyle-ForeColor="#e74c3c" />
                     <asp:BoundField DataField="ActionType" HeaderText="Action" ItemStyle-Font-Bold="true" ItemStyle-ForeColor="#3498db" />
-                    <asp:BoundField DataField="Description" HeaderText="Details" />
+                    <asp:BoundField DataField="ActionDetails" HeaderText="Details" />
                     <asp:BoundField DataField="ActionDate" HeaderText="Time" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
                 </Columns>
             </asp:GridView>

@@ -144,8 +144,8 @@
     <Content Include="Global.asax" />
     <Content Include="images\1_pp.png" />
     <Content Include="images\default_user.png" />
-    <Content Include="Member\MemberQuiz.aspx" />
-    <Content Include="Member\MemberSelectQuizTopic.aspx" />
+    <Content Include="Member\Quiz.aspx" />
+    <Content Include="Member\QuizTopic.aspx" />
     <Content Include="ZerotoAI\EditProfile.aspx" />
     <Content Include="ZerotoAI\Home.aspx" />
     <Content Include="ZerotoAI\Login.aspx" />
@@ -238,19 +238,19 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Member\MemberQuiz.aspx.cs">
-      <DependentUpon>MemberQuiz.aspx</DependentUpon>
+    <Compile Include="Member\Quiz.aspx.cs">
+      <DependentUpon>Quiz.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Member\MemberQuiz.aspx.designer.cs">
-      <DependentUpon>MemberQuiz.aspx</DependentUpon>
+    <Compile Include="Member\Quiz.aspx.designer.cs">
+      <DependentUpon>Quiz.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Member\MemberSelectQuizTopic.aspx.cs">
-      <DependentUpon>MemberSelectQuizTopic.aspx</DependentUpon>
+    <Compile Include="Member\QuizTopic.aspx.cs">
+      <DependentUpon>QuizTopic.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Member\MemberSelectQuizTopic.aspx.designer.cs">
-      <DependentUpon>MemberSelectQuizTopic.aspx</DependentUpon>
+    <Compile Include="Member\QuizTopic.aspx.designer.cs">
+      <DependentUpon>QuizTopic.aspx</DependentUpon>
     </Compile>
     <Compile Include="ZerotoAI\EditProfile.aspx.cs">
       <DependentUpon>EditProfile.aspx</DependentUpon>

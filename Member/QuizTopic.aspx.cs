@@ -10,7 +10,7 @@ using System.Configuration;
 
 namespace Zero_to_AI.Member
 {
-    public partial class MemberSelectQuizTopic : System.Web.UI.Page
+    public partial class QuizTopic : System.Web.UI.Page
     {
         string connString = ConfigurationManager.ConnectionStrings["db"].ConnectionString;
 

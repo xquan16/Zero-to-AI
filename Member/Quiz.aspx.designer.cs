@@ -11,7 +11,7 @@ namespace Zero_to_AI.Member
 {
 
 
-    public partial class MemberQuiz
+    public partial class Quiz
     {
 
         /// <summary>
