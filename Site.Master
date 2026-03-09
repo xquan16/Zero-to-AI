@@ -72,9 +72,18 @@
             <div class="sidebar collapsed" id="sidebar">
                 <ul class="menu">
                     <li><asp:LinkButton ID="dashboardBtn" runat="server" PostBackUrl="Dashboard.aspx"><i class="fas fa-th-large"></i> <span>Dashboard</span></asp:LinkButton></li>
-                    <li><asp:LinkButton ID="simulationsBtn" runat="server" PostBackUrl="Simulations.aspx"><i class="fas fa-vial"></i> <span>Simulations</span></asp:LinkButton></li>
-                    <li><asp:LinkButton ID="coursesBtn" runat="server" PostBackUrl="Courses.aspx"><i class="fas fa-book"></i> <span>Courses</span></asp:LinkButton></li>
+                    
+                    <li>
+                        <asp:LinkButton ID="simBtn" runat="server" OnClick="simBtn_Click">
+                            <i class="fas fa-vial"></i> <span>Simulations</span>
+                        </asp:LinkButton>
+                    </li>
 
+                    <li>
+                        <asp:LinkButton ID="coursesBtn" runat="server" OnClick="coursesBtn_Click">
+                            <i class="fas fa-book"></i> <span>Courses</span>
+                        </asp:LinkButton>
+                    </li>
 
                     <li>
                         <asp:LinkButton ID="quizzesBtn" runat="server" OnClick="quizzesBtn_Click">

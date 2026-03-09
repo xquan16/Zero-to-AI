@@ -17,6 +17,8 @@
             <asp:Label ID="lblHeroTitle" runat="server"></asp:Label>
             <asp:TextBox ID="txtHeroTitle" runat="server" CssClass="admin-edit-box" Visible="false"></asp:TextBox>
         </h1>
+
+
         <p class="hero-subtitle">
             <asp:Label ID="lblHeroSubtitle" runat="server"></asp:Label>
             <asp:TextBox ID="txtHeroSubtitle" runat="server" CssClass="admin-edit-box" TextMode="MultiLine" Rows="3" Visible="false"></asp:TextBox>

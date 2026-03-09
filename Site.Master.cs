@@ -20,8 +20,8 @@ namespace ZerotoAI
                 string guestPopupJS = $"if(confirm('You haven\\'t logged in yet. Go to the Login page?')) {{ window.location.href='{loginUrl}'; }} return false;";
 
                 quizzesBtn.OnClientClick = guestPopupJS;
-                // coursesBtn.OnClientClick = guestPopupJS;
-                // simBtn.OnClientClick = guestPopupJS;
+                coursesBtn.OnClientClick = guestPopupJS;
+                simBtn.OnClientClick = guestPopupJS;
             }
             else
             {
@@ -104,5 +104,68 @@ namespace ZerotoAI
                 Response.Redirect("~/ZerotoAI/Login.aspx");
             }
         }
+
+
+        protected void coursesBtn_Click(object sender, EventArgs e)
+        {
+            // 1. Check if the user is a Guest
+            if (Session["UserRole"] == null)
+            {
+                Response.Redirect("~/ZerotoAI/Login.aspx");
+                return;
+            }
+
+            // 2. Read the role and redirect to the correct module
+            string role = Session["UserRole"].ToString();
+
+            if (role == "Admin")
+            {
+                Response.Redirect("~/Admin/AdminCourses.aspx");
+            }
+            else if (role == "Editor")
+            {
+                Response.Redirect("~/Editor/EditorCourses.aspx");
+            }
+            else if (role == "Member")
+            {
+                Response.Redirect("~/Member/Courses.aspx");
+            }
+            else
+            {
+                Response.Redirect("~/ZerotoAI/Login.aspx");
+            }
+        }
+
+
+        protected void simBtn_Click(object sender, EventArgs e)
+        {
+            // 1. Check if the user is a Guest
+            if (Session["UserRole"] == null)
+            {
+                Response.Redirect("~/ZerotoAI/Login.aspx");
+                return;
+            }
+
+            // 2. Read the role and redirect to the correct module
+            string role = Session["UserRole"].ToString();
+
+            if (role == "Admin")
+            {
+                Response.Redirect("~/Admin/AdminSimulations.aspx");
+            }
+            else if (role == "Editor")
+            {
+                Response.Redirect("~/Editor/EditorSimulations.aspx");
+            }
+            else if (role == "Member")
+            {
+                Response.Redirect("~/Member/Simulations.aspx");
+            }
+            else
+            {
+                Response.Redirect("~/ZerotoAI/Login.aspx");
+            }
+        }
+
     }
 }

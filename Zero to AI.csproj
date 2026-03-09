@@ -115,7 +115,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin\AdminCourses.aspx" />
     <Content Include="Admin\AdminMonitorQuiz.aspx" />
+    <Content Include="Admin\AdminSimulations.aspx" />
     <Content Include="App_Data\Database.mdf" />
     <Content Include="App_Data\Database_log.ldf">
       <DependentUpon>Database.mdf</DependentUpon>
@@ -139,13 +141,17 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\style.css" />
+    <Content Include="Editor\EditorCourses.aspx" />
     <Content Include="Editor\EditorEditQuiz.aspx" />
+    <Content Include="Editor\EditorSimulations.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="images\1_pp.png" />
     <Content Include="images\default_user.png" />
+    <Content Include="Member\Courses.aspx" />
     <Content Include="Member\Quiz.aspx" />
     <Content Include="Member\QuizTopic.aspx" />
+    <Content Include="Member\Simulations.aspx" />
     <Content Include="ZerotoAI\EditProfile.aspx" />
     <Content Include="ZerotoAI\Home.aspx" />
     <Content Include="ZerotoAI\Login.aspx" />
@@ -212,12 +218,26 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\AdminCourses.aspx.cs">
+      <DependentUpon>AdminCourses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\AdminCourses.aspx.designer.cs">
+      <DependentUpon>AdminCourses.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\AdminMonitorQuiz.aspx.cs">
       <DependentUpon>AdminMonitorQuiz.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\AdminMonitorQuiz.aspx.designer.cs">
       <DependentUpon>AdminMonitorQuiz.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\AdminSimulations.aspx.cs">
+      <DependentUpon>AdminSimulations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\AdminSimulations.aspx.designer.cs">
+      <DependentUpon>AdminSimulations.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -228,6 +248,13 @@
     <Compile Include="Auth.Master.designer.cs">
       <DependentUpon>Auth.Master</DependentUpon>
     </Compile>
+    <Compile Include="Editor\EditorCourses.aspx.cs">
+      <DependentUpon>EditorCourses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Editor\EditorCourses.aspx.designer.cs">
+      <DependentUpon>EditorCourses.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Editor\EditorEditQuiz.aspx.cs">
       <DependentUpon>EditorEditQuiz.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -235,8 +262,22 @@
     <Compile Include="Editor\EditorEditQuiz.aspx.designer.cs">
       <DependentUpon>EditorEditQuiz.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Editor\EditorSimulations.aspx.cs">
+      <DependentUpon>EditorSimulations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Editor\EditorSimulations.aspx.designer.cs">
+      <DependentUpon>EditorSimulations.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Member\Courses.aspx.cs">
+      <DependentUpon>Courses.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Member\Courses.aspx.designer.cs">
+      <DependentUpon>Courses.aspx</DependentUpon>
     </Compile>
     <Compile Include="Member\Quiz.aspx.cs">
       <DependentUpon>Quiz.aspx</DependentUpon>
@@ -251,6 +292,13 @@
     </Compile>
     <Compile Include="Member\QuizTopic.aspx.designer.cs">
       <DependentUpon>QuizTopic.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Member\Simulations.aspx.cs">
+      <DependentUpon>Simulations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Member\Simulations.aspx.designer.cs">
+      <DependentUpon>Simulations.aspx</DependentUpon>
     </Compile>
     <Compile Include="ZerotoAI\EditProfile.aspx.cs">
       <DependentUpon>EditProfile.aspx</DependentUpon>
