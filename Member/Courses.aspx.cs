@@ -199,6 +199,16 @@ namespace Zero_to_AI.Member
             litQuiz.Text = BuildQuizHTML(category);
 
             MainView.ActiveViewIndex = 1;
+            if (!IsPostBack) // Only count the view the first time they open it
+            {
+                using (SqlConnection conn = new SqlConnection(_conn))
+                using (SqlCommand cmdUpdate = new SqlCommand("UPDATE Articles SET Views = ISNULL(Views, 0) + 1 WHERE ArticleID = @id", conn))
+                {
+                    cmdUpdate.Parameters.AddWithValue("@id", articleID);
+                    conn.Open();
+                    cmdUpdate.ExecuteNonQuery();
+                }
+            }
         }
 
         // ── BUILD TAKEAWAYS ───────────────────────────────────────────────────
@@ -247,7 +257,7 @@ namespace Zero_to_AI.Member
             DataTable dtQ = new DataTable();
             using (SqlConnection conn = new SqlConnection(_conn))
             using (SqlDataAdapter da = new SqlDataAdapter(
-                "SELECT QuestionID, QuestionText, OptionA, OptionB, OptionC, OptionD, CorrectAnswer FROM Questions WHERE QuizID = @qid ORDER BY QuestionID", conn))
+                "SELECT TOP 5 QuestionID, QuestionText, OptionA, OptionB, OptionC, OptionD, CorrectAnswer FROM Questions WHERE QuizID = @qid ORDER BY NEWID()", conn))
             {
                 da.SelectCommand.Parameters.AddWithValue("@qid", quizID);
                 da.Fill(dtQ);

@@ -217,7 +217,14 @@ namespace Zero_to_AI.Editor
                 ShowDashboardMessage($"Article '{txtTitle.Text}' was updated successfully.", "alert-success");
             }
 
+            lblMessage.Text = "Article saved successfully!";
+            lblMessage.CssClass = "alert-box alert-success";
+            lblMessage.Visible = true;
+
+            // Switch back to the dashboard view
             MainMultiView.ActiveViewIndex = 0;
+
+            // Refresh your repeaters so the new data shows up
             BindArticleCards();
         }
 

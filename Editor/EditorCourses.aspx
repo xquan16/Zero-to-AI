@@ -95,8 +95,8 @@
         <!-- ═══════════════════════ VIEW 1: EDIT ARTICLE ═══════════════════════ -->
         <asp:View ID="ViewEditArticle" runat="server">
 
-            <asp:LinkButton ID="btnBackFromEdit" runat="server" OnClick="btnBack_Click" CssClass="btn-back">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            <asp:LinkButton ID="btnBackFromEdit" runat="server" OnClick="btnBack_Click" CssClass="btn-back" CausesValidation="false">
+                <i class="fas fa-arrow-left"></i> Back
             </asp:LinkButton>
 
             <asp:Label ID="lblEditMsg" runat="server" Visible="false" CssClass="alert-box"></asp:Label>
@@ -164,7 +164,7 @@
         <!-- ═══════════════════════ VIEW 2: MANAGE QUIZ ═══════════════════════ -->
         <asp:View ID="ViewManageQuiz" runat="server">
 
-            <asp:LinkButton ID="btnBackFromQuiz" runat="server" OnClick="btnBack_Click" CssClass="btn-back">
+            <asp:LinkButton ID="btnBackFromQuiz" runat="server" OnClick="btnBack_Click" CssClass="btn-back" CausesValidation="false">
                 <i class="fas fa-arrow-left"></i> Back to Dashboard
             </asp:LinkButton>
 

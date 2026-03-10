@@ -31,35 +31,34 @@
                     </div>
                     <div class="section-divider"></div>
                 </div>
-                <div class="row g-4 mb-4">
+                
+                <div class="courses-grid mb-4">
                     <asp:Repeater ID="rptML" runat="server" OnItemCommand="rptCourses_ItemCommand">
                         <ItemTemplate>
-                            <div class="col-12 col-sm-6 col-lg-3">
-                                <div class="course-card">
-                                    <div class="card-banner banner-ml">
-                                        <i class="fas <%# Eval("ImageURL") %>"></i>
-                                        <%# IsCompleted(Eval("IsCompleted")) ? "<div class='done-badge'><i class='fas fa-check'></i> Done</div>" : "" %>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="card-tag">Machine Learning</div>
-                                        <div class="card-title"><%# Eval("Title") %></div>
-                                        <div class="card-desc"><%# Eval("Description") %></div>
-                                        <div class="progress-wrap">
-                                            <div class="progress-label">
-                                                <span>Progress</span>
-                                                <span><%# IsCompleted(Eval("IsCompleted")) ? "100%" : "0%" %></span>
-                                            </div>
-                                            <div class="progress-bar-bg">
-                                                <div class="progress-fill" style='<%# "width:" + (IsCompleted(Eval("IsCompleted")) ? "100%" : "0%") %>'></div>
-                                            </div>
+                            <div class="course-card">
+                                <div class="card-banner banner-ml">
+                                    <i class="fas <%# Eval("ImageURL") %>"></i>
+                                    <%# IsCompleted(Eval("IsCompleted")) ? "<div class='done-badge'><i class='fas fa-check'></i> Done</div>" : "" %>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-tag">Machine Learning</div>
+                                    <div class="card-title"><%# Eval("Title") %></div>
+                                    <div class="card-desc"><%# Eval("Description") %></div>
+                                    <div class="progress-wrap">
+                                        <div class="progress-label">
+                                            <span>Progress</span>
+                                            <span><%# IsCompleted(Eval("IsCompleted")) ? "100%" : "0%" %></span>
                                         </div>
-                                        <asp:LinkButton runat="server"
-                                            CommandName="OpenCourse"
-                                            CommandArgument='<%# Eval("ArticleID") %>'
-                                            CssClass='<%# "btn-start" + (IsCompleted(Eval("IsCompleted")) ? " done" : "") %>'>
-                                            <%# IsCompleted(Eval("IsCompleted")) ? "<i class='fas fa-check-circle'></i> Review" : "<i class='fas fa-play-circle'></i> Start Learning" %>
-                                        </asp:LinkButton>
+                                        <div class="progress-bar-bg">
+                                            <div class="progress-fill" style='<%# "width:" + (IsCompleted(Eval("IsCompleted")) ? "100%" : "0%") %>'></div>
+                                        </div>
                                     </div>
+                                    <asp:LinkButton runat="server"
+                                        CommandName="OpenCourse"
+                                        CommandArgument='<%# Eval("ArticleID") %>'
+                                        CssClass='<%# "btn-start" + (IsCompleted(Eval("IsCompleted")) ? " done" : "") %>'>
+                                        <%# IsCompleted(Eval("IsCompleted")) ? "<i class='fas fa-check-circle'></i> Review" : "<i class='fas fa-play-circle'></i> Start Learning" %>
+                                    </asp:LinkButton>
                                 </div>
                             </div>
                         </ItemTemplate>
@@ -76,41 +75,41 @@
                     </div>
                     <div class="section-divider"></div>
                 </div>
-                <div class="row g-4">
+                
+                <div class="courses-grid">
                     <asp:Repeater ID="rptRobot" runat="server" OnItemCommand="rptCourses_ItemCommand">
                         <ItemTemplate>
-                            <div class="col-12 col-sm-6 col-lg-3">
-                                <div class="course-card">
-                                    <div class="card-banner banner-robot">
-                                        <i class="fas <%# Eval("ImageURL") %>"></i>
-                                        <%# IsCompleted(Eval("IsCompleted")) ? "<div class='done-badge'><i class='fas fa-check'></i> Done</div>" : "" %>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="card-tag">Robotics</div>
-                                        <div class="card-title"><%# Eval("Title") %></div>
-                                        <div class="card-desc"><%# Eval("Description") %></div>
-                                        <div class="progress-wrap">
-                                            <div class="progress-label">
-                                                <span>Progress</span>
-                                                <span><%# IsCompleted(Eval("IsCompleted")) ? "100%" : "0%" %></span>
-                                            </div>
-                                            <div class="progress-bar-bg">
-                                                <div class="progress-fill" style='<%# "width:" + (IsCompleted(Eval("IsCompleted")) ? "100%" : "0%") %>'></div>
-                                            </div>
+                            <div class="course-card">
+                                <div class="card-banner banner-robot">
+                                    <i class="fas <%# Eval("ImageURL") %>"></i>
+                                    <%# IsCompleted(Eval("IsCompleted")) ? "<div class='done-badge'><i class='fas fa-check'></i> Done</div>" : "" %>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-tag">Robotics</div>
+                                    <div class="card-title"><%# Eval("Title") %></div>
+                                    <div class="card-desc"><%# Eval("Description") %></div>
+                                    <div class="progress-wrap">
+                                        <div class="progress-label">
+                                            <span>Progress</span>
+                                            <span><%# IsCompleted(Eval("IsCompleted")) ? "100%" : "0%" %></span>
                                         </div>
-                                        <asp:LinkButton runat="server"
-                                            CommandName="OpenCourse"
-                                            CommandArgument='<%# Eval("ArticleID") %>'
-                                            CssClass='<%# "btn-start" + (IsCompleted(Eval("IsCompleted")) ? " done" : "") %>'>
-                                            <%# IsCompleted(Eval("IsCompleted")) ? "<i class='fas fa-check-circle'></i> Review" : "<i class='fas fa-play-circle'></i> Start Learning" %>
-                                        </asp:LinkButton>
+                                        <div class="progress-bar-bg">
+                                            <div class="progress-fill" style='<%# "width:" + (IsCompleted(Eval("IsCompleted")) ? "100%" : "0%") %>'></div>
+                                        </div>
                                     </div>
+                                    <asp:LinkButton runat="server"
+                                        CommandName="OpenCourse"
+                                        CommandArgument='<%# Eval("ArticleID") %>'
+                                        CssClass='<%# "btn-start" + (IsCompleted(Eval("IsCompleted")) ? " done" : "") %>'>
+                                        <%# IsCompleted(Eval("IsCompleted")) ? "<i class='fas fa-check-circle'></i> Review" : "<i class='fas fa-play-circle'></i> Start Learning" %>
+                                    </asp:LinkButton>
                                 </div>
                             </div>
                         </ItemTemplate>
                     </asp:Repeater>
                 </div>
-            </div> </asp:View>
+            </div>
+        </asp:View> 
 
         <asp:View ID="ViewRoom" runat="server">
             <div class="room-wrap">
@@ -163,9 +162,8 @@
                     </div>
                 </div>
             </div>
-        </asp:View>
-
-    </asp:MultiView>
+    </asp:View>
+</asp:MultiView>
 
     <script>
         function filterSection(cat, btn) {
