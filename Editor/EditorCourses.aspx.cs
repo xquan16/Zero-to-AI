@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -24,7 +21,7 @@ namespace Zero_to_AI.Editor
             }
         }
 
-        // ── HELPER: badge CSS class based on Status ────────────────────────────
+        // ── BADGE CSS CLASS ────────────────────────────────────────────────────
         public string GetBadgeClass(object status)
         {
             if (status == null) return "badge-draft";
@@ -36,9 +33,7 @@ namespace Zero_to_AI.Editor
             }
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  BIND ARTICLE CARDS — SELECT from Articles + Categories
-        // ══════════════════════════════════════════════════════════════════════
+        // ── BIND ARTICLE CARDS ─────────────────────────────────────────────────
         private void BindArticleCards()
         {
             string sql = @"
@@ -63,32 +58,19 @@ namespace Zero_to_AI.Editor
             rptRobot.DataSource = dvRobot; rptRobot.DataBind();
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  REPEATER ITEM COMMAND — Edit Article / Delete Article / Manage Quiz
-        // ══════════════════════════════════════════════════════════════════════
+        // ── REPEATER ITEM COMMAND ─────────────────────────────────────────────
         protected void rptCourses_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             int articleID = Convert.ToInt32(e.CommandArgument);
-
             switch (e.CommandName)
             {
-                case "EditArticle":
-                    OpenEditArticleForm(articleID, isNew: false);
-                    break;
-
-                case "DeleteArticle":
-                    DeleteArticle(articleID);
-                    break;
-
-                case "ManageQuiz":
-                    OpenManageQuiz(articleID);
-                    break;
+                case "EditArticle": OpenEditArticleForm(articleID, isNew: false); break;
+                case "DeleteArticle": DeleteArticle(articleID); break;
+                case "ManageQuiz": OpenManageQuiz(articleID); break;
             }
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  OPEN EDIT ARTICLE FORM
-        // ══════════════════════════════════════════════════════════════════════
+        // ── OPEN EDIT ARTICLE FORM ────────────────────────────────────────────
         private void OpenEditArticleForm(int articleID, bool isNew)
         {
             lblEditMsg.Visible = false;
@@ -109,7 +91,6 @@ namespace Zero_to_AI.Editor
                 lblFormTitle.Text = "Edit Article";
                 hfArticleID.Value = articleID.ToString();
 
-                // SELECT single article from DB (Lab 6 pattern)
                 string sql = @"
                     SELECT a.Title, a.Content,
                            ISNULL(a.Description,'') AS Description,
@@ -143,30 +124,25 @@ namespace Zero_to_AI.Editor
                 }
             }
 
-            MainMultiView.ActiveViewIndex = 1; // Switch to Edit Article view
+            MainMultiView.ActiveViewIndex = 1;
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  ADD NEW ARTICLE BUTTON
-        // ══════════════════════════════════════════════════════════════════════
+        // ── ADD NEW ARTICLE BUTTON ────────────────────────────────────────────
         protected void btnAddNew_Click(object sender, EventArgs e)
         {
             OpenEditArticleForm(0, isNew: true);
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  SAVE ARTICLE — INSERT or UPDATE in Articles table
-        //  Changes are immediately visible to Members and Admins
-        // ══════════════════════════════════════════════════════════════════════
+        // ── SAVE ARTICLE ──────────────────────────────────────────────────────
+        // FIX: Removed duplicate lblMessage assignment that was after the if/else block
         protected void btnSaveArticle_Click(object sender, EventArgs e)
         {
-            // Get CategoryID from selected category name
             int categoryID = GetCategoryID(ddlCategory.SelectedValue);
             int editorID = GetCurrentUserID();
 
             if (string.IsNullOrEmpty(hfArticleID.Value))
             {
-                // ── INSERT new article (Lab 6 pattern) ──
+                // INSERT new article
                 string sqlInsert = @"
                     INSERT INTO Articles (Title, Content, Description, ImageURL, CategoryID, AuthorID, Status, PublishDate)
                     VALUES (@title, @content, @desc, @icon, @catID, @authorID, @status, GETDATE())";
@@ -184,12 +160,11 @@ namespace Zero_to_AI.Editor
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
-
-                ShowDashboardMessage($"Article '{txtTitle.Text}' was created successfully.", "alert-success");
+                ShowDashboardMessage("Article '" + txtTitle.Text + "' was created successfully.", "alert-success");
             }
             else
             {
-                // ── UPDATE existing article (Lab 8 pattern) ──
+                // UPDATE existing article
                 string sqlUpdate = @"
                     UPDATE Articles
                     SET Title       = @title,
@@ -213,27 +188,18 @@ namespace Zero_to_AI.Editor
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
-
-                ShowDashboardMessage($"Article '{txtTitle.Text}' was updated successfully.", "alert-success");
+                ShowDashboardMessage("Article '" + txtTitle.Text + "' was updated successfully.", "alert-success");
             }
 
-            lblMessage.Text = "Article saved successfully!";
-            lblMessage.CssClass = "alert-box alert-success";
-            lblMessage.Visible = true;
-
-            // Switch back to the dashboard view
+            // NOTE: NO duplicate assignment here — ShowDashboardMessage above handles it
             MainMultiView.ActiveViewIndex = 0;
-
-            // Refresh your repeaters so the new data shows up
             BindArticleCards();
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  DELETE ARTICLE — DELETE from Articles table
-        // ══════════════════════════════════════════════════════════════════════
+        // ── DELETE ARTICLE ─────────────────────────────────────────────────────
+        // FIX: Delete UserProgress rows for this article FIRST (avoids FK constraint crash)
         private void DeleteArticle(int articleID)
         {
-            // Get title first for the message
             string title = "";
             using (SqlConnection conn = new SqlConnection(_conn))
             using (SqlCommand cmd = new SqlCommand("SELECT Title FROM Articles WHERE ArticleID = @id", conn))
@@ -244,7 +210,16 @@ namespace Zero_to_AI.Editor
                 if (r != null) title = r.ToString();
             }
 
-            // DELETE the article (Lab 8 pattern — ExecuteNonQuery)
+            // Step 1: Remove progress rows first (prevents FK error)
+            using (SqlConnection conn = new SqlConnection(_conn))
+            using (SqlCommand cmd = new SqlCommand("DELETE FROM UserProgress WHERE ArticleID = @id", conn))
+            {
+                cmd.Parameters.AddWithValue("@id", articleID);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            // Step 2: Now safe to delete the article
             using (SqlConnection conn = new SqlConnection(_conn))
             using (SqlCommand cmd = new SqlCommand("DELETE FROM Articles WHERE ArticleID = @id", conn))
             {
@@ -253,20 +228,17 @@ namespace Zero_to_AI.Editor
                 cmd.ExecuteNonQuery();
             }
 
-            ShowDashboardMessage($"Article '{title}' was deleted.", "alert-danger");
+            ShowDashboardMessage("Article '" + title + "' was deleted.", "alert-danger");
             BindArticleCards();
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  OPEN MANAGE QUIZ VIEW
-        // ══════════════════════════════════════════════════════════════════════
+        // ── OPEN MANAGE QUIZ VIEW ──────────────────────────────────────────────
         private void OpenManageQuiz(int articleID)
         {
             lblQuizMsg.Visible = false;
             hfQuizArticleID.Value = articleID.ToString();
             hfEditQuestionID.Value = "";
 
-            // Get article title + category for the heading
             string sqlArt = @"
                 SELECT a.Title, c.CategoryName, c.CategoryID
                 FROM Articles a
@@ -292,25 +264,20 @@ namespace Zero_to_AI.Editor
                 }
             }
 
-            // Find or create the quiz for this category
             int quizID = GetOrCreateQuiz(catID, catName);
             hfQuizID.Value = quizID.ToString();
 
-            // Reset the add/edit question form
             ResetQuestionForm();
-
-            // Load existing questions
             BindQuestions(quizID);
 
-            MainMultiView.ActiveViewIndex = 2; // Switch to Manage Quiz view
+            MainMultiView.ActiveViewIndex = 2;
         }
 
-        // ── Get quiz for this category, create one if it doesn't exist ────────
+        // ── GET OR CREATE QUIZ ─────────────────────────────────────────────────
         private int GetOrCreateQuiz(int catID, string catName)
         {
-            string sqlFind = "SELECT TOP 1 QuizID FROM Quizzes WHERE CategoryID = @cid";
             using (SqlConnection conn = new SqlConnection(_conn))
-            using (SqlCommand cmd = new SqlCommand(sqlFind, conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 QuizID FROM Quizzes WHERE CategoryID = @cid", conn))
             {
                 cmd.Parameters.AddWithValue("@cid", catID);
                 conn.Open();
@@ -318,7 +285,6 @@ namespace Zero_to_AI.Editor
                 if (r != null) return Convert.ToInt32(r);
             }
 
-            // No quiz yet — create one
             string sqlCreate = @"
                 INSERT INTO Quizzes (Title, CategoryID)
                 VALUES (@title, @cid);
@@ -334,9 +300,7 @@ namespace Zero_to_AI.Editor
             }
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  BIND QUESTIONS — SELECT from Questions table
-        // ══════════════════════════════════════════════════════════════════════
+        // ── BIND QUESTIONS ─────────────────────────────────────────────────────
         private void BindQuestions(int quizID)
         {
             DataTable dt = new DataTable();
@@ -353,9 +317,7 @@ namespace Zero_to_AI.Editor
             lblNoQuestions.Visible = (dt.Rows.Count == 0);
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  QUESTION REPEATER COMMAND — Edit or Delete a question
-        // ══════════════════════════════════════════════════════════════════════
+        // ── QUESTION REPEATER COMMAND ──────────────────────────────────────────
         protected void rptQuestions_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             int qid = Convert.ToInt32(e.CommandArgument);
@@ -363,7 +325,6 @@ namespace Zero_to_AI.Editor
 
             if (e.CommandName == "DeleteQuestion")
             {
-                // DELETE question (Lab 8 pattern)
                 using (SqlConnection conn = new SqlConnection(_conn))
                 using (SqlCommand cmd = new SqlCommand("DELETE FROM Questions WHERE QuestionID = @id", conn))
                 {
@@ -376,7 +337,6 @@ namespace Zero_to_AI.Editor
             }
             else if (e.CommandName == "EditQuestion")
             {
-                // Load question into the form for editing
                 string sql = "SELECT QuestionText, OptionA, OptionB, OptionC, OptionD, CorrectAnswer FROM Questions WHERE QuestionID = @id";
                 using (SqlConnection conn = new SqlConnection(_conn))
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
@@ -402,17 +362,13 @@ namespace Zero_to_AI.Editor
             }
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  SAVE QUESTION — INSERT or UPDATE in Questions table
-        //  Immediately visible to Members on the Courses page
-        // ══════════════════════════════════════════════════════════════════════
+        // ── SAVE QUESTION ──────────────────────────────────────────────────────
         protected void btnSaveQuestion_Click(object sender, EventArgs e)
         {
             int quizID = Convert.ToInt32(hfQuizID.Value);
 
             if (string.IsNullOrEmpty(hfEditQuestionID.Value))
             {
-                // ── INSERT new question ──
                 string sqlInsert = @"
                     INSERT INTO Questions (QuizID, QuestionText, OptionA, OptionB, OptionC, OptionD, CorrectAnswer)
                     VALUES (@qid, @qtext, @a, @b, @c, @d, @correct)";
@@ -434,16 +390,15 @@ namespace Zero_to_AI.Editor
             }
             else
             {
-                // ── UPDATE existing question ──
                 string sqlUpdate = @"
                     UPDATE Questions
-                    SET QuestionText   = @qtext,
-                        OptionA        = @a,
-                        OptionB        = @b,
-                        OptionC        = @c,
-                        OptionD        = @d,
-                        CorrectAnswer  = @correct
-                    WHERE QuestionID   = @id";
+                    SET QuestionText  = @qtext,
+                        OptionA       = @a,
+                        OptionB       = @b,
+                        OptionC       = @c,
+                        OptionD       = @d,
+                        CorrectAnswer = @correct
+                    WHERE QuestionID  = @id";
 
                 using (SqlConnection conn = new SqlConnection(_conn))
                 using (SqlCommand cmd = new SqlCommand(sqlUpdate, conn))
@@ -465,7 +420,7 @@ namespace Zero_to_AI.Editor
             BindQuestions(quizID);
         }
 
-        // ── BACK BUTTON — used by both Edit Article and Manage Quiz views ─────
+        // ── BACK BUTTON ───────────────────────────────────────────────────────
         protected void btnBack_Click(object sender, EventArgs e)
         {
             lblMessage.Visible = false;
@@ -501,7 +456,6 @@ namespace Zero_to_AI.Editor
             lblQuizMsg.Visible = true;
         }
 
-        // ── GET CATEGORY ID by name (SELECT — Lab 6 pattern) ─────────────────
         private int GetCategoryID(string categoryName)
         {
             using (SqlConnection conn = new SqlConnection(_conn))
@@ -515,22 +469,30 @@ namespace Zero_to_AI.Editor
             }
         }
 
-        // ── GET CURRENT EDITOR'S USER ID FROM SESSION ─────────────────────────
+        // FIX: Tries all session key variations used across the project
         private int GetCurrentUserID()
         {
             if (Session["UserID"] != null) return Convert.ToInt32(Session["UserID"]);
-            if (Session["Username"] != null)
+
+            string[] keys = { "Username", "username", "UserName", "user", "User" };
+            foreach (string key in keys)
             {
+                if (Session[key] == null) continue;
                 using (SqlConnection conn = new SqlConnection(_conn))
                 using (SqlCommand cmd = new SqlCommand("SELECT UserID FROM Users WHERE Username = @u", conn))
                 {
-                    cmd.Parameters.AddWithValue("@u", Session["Username"].ToString());
+                    cmd.Parameters.AddWithValue("@u", Session[key].ToString());
                     conn.Open();
                     object r = cmd.ExecuteScalar();
-                    if (r != null) return Convert.ToInt32(r);
+                    if (r != null)
+                    {
+                        int id = Convert.ToInt32(r);
+                        Session["UserID"] = id;
+                        return id;
+                    }
                 }
             }
-            return 1;
+            return 1; // fallback to SystemAdmin
         }
     }
 }

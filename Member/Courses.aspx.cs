@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Text;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -14,8 +11,9 @@ namespace Zero_to_AI.Member
     public partial class Courses : System.Web.UI.Page
     {
         private readonly string _conn = ConfigurationManager.ConnectionStrings["db"].ConnectionString;
-        
-        // Get current logged-in UserID from Session
+
+        // ── GET CURRENT USER ID ────────────────────────────────────────────────
+        // FIX: Tries multiple session key names used across the project, caches result
         private int CurrentUserID
         {
             get
@@ -23,23 +21,21 @@ namespace Zero_to_AI.Member
                 if (Session["UserID"] != null)
                     return Convert.ToInt32(Session["UserID"]);
 
-                string[] usernameKeys = { "Username", "username", "UserName", "user", "User" };
-                foreach (string key in usernameKeys)
+                string[] keys = { "Username", "username", "UserName", "user", "User" };
+                foreach (string key in keys)
                 {
-                    if (Session[key] != null)
+                    if (Session[key] == null) continue;
+                    using (SqlConnection c = new SqlConnection(_conn))
+                    using (SqlCommand cmd = new SqlCommand("SELECT UserID FROM Users WHERE Username = @u", c))
                     {
-                        using (SqlConnection c = new SqlConnection(_conn))
-                        using (SqlCommand cmd = new SqlCommand("SELECT UserID FROM Users WHERE Username = @u", c))
+                        cmd.Parameters.AddWithValue("@u", Session[key].ToString());
+                        c.Open();
+                        object r = cmd.ExecuteScalar();
+                        if (r != null)
                         {
-                            cmd.Parameters.AddWithValue("@u", Session[key].ToString());
-                            c.Open();
-                            object r = cmd.ExecuteScalar();
-                            if (r != null)
-                            {
-                                int id = Convert.ToInt32(r);
-                                Session["UserID"] = id;
-                                return id;
-                            }
+                            int id = Convert.ToInt32(r);
+                            Session["UserID"] = id; // cache so we only hit DB once per session
+                            return id;
                         }
                     }
                 }
@@ -58,7 +54,7 @@ namespace Zero_to_AI.Member
         }
 
         // ── BIND COURSE CARDS ─────────────────────────────────────────────────
-        // SELECT Articles + Categories + UserProgress from database
+        // FIX: IsCompleted sub-query uses up.ArticleID = a.ArticleID (not CategoryID)
         private void BindCourseCards()
         {
             int uid = CurrentUserID;
@@ -71,8 +67,8 @@ namespace Zero_to_AI.Member
                     ISNULL(a.Description, '') AS Description,
                     c.CategoryName,
                     CASE WHEN EXISTS (
-                        SELECT 1 FROM UserProgress up
-                        WHERE up.UserID = @uid AND up.ArticleID = a.ArticleID
+                        SELECT 1 FROM CourseProgress cp
+                        WHERE cp.UserID = @uid AND cp.ArticleID = a.ArticleID
                     ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS IsCompleted
                 FROM Articles a
                 INNER JOIN Categories c ON a.CategoryID = c.CategoryID
@@ -87,41 +83,50 @@ namespace Zero_to_AI.Member
                 da.Fill(dt);
             }
 
-            // Bind ML and Robotics to separate repeaters
             DataView dvML = new DataView(dt); dvML.RowFilter = "CategoryName = 'Machine Learning'";
             DataView dvRobot = new DataView(dt); dvRobot.RowFilter = "CategoryName = 'Robotics'";
 
-            lblMLCount.Text = dvML.Count.ToString() + " modules";
-            lblRobotCount.Text = dvRobot.Count.ToString() + " modules";
+            lblMLCount.Text = dvML.Count + " modules";
+            lblRobotCount.Text = dvRobot.Count + " modules";
 
             rptML.DataSource = dvML; rptML.DataBind();
             rptRobot.DataSource = dvRobot; rptRobot.DataBind();
         }
 
-        // Helper called from .aspx databinding expressions
-        public bool IsCompleted(object val)
+        // Helper used by .aspx databinding expressions
+        protected bool IsCompleted(object articleIDObj)
         {
-            if (val == null || val == DBNull.Value) return false;
-            return Convert.ToBoolean(val);
+            if (articleIDObj == null) return false;
+            int articleID = Convert.ToInt32(articleIDObj);
+            int uid = CurrentUserID;
+            if (uid <= 0) return false;
+
+            // UPDATED: Now queries the new CourseProgress table!
+            string sql = "SELECT COUNT(*) FROM CourseProgress WHERE UserID = @uid AND ArticleID = @aid";
+            using (SqlConnection conn = new SqlConnection(_conn))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@uid", uid);
+                cmd.Parameters.AddWithValue("@aid", articleID);
+                conn.Open();
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+                return count > 0;
+            }
         }
 
-
-
-        // ── OPEN COURSE — user clicks "Start Learning" or "Review" ────────────
+        // ── OPEN COURSE ───────────────────────────────────────────────────────
         protected void rptCourses_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName != "OpenCourse") return;
-            int articleID = Convert.ToInt32(e.CommandArgument);
-            LoadLearningRoom(articleID);
+            LoadLearningRoom(Convert.ToInt32(e.CommandArgument));
+            ViewState["CurrentArticleID"] = Convert.ToInt32(e.CommandArgument);
         }
 
         // ── LOAD LEARNING ROOM ────────────────────────────────────────────────
-        // Reads one article + its quiz questions from the database
         private void LoadLearningRoom(int articleID)
         {
             ViewState["CurrentArticleID"] = articleID;
 
-            // SELECT article using SqlCommand + SqlDataReader (Lab 6/7 pattern)
             string sqlArt = @"
                 SELECT a.Title, a.Content,
                        ISNULL(a.Description, '') AS Description,
@@ -130,10 +135,7 @@ namespace Zero_to_AI.Member
                 INNER JOIN Categories c ON a.CategoryID = c.CategoryID
                 WHERE a.ArticleID = @id";
 
-            string title = "";
-            string content = "";
-            string desc = "";
-            string category = "";
+            string title = "", content = "", desc = "", category = "";
 
             using (SqlConnection conn = new SqlConnection(_conn))
             using (SqlCommand cmd = new SqlCommand(sqlArt, conn))
@@ -151,7 +153,6 @@ namespace Zero_to_AI.Member
                     }
                     else
                     {
-                        // Article not found — return to catalogue safely
                         MainView.ActiveViewIndex = 0;
                         BindCourseCards();
                         return;
@@ -159,28 +160,29 @@ namespace Zero_to_AI.Member
                 }
             }
 
-            // Populate UI
             lblBreadCat.Text = category;
             lblBreadTitle.Text = title;
             lblTitle.Text = title;
 
             bool isML = (category == "Machine Learning");
             lblCatTag.Text = string.Format(
-                "<span class='art-tag {0}'>{1}</span>",
-                isML ? "ml" : "robot", category);
+                "<span class='art-tag {0}'><i class='fas {1}'></i> {2}</span>",
+                isML ? "ml" : "robot",
+                isML ? "fa-brain" : "fa-microchip",
+                category);
 
-            // Strip any embedded quiz HTML from article Content before displaying
-            // (old seeded articles had quiz HTML baked into the Content field)
-            int quizCutoff = content.IndexOf("<div class='quiz", System.StringComparison.OrdinalIgnoreCase);
-            if (quizCutoff < 0) quizCutoff = content.IndexOf("<h2>Test Your", System.StringComparison.OrdinalIgnoreCase);
-            if (quizCutoff < 0) quizCutoff = content.IndexOf("<h3>Test Your", System.StringComparison.OrdinalIgnoreCase);
-            if (quizCutoff < 0) quizCutoff = content.IndexOf("Test Your Understanding", System.StringComparison.OrdinalIgnoreCase);
-            if (quizCutoff < 0) quizCutoff = content.IndexOf("Knowledge Check", System.StringComparison.OrdinalIgnoreCase);
-            if (quizCutoff > 0) content = content.Substring(0, quizCutoff);
+            // Strip any embedded quiz content from the article body
+            int cut = content.IndexOf("<div class='quiz", StringComparison.OrdinalIgnoreCase);
+            if (cut < 0) cut = content.IndexOf("<h2>Test Your", StringComparison.OrdinalIgnoreCase);
+            if (cut < 0) cut = content.IndexOf("<h3>Test Your", StringComparison.OrdinalIgnoreCase);
+            if (cut < 0) cut = content.IndexOf("Test Your Understanding", StringComparison.OrdinalIgnoreCase);
+            if (cut < 0) cut = content.IndexOf("Knowledge Check", StringComparison.OrdinalIgnoreCase);
+            if (cut > 0) content = content.Substring(0, cut);
+
             litContent.Text = content;
             litTakeaways.Text = BuildTakeaways(desc);
 
-            // Check if already completed — update button state
+            // Set Mark Complete button state based on DB
             bool done = IsArticleCompleted(articleID);
             if (done)
             {
@@ -195,28 +197,32 @@ namespace Zero_to_AI.Member
                 btnMarkComplete.Enabled = true;
             }
 
-            // Load quiz questions for this category
             litQuiz.Text = BuildQuizHTML(category);
-
             MainView.ActiveViewIndex = 1;
-            if (!IsPostBack) // Only count the view the first time they open it
+
+            // FIX: Views counter — use ViewState flag so it fires ONCE per article visit.
+            // This method is always called on PostBack, so !IsPostBack is always false here.
+            string viewedKey = "Viewed_" + articleID;
+            if (ViewState[viewedKey] == null)
             {
+                ViewState[viewedKey] = true;
                 using (SqlConnection conn = new SqlConnection(_conn))
-                using (SqlCommand cmdUpdate = new SqlCommand("UPDATE Articles SET Views = ISNULL(Views, 0) + 1 WHERE ArticleID = @id", conn))
+                using (SqlCommand cmd = new SqlCommand(
+                    "UPDATE Articles SET Views = ISNULL(Views, 0) + 1 WHERE ArticleID = @id", conn))
                 {
-                    cmdUpdate.Parameters.AddWithValue("@id", articleID);
+                    cmd.Parameters.AddWithValue("@id", articleID);
                     conn.Open();
-                    cmdUpdate.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
 
         // ── BUILD TAKEAWAYS ───────────────────────────────────────────────────
-        // Description in DB is stored as pipe-separated: "Point 1|Point 2|Point 3"
+        // Description stored as pipe-separated: "Point 1|Point 2|Point 3"
         private string BuildTakeaways(string desc)
         {
             if (string.IsNullOrWhiteSpace(desc))
-                return "<p style='font-size:0.83rem;color:var(--text-muted)'>No takeaways listed.</p>";
+                return "<p style='font-size:.83rem;color:var(--text-muted)'>No takeaways listed.</p>";
 
             StringBuilder sb = new StringBuilder("<ul class='takeaway-list'>");
             foreach (string item in desc.Split('|'))
@@ -230,10 +236,8 @@ namespace Zero_to_AI.Member
         }
 
         // ── BUILD QUIZ HTML ───────────────────────────────────────────────────
-        // SELECT from Quizzes + Questions tables using SqlDataAdapter (Lab 8 pattern)
         private string BuildQuizHTML(string categoryName)
         {
-            // Find the quiz for this category
             string sqlQuiz = @"
                 SELECT TOP 1 q.QuizID
                 FROM Quizzes q
@@ -246,14 +250,13 @@ namespace Zero_to_AI.Member
             {
                 cmd.Parameters.AddWithValue("@cat", categoryName);
                 conn.Open();
-                object r = cmd.ExecuteScalar(); // ExecuteScalar for single value (Lab 7)
+                object r = cmd.ExecuteScalar();
                 if (r != null) quizID = Convert.ToInt32(r);
             }
 
             if (quizID == 0)
                 return "<div class='no-quiz'><i class='fas fa-hourglass-start'></i> No quiz available yet for this module.</div>";
 
-            // Load questions using SqlDataAdapter + DataTable (Lab 8 pattern)
             DataTable dtQ = new DataTable();
             using (SqlConnection conn = new SqlConnection(_conn))
             using (SqlDataAdapter da = new SqlDataAdapter(
@@ -266,29 +269,32 @@ namespace Zero_to_AI.Member
             if (dtQ.Rows.Count == 0)
                 return "<div class='no-quiz'><i class='fas fa-hourglass-start'></i> No questions added yet.</div>";
 
-            // Build question cards — use data-correct attribute, zero JS quoting issues
             StringBuilder sb = new StringBuilder();
             int num = 1;
             foreach (DataRow row in dtQ.Rows)
             {
                 int qid = Convert.ToInt32(row["QuestionID"]);
-                string qtext = row["QuestionText"].ToString();
-                string optA = row["OptionA"].ToString();
-                string optB = row["OptionB"].ToString();
-                string optC = row["OptionC"].ToString();
-                string optD = row["OptionD"].ToString();
                 string correct = row["CorrectAnswer"].ToString().Trim().ToUpper();
 
-                sb.Append("<div class='quiz-q-card'>");
-                sb.Append("<p class='q-text'>" + num + ". " + qtext + "</p>");
-                sb.Append("<div class='q-options'>");
-                sb.Append("<label><input type='radio' name='q" + qid + "' value='A'> " + optA + "</label>");
-                sb.Append("<label><input type='radio' name='q" + qid + "' value='B'> " + optB + "</label>");
-                sb.Append("<label><input type='radio' name='q" + qid + "' value='C'> " + optC + "</label>");
-                sb.Append("<label><input type='radio' name='q" + qid + "' value='D'> " + optD + "</label>");
+                sb.Append("<div class='quiz-q'>");
+                sb.Append("<div class='q-num'>Question " + num + "</div>");
+                sb.Append("<div class='q-text'>" + row["QuestionText"] + "</div>");
+                sb.Append("<div class='q-opts'>");
+
+                string[] letters = { "A", "B", "C", "D" };
+                string[] options = {
+                    row["OptionA"].ToString(), row["OptionB"].ToString(),
+                    row["OptionC"].ToString(), row["OptionD"].ToString()
+                };
+                for (int i = 0; i < 4; i++)
+                    sb.AppendFormat(
+                        "<label><input type='radio' name='q{0}' value='{1}'> <strong>{1}.</strong> {2}</label>",
+                        qid, letters[i], options[i]);
+
                 sb.Append("</div>");
-                // Store correct answer in data-correct attribute — no JS quote escaping needed
-                sb.Append("<button type='button' class='btn-check' data-qid='" + qid + "' data-correct='" + correct + "' onclick='checkAnswer(this)'>Check Answer</button>");
+                sb.AppendFormat(
+                    "<button type='button' class='btn-check' data-qid='{0}' data-correct='{1}' onclick='checkAnswer(this)'>Check Answer</button>",
+                    qid, correct);
                 sb.Append("<div class='q-feedback' id='fb" + qid + "'></div>");
                 sb.Append("</div>");
                 num++;
@@ -296,20 +302,15 @@ namespace Zero_to_AI.Member
             return sb.ToString();
         }
 
-        // ── CHECK IF COMPLETED ────────────────────────────────────────────────
-        // SELECT COUNT with ExecuteScalar (Lab 7 pattern)
+        // ── IS ARTICLE COMPLETED ──────────────────────────────────────────────
         private bool IsArticleCompleted(int articleID)
         {
             int uid = CurrentUserID;
             if (uid == 0) return false;
 
-            string sql = @"
-                SELECT COUNT(1)
-                FROM UserProgress
-                WHERE UserID = @uid AND ArticleID = @aid";
-
             using (SqlConnection conn = new SqlConnection(_conn))
-            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            using (SqlCommand cmd = new SqlCommand(
+                "SELECT COUNT(1) FROM CourseProgress WHERE UserID = @uid AND ArticleID = @aid", conn))
             {
                 cmd.Parameters.AddWithValue("@uid", uid);
                 cmd.Parameters.AddWithValue("@aid", articleID);
@@ -319,53 +320,34 @@ namespace Zero_to_AI.Member
         }
 
         // ── MARK AS COMPLETED ─────────────────────────────────────────────────
-        // INSERT into UserProgress using ExecuteNonQuery (Lab 6 pattern)
+        // FIX: INSERT includes ArticleID column for per-article tracking
         protected void btnMarkComplete_Click(object sender, EventArgs e)
         {
             int uid = CurrentUserID;
+            if (uid <= 0) return;
+
+            // FIX: Use ViewState to grab the ArticleID instead of the missing HiddenField
+            if (ViewState["CurrentArticleID"] == null) return;
             int articleID = Convert.ToInt32(ViewState["CurrentArticleID"]);
 
-            if (uid == 0) { Response.Redirect("~/ZerotoAI/Login.aspx"); return; }
-
-            // Get quiz linked to this article's category
-            string sqlQuiz = @"
-                SELECT TOP 1 q.QuizID
-                FROM Quizzes q
-                INNER JOIN Articles a ON a.CategoryID = q.CategoryID
-                WHERE a.ArticleID = @aid";
-
-            int quizID = 0;
-            using (SqlConnection conn = new SqlConnection(_conn))
-            using (SqlCommand cmd = new SqlCommand(sqlQuiz, conn))
-            {
-                cmd.Parameters.AddWithValue("@aid", articleID);
-                conn.Open();
-                object r = cmd.ExecuteScalar();
-                if (r != null) quizID = Convert.ToInt32(r);
-            }
-
-            if (quizID == 0) return;
-
-            // INSERT only if not already completed (prevent duplicates)
+            // Notice: Using IsArticleCompleted to match your existing code name!
             if (!IsArticleCompleted(articleID))
             {
-                // Store ArticleID in UserProgress so each article is tracked individually
+                // Inserts directly into the new CourseProgress table
                 string sqlInsert = @"
-                    INSERT INTO UserProgress (UserID, QuizID, ArticleID, Score, CompletedDate)
-                    VALUES (@uid, @qid, @aid, 0, GETDATE())";
+                    INSERT INTO CourseProgress (UserID, ArticleID, CompletedDate)
+                    VALUES (@uid, @aid, GETDATE())";
 
                 using (SqlConnection conn = new SqlConnection(_conn))
                 using (SqlCommand cmd = new SqlCommand(sqlInsert, conn))
                 {
                     cmd.Parameters.AddWithValue("@uid", uid);
-                    cmd.Parameters.AddWithValue("@qid", quizID);
                     cmd.Parameters.AddWithValue("@aid", articleID);
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
             }
 
-            // Update button state
             btnMarkComplete.Text = "<i class='fas fa-check-circle'></i> Completed!";
             btnMarkComplete.CssClass = "btn-complete completed";
             btnMarkComplete.Enabled = false;
