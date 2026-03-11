@@ -120,9 +120,20 @@ namespace Zero_to_AI.Member
                     dr.Close();
                 }
 
-                // 2. 保存成绩到数据库
-                int currentUserId = 1; // prentend User 1 for testing
-                // int currentUserId = Convert.ToInt32(Session["UserID"]);    // this is used when login is okay
+                // 2. Save score to database
+                int currentUserId = 0;
+
+                // Safely grab the logged-in UserID
+                if (Session["UserID"] != null)
+                {
+                    currentUserId = Convert.ToInt32(Session["UserID"]);
+                }
+                else
+                {
+                    // If they aren't logged in, redirect them to login before saving!
+                    Response.Redirect("~/ZerotoAI/Login.aspx");
+                    return;
+                }
 
                 int currentQuizId = 1; // default is ML
                 string currentTopic = Request.QueryString["topic"];
@@ -133,7 +144,7 @@ namespace Zero_to_AI.Member
                 }
                 else if (currentTopic == "All")
                 {
-                    currentQuizId = 3; // Mixed Challenge
+                    currentQuizId = 3; // Mixed Challenge (Ensure QuizID 3 exists in DB!)
                 }
 
                 string insertSql = "INSERT INTO UserProgress (UserID, QuizID, Score, CompletedDate) VALUES (@uid, @qid, @score, GETDATE())";
@@ -143,7 +154,6 @@ namespace Zero_to_AI.Member
                 insertCmd.Parameters.AddWithValue("@score", totalScore);
                 insertCmd.ExecuteNonQuery(); // write to database
             }
-
 
 
             // Show result

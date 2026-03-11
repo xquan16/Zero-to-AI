@@ -46,7 +46,7 @@ namespace ZerotoAI
                     conn.Open();
 
                     // 1. Get the Hash, Role, FirstName and ProfilePicture
-                    string query = "SELECT PasswordHash, Role, FirstName, ProfilePicture FROM [Users] WHERE Username = @User";
+                    string query = "SELECT UserID, PasswordHash, Role, FirstName, ProfilePicture FROM [Users] WHERE Username = @User";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@User", userTxt.Text);
 
@@ -65,6 +65,7 @@ namespace ZerotoAI
                             if (isValid)
                             {
                                 // SUCCESS!
+                                Session["UserID"] = reader["UserID"].ToString();
                                 Session["Username"] = userTxt.Text;
                                 Session["UserRole"] = role;
                                 Session["FirstName"] = firstName; // For "Hi, [Name]" labels
