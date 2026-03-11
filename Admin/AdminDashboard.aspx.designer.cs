@@ -11,26 +11,62 @@ namespace Zero_to_AI.Admin
 {
 
 
-    public partial class AdminCourses
+    public partial class AdminDashboard
     {
 
         /// <summary>
-        /// MainMultiView control.
+        /// ScriptManager1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.MultiView MainMultiView;
+        protected global::System.Web.UI.ScriptManager ScriptManager1;
 
         /// <summary>
-        /// ViewDashboard control.
+        /// lblWelcome control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.View ViewDashboard;
+        protected global::System.Web.UI.WebControls.Label lblWelcome;
+
+        /// <summary>
+        /// lblAdSimTotal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAdSimTotal;
+
+        /// <summary>
+        /// lblAdCourseTotal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAdCourseTotal;
+
+        /// <summary>
+        /// lblAdQuizTotal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAdQuizTotal;
+
+        /// <summary>
+        /// upFeedback control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel upFeedback;
 
         /// <summary>
         /// lblMessage control.
@@ -42,138 +78,129 @@ namespace Zero_to_AI.Admin
         protected global::System.Web.UI.WebControls.Label lblMessage;
 
         /// <summary>
-        /// lblTotalArticles control.
+        /// tabFbAll control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalArticles;
+        protected global::System.Web.UI.WebControls.LinkButton tabFbAll;
 
         /// <summary>
-        /// lblPublished control.
+        /// tabFbUnread control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPublished;
+        protected global::System.Web.UI.WebControls.LinkButton tabFbUnread;
 
         /// <summary>
-        /// lblTotalCompletions control.
+        /// tabFbRead control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalCompletions;
+        protected global::System.Web.UI.WebControls.LinkButton tabFbRead;
 
         /// <summary>
-        /// lblTotalMembers control.
+        /// rptAdminFeedback control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalMembers;
+        protected global::System.Web.UI.WebControls.Repeater rptAdminFeedback;
 
         /// <summary>
-        /// rptML control.
+        /// lblNoFeedbackAdmin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptML;
+        protected global::System.Web.UI.WebControls.Label lblNoFeedbackAdmin;
 
         /// <summary>
-        /// rptRobot control.
+        /// upUsers control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptRobot;
+        protected global::System.Web.UI.UpdatePanel upUsers;
 
         /// <summary>
-        /// ViewAnalytics control.
+        /// tabUserAll control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.View ViewAnalytics;
+        protected global::System.Web.UI.WebControls.LinkButton tabUserAll;
 
         /// <summary>
-        /// btnBack control.
+        /// tabUserEditors control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnBack;
+        protected global::System.Web.UI.WebControls.LinkButton tabUserEditors;
 
         /// <summary>
-        /// lblAnalyticsTitle control.
+        /// tabUserMembers control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblAnalyticsTitle;
+        protected global::System.Web.UI.WebControls.LinkButton tabUserMembers;
 
         /// <summary>
-        /// lblTotalViews control.
+        /// tabUserBanned control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalViews;
+        protected global::System.Web.UI.WebControls.LinkButton tabUserBanned;
 
         /// <summary>
-        /// lblStudentCompletions control.
+        /// txtSearchUser control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblStudentCompletions;
+        protected global::System.Web.UI.WebControls.TextBox txtSearchUser;
 
         /// <summary>
-        /// lblCompletionRate control.
+        /// btnSearchUser control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCompletionRate;
+        protected global::System.Web.UI.WebControls.Button btnSearchUser;
 
         /// <summary>
-        /// lblCategory control.
+        /// gvUsers control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCategory;
+        protected global::System.Web.UI.WebControls.GridView gvUsers;
 
         /// <summary>
-        /// lblQCount control.
+        /// lblSearchError control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblQCount;
-
-        /// <summary>
-        /// litCompletions control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litCompletions;
+        protected global::System.Web.UI.WebControls.Label lblSearchError;
     }
 }

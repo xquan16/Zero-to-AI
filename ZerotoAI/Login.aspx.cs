@@ -72,11 +72,13 @@ namespace ZerotoAI
                                 // store profile pic (or default)
                                 Session["UserProfilePic"] = string.IsNullOrEmpty(profilePic) ? "default_user.png" : profilePic;
 
+                                // Redirect based on Role!
                                 if (role == "Admin")
-                                    //Response.Redirect("~/Admin/AdminDashboard.aspx");
-                                    Response.Redirect("~/ZerotoAI/Home.aspx");
+                                    Response.Redirect("~/Admin/AdminDashboard.aspx");
+                                else if (role == "Editor")
+                                    Response.Redirect("~/Editor/EditorDashboard.aspx");
                                 else
-                                    Response.Redirect("~/ZerotoAI/Home.aspx");
+                                    Response.Redirect("~/Member/Dashboard.aspx");
                             }
                             else
                             {

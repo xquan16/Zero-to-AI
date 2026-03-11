@@ -19,6 +19,7 @@ namespace ZerotoAI
                 string loginUrl = ResolveClientUrl("~/ZerotoAI/Login.aspx");
                 string guestPopupJS = $"if(confirm('You haven\\'t logged in yet. Go to the Login page?')) {{ window.location.href='{loginUrl}'; }} return false;";
 
+                dashboardBtn.OnClientClick = guestPopupJS;
                 quizzesBtn.OnClientClick = guestPopupJS;
                 coursesBtn.OnClientClick = guestPopupJS;
                 simBtn.OnClientClick = guestPopupJS;
@@ -77,14 +78,7 @@ namespace ZerotoAI
 
         protected void quizzesBtn_Click(object sender, EventArgs e)
         {
-            // 1. Check if the user is a Guest
-            if (Session["UserRole"] == null)
-            {
-                Response.Redirect("~/ZerotoAI/Login.aspx");
-                return;
-            }
-
-            // 2. Read the role and redirect to the correct module
+            // Read the role and redirect to the correct module
             string role = Session["UserRole"].ToString();
 
             if (role == "Admin")
@@ -108,14 +102,6 @@ namespace ZerotoAI
 
         protected void coursesBtn_Click(object sender, EventArgs e)
         {
-            // 1. Check if the user is a Guest
-            if (Session["UserRole"] == null)
-            {
-                Response.Redirect("~/ZerotoAI/Login.aspx");
-                return;
-            }
-
-            // 2. Read the role and redirect to the correct module
             string role = Session["UserRole"].ToString();
 
             if (role == "Admin")
@@ -139,14 +125,6 @@ namespace ZerotoAI
 
         protected void simBtn_Click(object sender, EventArgs e)
         {
-            // 1. Check if the user is a Guest
-            if (Session["UserRole"] == null)
-            {
-                Response.Redirect("~/ZerotoAI/Login.aspx");
-                return;
-            }
-
-            // 2. Read the role and redirect to the correct module
             string role = Session["UserRole"].ToString();
 
             if (role == "Admin")
@@ -167,5 +145,27 @@ namespace ZerotoAI
             }
         }
 
+
+        protected void dashboardBtn_Click(object sender, EventArgs e)
+        {
+            string role = Session["UserRole"].ToString();
+
+            if (role == "Admin")
+            {
+                Response.Redirect("~/Admin/AdminDashboard.aspx");
+            }
+            else if (role == "Editor")
+            {
+                Response.Redirect("~/Editor/EditorDashboard.aspx");
+            }
+            else if (role == "Member")
+            {
+                Response.Redirect("~/Member/Dashboard.aspx");
+            }
+            else
+            {
+                Response.Redirect("~/ZerotoAI/Home.aspx");
+            }
+        }
     }
 }

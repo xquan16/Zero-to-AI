@@ -41,7 +41,7 @@
         }
 
         /* ── SUMMARY STATS ──────────────────────────────────── */
-        .aw .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px; }
+        .aw .stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:28px; }
         @media(max-width:768px){ .aw .stats-row { grid-template-columns:repeat(2,1fr); } }
         @media(max-width:480px){ .aw .stats-row { grid-template-columns:1fr; } }
         .aw .stat-card {
@@ -291,7 +291,6 @@
                     <asp:Repeater ID="rptML" runat="server" OnItemCommand="rptCourses_ItemCommand">
                         <ItemTemplate>
                             <div class="course-card">
-                                <span class='status-badge <%# GetBadgeClass(Eval("Status")) %>'><%# Eval("Status") %></span>
                                 <div class="card-banner bml">
                                     <i class="fas <%# Eval("ImageURL") %>"></i>
                                 </div>
@@ -327,7 +326,6 @@
                     <asp:Repeater ID="rptRobot" runat="server" OnItemCommand="rptCourses_ItemCommand">
                         <ItemTemplate>
                             <div class="course-card">
-                                <span class='status-badge <%# GetBadgeClass(Eval("Status")) %>'><%# Eval("Status") %></span>
                                 <div class="card-banner brobot">
                                     <i class="fas <%# Eval("ImageURL") %>"></i>
                                 </div>
@@ -388,10 +386,6 @@
                     <div class="detail-item">
                         <small>Category</small>
                         <p><asp:Label ID="lblCategory" runat="server"></asp:Label></p>
-                    </div>
-                    <div class="detail-item">
-                        <small>Status</small>
-                        <p><asp:Label ID="lblStatus" runat="server"></asp:Label></p>
                     </div>
                     <div class="detail-item">
                         <small>Quiz Questions</small>

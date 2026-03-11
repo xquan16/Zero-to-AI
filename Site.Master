@@ -57,8 +57,7 @@
                         </div>
 
                         <div id="userDropdown" class="dropdown-content">
-                            <a href="EditProfile.aspx"><i class="fas fa-user-edit"></i> Edit Profile</a>
-                            <asp:LinkButton ID="logoutBtn" runat="server" OnClick="logoutBtn_Click">
+                                <a href="~/ZerotoAI/EditProfile.aspx" runat="server"><i class="fas fa-user-edit"></i> Edit Profile</a>                            <asp:LinkButton ID="logoutBtn" runat="server" OnClick="logoutBtn_Click">
                                 <i class="fas fa-sign-out-alt"></i> Logout
                             </asp:LinkButton>
                         </div>
@@ -71,9 +70,13 @@
         <div class="layout-container">    
             <div class="sidebar collapsed" id="sidebar">
                 <ul class="menu">
-                    <li><asp:LinkButton ID="dashboardBtn" runat="server" PostBackUrl="Dashboard.aspx"><i class="fas fa-th-large"></i> <span>Dashboard</span></asp:LinkButton></li>
-                    
                     <li>
+                        <asp:LinkButton ID="dashboardBtn" runat="server" OnClick="dashboardBtn_Click">
+                            <i class="fas fa-th-large"></i> <span>Dashboard</span>
+                        </asp:LinkButton>
+                    </li>
+                    
+                    <li>    
                         <asp:LinkButton ID="simBtn" runat="server" OnClick="simBtn_Click">
                             <i class="fas fa-vial"></i> <span>Simulations</span>
                         </asp:LinkButton>

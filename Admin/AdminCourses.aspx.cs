@@ -22,21 +22,9 @@ namespace Zero_to_AI.Admin
             }
         }
 
-        public string GetBadgeClass(object status)
-        {
-            if (status == null) return "badge-draft";
-            switch (status.ToString())
-            {
-                case "Published": return "badge-published";
-                case "Unpublished": return "badge-unpublished";
-                default: return "badge-draft";
-            }
-        }
-
         private void BindSummaryStats()
         {
             lblTotalArticles.Text = ExecScalar("SELECT COUNT(*) FROM Articles").ToString();
-            lblPublished.Text = ExecScalar("SELECT COUNT(*) FROM Articles WHERE Status = 'Published'").ToString();
             lblTotalCompletions.Text = ExecScalar("SELECT COUNT(*) FROM CourseProgress").ToString();
             lblTotalMembers.Text = ExecScalar("SELECT COUNT(*) FROM Users WHERE Role = 'Member'").ToString();
         }
@@ -49,7 +37,6 @@ namespace Zero_to_AI.Admin
                     a.ArticleID,
                     a.Title,
                     ISNULL(a.ImageURL, 'fa-book') AS ImageURL,
-                    ISNULL(a.Status,   'Draft')   AS Status,
                     ISNULL(a.Views,    0)         AS Views,
                     c.CategoryName,
                     
@@ -97,14 +84,14 @@ namespace Zero_to_AI.Admin
         private void LoadAnalytics(int articleID)
         {
             string sqlArt = @"
-                SELECT a.Title, a.Status,
+                SELECT a.Title,
                        ISNULL(a.Views, 0) AS Views,
                        c.CategoryName, c.CategoryID
                 FROM Articles a
                 INNER JOIN Categories c ON a.CategoryID = c.CategoryID
                 WHERE a.ArticleID = @id";
 
-            string title = "", status = "", catName = "";
+            string title = "", catName = "";
             int views = 0, catID = 0;
 
             using (SqlConnection conn = new SqlConnection(_conn))
@@ -116,7 +103,6 @@ namespace Zero_to_AI.Admin
                 {
                     if (!dr.Read()) return;
                     title = dr["Title"].ToString();
-                    status = dr["Status"].ToString();
                     views = Convert.ToInt32(dr["Views"]);
                     catName = dr["CategoryName"].ToString();
                     catID = Convert.ToInt32(dr["CategoryID"]);
@@ -141,7 +127,6 @@ namespace Zero_to_AI.Admin
 
             lblAnalyticsTitle.Text = title;
             lblCategory.Text = catName;
-            lblStatus.Text = "<span class='status-badge " + GetBadgeClass(status) + "'>" + status + "</span>";
             lblTotalViews.Text = views.ToString();
             lblStudentCompletions.Text = completions.ToString();
             lblCompletionRate.Text = rate.ToString();
