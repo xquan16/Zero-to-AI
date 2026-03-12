@@ -30,7 +30,7 @@ namespace Zero_to_AI.Editor
             if (!IsPostBack)
             {
                 string username = Session["Username"] != null ? Session["Username"].ToString() : "Editor";
-                lblWelcome.Text = "Welcome Back, " + username + "<br><br>Creator Workspace";
+                lblWelcome.Text = "Welcome Back, " + username;
 
                 LoadEditorStats();
                 LoadRecentActivity(username);

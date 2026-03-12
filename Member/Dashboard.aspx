@@ -11,15 +11,15 @@
         <asp:Label ID="lblMessage" runat="server" Visible="false" style="display:block; padding:15px; margin-bottom:20px; border-radius:8px; background:rgba(13,148,136,0.1); color:#0d9488; border:1px solid rgba(13,148,136,0.3); font-weight:bold;"></asp:Label>
 
         <div class="stat-grid">
-            <a href="../Simulations.aspx" class="stat-card">
+            <a href="~/Member/Simulations.aspx" runat="server" class="stat-card">
                 <div class="stat-icon purple"><i class="fas fa-gamepad"></i></div>
                 <div class="stat-info"><h3 class="big-num"><asp:Label ID="lblMemSims" runat="server">0</asp:Label></h3><span>Simulations Cleared</span></div>
             </a>
-            <a href="../Courses.aspx" class="stat-card">
+            <a href="~/Member/Courses.aspx" runat="server" class="stat-card">
                 <div class="stat-icon blue"><i class="fas fa-book-reader"></i></div>
                 <div class="stat-info"><h3 class="big-num"><asp:Label ID="lblMemCourses" runat="server">0</asp:Label></h3><span>Courses Completed</span></div>
             </a>
-            <a href="../Quizzes.aspx" class="stat-card">
+            <a href="~/Member/Quizzes.aspx" runat="server" class="stat-card">
                 <div class="stat-icon teal"><i class="fas fa-brain"></i></div>
                 <div class="stat-info"><h3 class="big-num"><asp:Label ID="lblMemQuizzes" runat="server">0%</asp:Label></h3><span>Avg Quiz Score</span></div>
             </a>

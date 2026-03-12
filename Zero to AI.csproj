@@ -117,6 +117,7 @@
   <ItemGroup>
     <Content Include="Admin\AdminCourses.aspx" />
     <Content Include="Admin\AdminDashboard.aspx" />
+    <Content Include="Admin\AdminManageUsers.aspx" />
     <Content Include="Admin\AdminMonitorQuiz.aspx" />
     <Content Include="Admin\AdminSimulations.aspx" />
     <Content Include="App_Data\Database.mdf" />
@@ -233,6 +234,13 @@
     </Compile>
     <Compile Include="Admin\AdminDashboard.aspx.designer.cs">
       <DependentUpon>AdminDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\AdminManageUsers.aspx.cs">
+      <DependentUpon>AdminManageUsers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\AdminManageUsers.aspx.designer.cs">
+      <DependentUpon>AdminManageUsers.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\AdminMonitorQuiz.aspx.cs">
       <DependentUpon>AdminMonitorQuiz.aspx</DependentUpon>

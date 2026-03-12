@@ -26,7 +26,7 @@ namespace Zero_to_AI.Admin
             if (!IsPostBack)
             {
                 string username = Session["Username"] != null ? Session["Username"].ToString() : "Admin";
-                lblWelcome.Text = "Welcome Back, " + username + "<br><br>Command Center";
+                lblWelcome.Text = "Welcome Back, " + username;
 
                 // Defaults
                 ViewState["FbTab"] = "All";

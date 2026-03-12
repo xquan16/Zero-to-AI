@@ -197,7 +197,8 @@ namespace Zero_to_AI.Editor
         }
 
         // ── DELETE ARTICLE ─────────────────────────────────────────────────────
-        // FIX: Delete UserProgress rows for this article FIRST (avoids FK constraint crash)
+        // Deletes UserProgress rows BEFORE deleting the article to avoid FK crashes.
+        // Works whether or not the ArticleID column exists in UserProgress yet.
         private void DeleteArticle(int articleID)
         {
             string title = "";
@@ -210,13 +211,41 @@ namespace Zero_to_AI.Editor
                 if (r != null) title = r.ToString();
             }
 
-            // Step 1: Remove progress rows first (prevents FK error)
+            // Step 1a: Delete UserProgress rows via ArticleID column IF it exists
+            // (safe dynamic check — no crash if column not yet added)
             using (SqlConnection conn = new SqlConnection(_conn))
-            using (SqlCommand cmd = new SqlCommand("DELETE FROM UserProgress WHERE ArticleID = @id", conn))
             {
-                cmd.Parameters.AddWithValue("@id", articleID);
                 conn.Open();
-                cmd.ExecuteNonQuery();
+                // Check if ArticleID column exists in UserProgress
+                string checkSql = @"
+                    SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+                    WHERE TABLE_NAME = 'UserProgress' AND COLUMN_NAME = 'ArticleID'";
+                int colExists = 0;
+                using (SqlCommand chk = new SqlCommand(checkSql, conn))
+                    colExists = Convert.ToInt32(chk.ExecuteScalar());
+
+                if (colExists > 0)
+                {
+                    using (SqlCommand del = new SqlCommand("DELETE FROM UserProgress WHERE ArticleID = @id", conn))
+                    {
+                        del.Parameters.AddWithValue("@id", articleID);
+                        del.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    // Fallback: delete via QuizID linked to this article's category
+                    string fallbackSql = @"
+                        DELETE up FROM UserProgress up
+                        INNER JOIN Quizzes q ON up.QuizID = q.QuizID
+                        INNER JOIN Articles a ON a.CategoryID = q.CategoryID
+                        WHERE a.ArticleID = @id";
+                    using (SqlCommand del = new SqlCommand(fallbackSql, conn))
+                    {
+                        del.Parameters.AddWithValue("@id", articleID);
+                        del.ExecuteNonQuery();
+                    }
+                }
             }
 
             // Step 2: Now safe to delete the article

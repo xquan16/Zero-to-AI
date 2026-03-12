@@ -5,13 +5,13 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="hero-section">
+    <asp:Panel ID="pnlAdminBar" runat="server" Visible="false" CssClass="admin-edit-bar">
+        <asp:Button ID="btnEditMode" runat="server" Text="✎ Edit Page" CssClass="btn-solid" OnClick="btnEditMode_Click" />
+        <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="btn-ghost btn-discard-custom" Visible="false" OnClick="btnCancel_Click" />
+        <asp:Button ID="btnSaveChanges" runat="server" Text="💾 Save Changes" CssClass="btn-primary-full btn-save-custom" Visible="false" OnClick="btnSaveChanges_Click" />
+    </asp:Panel>
 
-        <asp:Panel ID="pnlAdminBar" runat="server" Visible="false" CssClass="admin-edit-bar">
-            <asp:Button ID="btnEditMode" runat="server" Text="✎ Edit Page" CssClass="btn-solid" OnClick="btnEditMode_Click" />
-            <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="btn-ghost btn-discard-custom" Visible="false" OnClick="btnCancel_Click" />
-            <asp:Button ID="btnSaveChanges" runat="server" Text="💾 Save Changes" CssClass="btn-primary-full btn-save-custom" Visible="false" OnClick="btnSaveChanges_Click" />
-        </asp:Panel>
+    <div class="hero-section">
         
         <h1 class="hero-title">
             <asp:Label ID="lblHeroTitle" runat="server"></asp:Label>

@@ -24,22 +24,32 @@
         </div>
 
         <div class="panel">
-            <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
-            <a href="EditorCourses.aspx" class="btn-action"><i class="fas fa-plus"></i> Create New Article</a>
-            <a href="EditorEditQuiz.aspx" class="btn-action" style="background: #0ea5e9;"><i class="fas fa-list-check"></i> Manage Quizzes</a>
+            <div class="dash-panel-header">
+                <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+            </div>
+            <div class="quick-actions-row">
+                <a href="EditorCourses.aspx" class="btn-action"><i class="fas fa-plus"></i> Create New Article</a>
+                <a href="EditorEditQuiz.aspx" class="btn-action btn-action-blue"><i class="fas fa-list-check"></i> Manage Quizzes</a>
+                <a href="EditorSimulations.aspx" class="btn-action btn-action-purple"><i class="fas fa-vr-cardboard"></i> Manage Simulations</a>
+            </div>
         </div>
 
         <div class="panel">
-            <h2><i class="fas fa-history"></i> My Recent Activity</h2>
-            <asp:GridView ID="gvEdLogs" runat="server" AutoGenerateColumns="false" 
-                CssClass="admin-grid-table" Width="100%" GridLines="None" CellPadding="10">
-                <HeaderStyle CssClass="grid-header" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:BoundField DataField="ActionType" HeaderText="Action" ItemStyle-Font-Bold="true" ItemStyle-ForeColor="#7c3aed" />
-                    <asp:BoundField DataField="ActionDetails" HeaderText="Details" />
-                    <asp:BoundField DataField="ActionDate" HeaderText="Date" DataFormatString="{0:MMM dd HH:mm}" />
-                </Columns>
-            </asp:GridView>
+            <div class="dash-panel-header">
+                <h2><i class="fas fa-history"></i> My Recent Activity</h2>
+            </div>
+            <div class="table-responsive">
+                <asp:GridView ID="gvEdLogs" runat="server" AutoGenerateColumns="false" 
+                    CssClass="admin-grid-table" Width="100%" GridLines="None" CellPadding="10">
+                    <HeaderStyle CssClass="grid-header" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:BoundField DataField="ActionType" HeaderText="Action" ItemStyle-Font-Bold="true" ItemStyle-CssClass="text-purple text-left" />
+                        <asp:BoundField DataField="ActionDetails" HeaderText="Details" ItemStyle-CssClass="text-left" />
+                        <asp:BoundField DataField="ActionDate" HeaderText="Date" DataFormatString="{0:MMM dd HH:mm}" ItemStyle-CssClass="text-left" />
+                    </Columns>
+                </asp:GridView>
+            </div>
         </div>
     </div>
 </asp:Content>
+

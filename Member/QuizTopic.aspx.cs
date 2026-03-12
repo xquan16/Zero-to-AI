@@ -27,6 +27,7 @@ namespace Zero_to_AI.Member
             }
         }
 
+ 
         private void LoadHistory()
         {
             using (SqlConnection con = new SqlConnection(connString))
@@ -36,10 +37,11 @@ namespace Zero_to_AI.Member
                     SELECT q.Title, u.Score, u.CompletedDate 
                     FROM UserProgress u 
                     JOIN Quizzes q ON u.QuizID = q.QuizID 
-                    WHERE u.UserID = 1 
+                    WHERE u.UserID = @uid  
                     ORDER BY u.CompletedDate DESC"; // DESC ensure the latest
 
                 SqlDataAdapter da = new SqlDataAdapter(sql, con);
+                da.SelectCommand.Parameters.AddWithValue("@uid", Convert.ToInt32(Session["UserID"])); 
                 DataTable dt = new DataTable();
 
                 try
@@ -67,3 +69,4 @@ namespace Zero_to_AI.Member
         }
     }
 }
+    
