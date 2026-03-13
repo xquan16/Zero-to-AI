@@ -24,6 +24,15 @@ namespace Zero_to_AI.ZerotoAI
         protected global::System.Web.UI.WebControls.HiddenField hfCroppedImage;
 
         /// <summary>
+        /// hfOriginalFileName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfOriginalFileName;
+
+        /// <summary>
         /// imgPreview control.
         /// </summary>
         /// <remarks>

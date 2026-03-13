@@ -129,6 +129,20 @@ namespace Zero_to_AI.ZerotoAI
             return cleaned;
         }
 
+        // --- Dashboard Router Helper ---
+        private void RedirectToDashboard()
+        {
+            // Get the user's role from the session (default to Member if missing)
+            string role = Session["UserRole"] != null ? Session["UserRole"].ToString() : "Member";
+
+            if (role == "Admin")
+                Response.Redirect("~/Admin/AdminDashboard.aspx");
+            else if (role == "Editor")
+                Response.Redirect("~/Editor/EditorDashboard.aspx");
+            else
+                Response.Redirect("~/Member/Dashboard.aspx");
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Username"] == null)
@@ -310,7 +324,7 @@ namespace Zero_to_AI.ZerotoAI
                     lblMsg.Visible = true;
 
                     // Success Redirect
-                    Response.Redirect("EditProfile.aspx");
+                    RedirectToDashboard();
                 }
             }
             catch (Exception ex)
@@ -319,10 +333,10 @@ namespace Zero_to_AI.ZerotoAI
             }
         }
 
+
         protected void btnDiscard_Click(object sender, EventArgs e)
         {
-            // Reloading the page discards changes and refetches from DB
-            Response.Redirect("EditProfile.aspx");
+            RedirectToDashboard();
         }
     }
 }

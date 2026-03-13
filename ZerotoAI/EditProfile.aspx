@@ -61,7 +61,6 @@
             <div class="form-group">
                 <label>Username</label>
                 <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control dirty-track"></asp:TextBox>
-                <small style="color:var(--text-muted);">Note: Changing this will require you to login again.</small>
             </div>
 
             <div class="form-row-split">
@@ -80,11 +79,11 @@
             <div class="form-actions-right">
                 <asp:Button ID="btnDiscard" runat="server" Text="Discard" 
                     CssClass="btn-ghost btn-discard-custom" 
-                    OnClick="btnDiscard_Click" OnClientClick="bypassDirty();" />
+                    OnClick="btnDiscard_Click" OnClientClick="return checkDiscard();" />
                 
                 <asp:Button ID="btnSave" runat="server" Text="Save Changes" 
                     CssClass="btn-primary-full btn-save-custom" 
-                    OnClick="btnSave_Click" OnClientClick="bypassDirty();" />
+                    OnClick="btnSave_Click" OnClientClick="bypassDirty(); return true;" />
             </div>
 
         </div>
@@ -178,6 +177,31 @@
         window.onbeforeunload = function (e) {
             if (isDirty) return "You have unsaved changes.";
         };
+
+        // 4. Track typing in textboxes
+        window.onload = function () {
+            // Find all textboxes with the 'dirty-track' class
+            var inputs = document.querySelectorAll('.dirty-track');
+            inputs.forEach(function (input) {
+                // If the user types anything, mark the form as dirty
+                input.addEventListener('input', markAsDirty);
+            });
+        };
+
+        // 5. Custom Discard Confirmation
+        function checkDiscard() {
+            if (isDirty) {
+                // If changes were made, ask for confirmation
+                var sure = confirm("You have unsaved changes. Are you sure you want to discard them?");
+                if (!sure) {
+                    return false; // User clicked Cancel. Stops the button click, stays on page.
+                }
+            }
+
+            // If no changes were made, OR if they clicked "OK" to discard:
+            bypassDirty(); // Disable the native browser warning
+            return true;   // Allows the C# backend to fire and redirect them
+        }
     </script>
 
 </asp:Content>

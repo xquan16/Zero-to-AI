@@ -214,8 +214,8 @@ form#form1 {
 
 /* Transparent button with a white outline (e.g., Sign In) */
 .btn-ghost {
-    border: 1px solid rgba(255,255,255,0.8);
-    color: lightgray;
+    border: 1px solid rgba(255,255,255,0.5);
+    color: white;
 }
 
     .btn-ghost:hover {
@@ -3850,4 +3850,323 @@ a.stat-card {
 
     .btn-edit-user:hover {
         background: #0f766e;
+    }
+
+
+
+/* ----------------------- Simulations Interface(Simulation.aspx) ------------------------------- */
+.sim-page {
+    padding: 30px;
+    max-width: 1480px;
+    margin: 0 auto;
+}
+
+/* Inheriting the global hero gradient style but keeping the rounded look */
+.sim-hero {
+    background: linear-gradient(135deg, #0a0e27 0%, #0d1b6e 50%, var(--bg-sidebar) 100%);
+    border-radius: 22px;
+    padding: 40px;
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+    .sim-hero::before {
+        content: '';
+        position: absolute;
+        top: -80px;
+        right: -80px;
+        width: 380px;
+        height: 380px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 50%;
+    }
+
+    .sim-hero h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        font-weight: 800;
+    }
+
+    .sim-hero p {
+        margin: 10px 0 0;
+        max-width: 960px;
+        opacity: 0.85;
+        line-height: 1.6;
+        font-size: 1.05rem;
+    }
+
+.sim-section {
+    margin-top: 30px;
+}
+
+.sim-section-title {
+    margin: 0 0 8px 0;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.sim-section-sub {
+    margin: 0 0 20px 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    max-width: 980px;
+}
+
+.sim-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 22px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+    min-height: 560px;
+}
+
+.sim-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.sim-card-title {
+    margin: 0;
+    color: var(--text-main);
+    font-size: 1.5rem;
+    font-weight: 800;
+    display: block;
+}
+
+.sim-card-sub {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    display: block;
+}
+
+.sim-pill {
+    padding: 6px 12px;
+    border-radius: 50px;
+    background: rgba(128, 128, 128, 0.1);
+    color: var(--text-main);
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sim-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    padding: 15px;
+    background: var(--bg-body);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    margin: 12px 0 20px;
+}
+
+    .sim-toolbar label {
+        color: var(--text-main);
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+
+    .sim-toolbar select, .sim-toolbar input[type="text"], .sim-toolbar input[type="number"] {
+        background: var(--bg-card);
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 8px 12px;
+        outline: none;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+        .sim-toolbar select:focus, .sim-toolbar input:focus {
+            border-color: var(--bg-sidebar);
+            box-shadow: 0 0 0 3px rgba(0, 150, 255, 0.1);
+        }
+
+.sim-btn {
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-main);
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: 0.2s;
+}
+
+    .sim-btn:hover {
+        background: rgba(128, 128, 128, 0.1);
+        transform: translateY(-1px);
+    }
+
+.sim-btn-primary {
+    background: var(--bg-sidebar);
+    color: white;
+    border: none;
+}
+
+    .sim-btn-primary:hover {
+        opacity: 0.9;
+        color: white;
+    }
+
+.sim-stats-row {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.sim-hint {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 15px;
+    text-align: center;
+    font-style: italic;
+}
+
+/* --- Simulation Specific Components --- */
+#arrayContainer {
+    width: 100%;
+    min-height: 300px;
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    padding: 15px;
+    border-radius: 18px;
+    background: var(--bg-body);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+    #arrayContainer div {
+        width: 20px;
+        border-radius: 5px 5px 0 0;
+        background: var(--bg-sidebar); /* Dynamically maps to Role colors! */
+        transition: 0.15s ease-in-out;
+    }
+
+.grid-board {
+    margin-top: 10px;
+    display: grid;
+    gap: 2px;
+    user-select: none;
+    padding: 15px;
+    border-radius: 18px;
+    background: var(--bg-body);
+    border: 1px solid var(--border-color);
+    overflow: auto;
+    justify-content: center;
+}
+
+.cell {
+    width: 22px;
+    height: 22px;
+    background: var(--bg-card);
+    border-radius: 4px;
+    border: 1px solid rgba(128,128,128,0.2);
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+    .cell:hover {
+        transform: scale(1.1);
+    }
+
+/* Grid Simulation Colors (Standard AI colors) */
+.wall {
+    background: #2d3436;
+    border-color: #2d3436;
+}
+
+.start {
+    background: #2ecc71;
+    border-color: #27ae60;
+}
+
+.end {
+    background: #e74c3c;
+    border-color: #c0392b;
+}
+
+.visited {
+    background: #3498db;
+    opacity: 0.6;
+}
+
+.path {
+    background: #f1c40f;
+    border-color: #f39c12;
+}
+
+[data-theme="dark"] .wall {
+    background: #636e72;
+}
+
+
+
+/* ----------------------- EditorSimulations.aspx ------------------------------- */
+
+/* The 2-column grid layout that automatically stacks on small screens */
+.editor-sim-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+@media (min-width: 980px) {
+    .editor-sim-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Forces the 3rd card to stretch across both columns */
+    .sim-card.span-2 {
+        grid-column: 1 / span 2;
+    }
+}
+
+/* The inner box containing the actual editing tools */
+.editor-box {
+    padding: 20px;
+    border-radius: 16px;
+    background: var(--bg-body);
+    border: 1px solid var(--border-color);
+    margin-bottom: 15px;
+}
+
+/* Wrapper for the Status Dropdown */
+.meta-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .meta-item span {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
