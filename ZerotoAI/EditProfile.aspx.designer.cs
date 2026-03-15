@@ -42,13 +42,13 @@ namespace Zero_to_AI.ZerotoAI
         protected global::System.Web.UI.WebControls.Image imgPreview;
 
         /// <summary>
-        /// fuProfilePic control.
+        /// fileUploadProfile control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fuProfilePic;
+        protected global::System.Web.UI.WebControls.FileUpload fileUploadProfile;
 
         /// <summary>
         /// txtFirst control.

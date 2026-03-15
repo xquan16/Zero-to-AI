@@ -16,7 +16,7 @@
             <asp:Image ID="imgPreview" runat="server" CssClass="avatar-preview-large" ImageUrl="~/images/default_user.png" />
 
             <div class="upload-area">
-                <asp:FileUpload ID="fuProfilePic" runat="server" CssClass="file-upload-control" onchange="markAsDirty(); previewImage(this);" BorderColor="#999999" BorderStyle="Inset" />
+            <asp:FileUpload ID="fileUploadProfile" runat="server" CssClass="file-upload-control" accept="image/*" onchange="validateImageUpload(this);" />
                 <small style="opacity: 0.7; margin-top:5px;">PNG or JPG only</small>
             </div>
 
@@ -56,7 +56,10 @@
                 <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control dirty-track"></asp:TextBox>
             </div>
 
-            <h4 style="color:var(--text-muted); margin:40px 0 20px;">Security</h4>
+            <h4 style="color:var(--text-muted); margin:40px 0 0;">Security</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); opacity: 0.8; margin: 5px 0 20px 0;">
+                <i class="fas fa-info-circle" style="color: var(--bg-sidebar);"></i> Note: Updating your password will require you to log in again.
+            </p>
 
             <div class="form-group">
                 <label>Username</label>
@@ -74,32 +77,65 @@
                 </div>
             </div>
 
-            <asp:Label ID="lblMsg" runat="server" Visible="false" CssClass="lbl-message"></asp:Label>
+            <asp:Label ID="lblMsg" runat="server" CssClass="lbl-message" style="text-align: left; margin-top: 0; font-size: 0.85rem;"></asp:Label>
 
             <div class="form-actions-right">
                 <asp:Button ID="btnDiscard" runat="server" Text="Discard" 
                     CssClass="btn-ghost btn-discard-custom" 
-                    OnClick="btnDiscard_Click" OnClientClick="return checkDiscard();" />
+                    OnClick="btnDiscard_Click" OnClientClick="return checkDiscard(event);" UseSubmitBehavior="false" />
                 
                 <asp:Button ID="btnSave" runat="server" Text="Save Changes" 
                     CssClass="btn-primary-full btn-save-custom" 
                     OnClick="btnSave_Click" OnClientClick="bypassDirty(); return true;" />
             </div>
-
         </div>
     </div>
 
     <script type="text/javascript">
         var cropper;
-        var fileInput = document.getElementById('<%= fuProfilePic.ClientID %>');
+        // FIXED ID: Changed fuProfilePic to fileUploadProfile to match your HTML
+        var fileInput = document.getElementById('<%= fileUploadProfile.ClientID %>');
         var cropModal = document.getElementById('cropModal');
         var imgToCrop = document.getElementById('imgToCrop');
         var hfCropped = document.getElementById('<%= hfCroppedImage.ClientID %>');
-        var hfOriginal = document.getElementById('<%= hfOriginalFileName.ClientID %>');
+            var hfOriginal = document.getElementById('<%= hfOriginalFileName.ClientID %>');
         var imgPreview = document.getElementById('<%= imgPreview.ClientID %>');
         var isDirty = false;
 
-        // 1. When user selects a file (also used by inline onchange previewImage)
+        // --- NEW: The Missing Validation Function ---
+        function validateImageUpload(input) {
+            var filePath = input.value;
+            if (!filePath) return;
+
+            // Define the allowed image file extensions
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.webp)$/i;
+
+            // If the file is NOT an image...
+            if (!allowedExtensions.exec(filePath)) {
+                input.value = ''; // Clear the bad file
+
+                var isDarkMode = document.body.getAttribute("data-theme") === "dark";
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid File',
+                    text: 'Please upload a valid image file (JPG, PNG, GIF). Documents like PDFs are not allowed.',
+                    confirmButtonText: 'Try Again',
+                    confirmButtonColor: '#e11d48',
+                    background: isDarkMode ? '#1e293b' : '#ffffff',
+                    color: isDarkMode ? '#f8fafc' : '#334155',
+                    backdrop: `rgba(0,0,0,0.7)`
+                });
+                return false;
+            }
+
+            // If the file IS an image, pass it to your Cropper logic!
+            if (input.files && input.files.length > 0) {
+                handleFileSelection(input.files[0]);
+                input.value = ''; // Clear so they can re-select the same file if they cancel
+            }
+        }
+
+        // 1. Cropper Logic (Runs after validation passes)
         function handleFileSelection(file) {
             if (!file) return;
             // store original filename so server can use it
@@ -122,24 +158,6 @@
             reader.readAsDataURL(file);
         }
 
-        if (fileInput) {
-            fileInput.addEventListener('change', function (e) {
-                var files = e.target.files;
-                if (files && files.length > 0) {
-                    handleFileSelection(files[0]);
-                    // Clear input so same file can be selected again if cancelled
-                    fileInput.value = '';
-                }
-            });
-        }
-
-        // helper used by markup onchange
-        function previewImage(input) {
-            if (!input || !input.files || input.files.length === 0) return;
-            handleFileSelection(input.files[0]);
-            // clear the input so same file can be reselected later
-            try { input.value = ''; } catch (ex) { }
-        }
 
         // 2. Crop & Save Button
         function cropAndSave() {
@@ -174,9 +192,34 @@
         // Dirty Flag Logic (Existing)
         function markAsDirty() { isDirty = true; }
         function bypassDirty() { isDirty = false; }
-        window.onbeforeunload = function (e) {
-            if (isDirty) return "You have unsaved changes.";
-        };
+        // Intercept sidebar and navigation links with SweetAlert
+        document.addEventListener('click', function (e) {
+            var link = e.target.closest('a'); // Check if what they clicked is a link
+
+            // If they clicked a link, it has a destination, AND the profile has unsaved changes...
+            if (link && link.href && isDirty) {
+                e.preventDefault(); // Stop the link from working immediately
+
+                var isDarkMode = document.body.getAttribute("data-theme") === "dark";
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Unsaved Changes',
+                    text: 'You have unsaved changes. Are you sure you want to leave this page?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Leave',
+                    cancelButtonText: 'Stay',
+                    confirmButtonColor: '#e11d48',
+                    background: isDarkMode ? '#1e293b' : '#ffffff',
+                    color: isDarkMode ? '#f8fafc' : '#334155',
+                    backdrop: `rgba(0,0,0,0.7)`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        bypassDirty(); // Clear the warning flag
+                        window.location.href = link.href; // Safely send them to the link they clicked
+                    }
+                });
+            }
+        });
 
         // 4. Track typing in textboxes
         window.onload = function () {
@@ -188,20 +231,72 @@
             });
         };
 
-        // 5. Custom Discard Confirmation
-        function checkDiscard() {
+        // 5. Custom Discard Confirmation (Now with SweetAlert!)
+        function checkDiscard(e) {
             if (isDirty) {
-                // If changes were made, ask for confirmation
-                var sure = confirm("You have unsaved changes. Are you sure you want to discard them?");
-                if (!sure) {
-                    return false; // User clicked Cancel. Stops the button click, stays on page.
+                e.preventDefault(); // Stop the button from clicking immediately
+
+                var isDarkMode = document.body.getAttribute("data-theme") === "dark";
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Unsaved Changes',
+                    text: 'You have unsaved changes. Are you sure you want to discard them?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Discard',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonColor: '#e11d48',
+                    background: isDarkMode ? '#1e293b' : '#ffffff',
+                    color: isDarkMode ? '#f8fafc' : '#334155',
+                    backdrop: `rgba(0,0,0,0.7)`
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        bypassDirty(); // Disable the browser warning
+                        __doPostBack('<%= btnDiscard.UniqueID %>', ''); // Trigger C# code
+                    }
+                });
+                return false;
+            }
+
+            bypassDirty();
+            return true;
+        }
+
+        // 6. Real-Time Password Matching using existing lblMsg
+        window.addEventListener('DOMContentLoaded', function () {
+            var txtNew = document.getElementById('<%= txtNewPass.ClientID %>');
+            var txtConfirm = document.getElementById('<%= txtConfirmPass.ClientID %>');
+            var msgLabel = document.getElementById('<%= lblMsg.ClientID %>');
+
+            function checkPasswords() {
+                var val1 = txtNew.value;
+                var val2 = txtConfirm.value;
+
+                // If both are empty, clear the text
+                if (val1 === "" && val2 === "") {
+                    // Only clear it if it's currently showing a password message 
+                    // (so we don't accidentally erase a backend success message)
+                    if (msgLabel.innerHTML.includes('Passwords')) {
+                        msgLabel.innerHTML = "";
+                    }
+                }
+                // If they match, show green text
+                else if (val1 === val2) {
+                    msgLabel.innerHTML = "<i class='fas fa-check-circle'></i> Passwords match.";
+                    msgLabel.className = "lbl-message text-success"; // Uses your existing green class
+                }
+                // If they don't match, show red text
+                else {
+                    msgLabel.innerHTML = "<i class='fas fa-times-circle'></i> Passwords do not match.";
+                    msgLabel.className = "lbl-message text-error"; // Uses your existing red class
                 }
             }
 
-            // If no changes were made, OR if they clicked "OK" to discard:
-            bypassDirty(); // Disable the native browser warning
-            return true;   // Allows the C# backend to fire and redirect them
-        }
+            // Listen for typing in both boxes
+            if (txtNew && txtConfirm) {
+                txtNew.addEventListener('input', checkPasswords);
+                txtConfirm.addEventListener('input', checkPasswords);
+            }
+        });
     </script>
 
 </asp:Content>

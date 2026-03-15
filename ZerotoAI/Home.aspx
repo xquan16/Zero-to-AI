@@ -51,39 +51,59 @@
         <div class="features-grid">
             
             <div class="feature-card">
-                <i class="fas fa-brain feature-icon"></i>
-                <div class="feature-title">
-                    <asp:Label ID="lblFeat1Title" runat="server"></asp:Label>
-                    <asp:TextBox ID="txtFeat1Title" runat="server" CssClass="admin-edit-box" Visible="false"></asp:TextBox>
-                </div>
-                <div class="feature-desc">
-                    <asp:Label ID="lblFeat1Desc" runat="server"></asp:Label>
-                    <asp:TextBox ID="txtFeat1Desc" runat="server" CssClass="admin-edit-box" TextMode="MultiLine" Rows="3" Visible="false"></asp:TextBox>
-                </div>
+                <a id="linkFeat1" runat="server" onserverclick="linkFeat1_ServerClick" class="card-link restricted-card">                    
+                    <i class="fas fa-th-large feature-icon"></i>
+                    <div class="feature-title">
+                        <asp:Label ID="lblFeat1Title" runat="server"></asp:Label>
+                        <asp:TextBox ID="txtFeat1Title" runat="server" CssClass="admin-edit-box" Visible="false"></asp:TextBox>
+                    </div>
+                    <div class="feature-desc">
+                        <asp:Label ID="lblFeat1Desc" runat="server"></asp:Label>
+                        <asp:TextBox ID="txtFeat1Desc" runat="server" CssClass="admin-edit-box" TextMode="MultiLine" Rows="3" Visible="false"></asp:TextBox>
+                    </div>
+                </a>
             </div>
 
             <div class="feature-card">
-                <i class="fas fa-chart-pie feature-icon"></i>
-                <div class="feature-title">
-                    <asp:Label ID="lblFeat2Title" runat="server"></asp:Label>
-                    <asp:TextBox ID="txtFeat2Title" runat="server" CssClass="admin-edit-box" Visible="false"></asp:TextBox>
-                </div>
-                <div class="feature-desc">
-                    <asp:Label ID="lblFeat2Desc" runat="server"></asp:Label>
-                    <asp:TextBox ID="txtFeat2Desc" runat="server" CssClass="admin-edit-box" TextMode="MultiLine" Rows="3" Visible="false"></asp:TextBox>
-                </div>
+                <a id="linkFeat2" runat="server" onserverclick="linkFeat2_ServerClick" class="card-link restricted-card">
+                    <i class="fas fa-vial feature-icon"></i>
+                    <div class="feature-title">
+                        <asp:Label ID="lblFeat2Title" runat="server"></asp:Label>
+                        <asp:TextBox ID="txtFeat2Title" runat="server" CssClass="admin-edit-box" Visible="false"></asp:TextBox>
+                    </div>
+                    <div class="feature-desc">
+                        <asp:Label ID="lblFeat2Desc" runat="server"></asp:Label>
+                        <asp:TextBox ID="txtFeat2Desc" runat="server" CssClass="admin-edit-box" TextMode="MultiLine" Rows="3" Visible="false"></asp:TextBox>
+                    </div>
+                </a>
             </div>
 
             <div class="feature-card">
-                <i class="fas fa-laptop-code feature-icon"></i>
-                <div class="feature-title">
-                    <asp:Label ID="lblFeat3Title" runat="server"></asp:Label>
-                    <asp:TextBox ID="txtFeat3Title" runat="server" CssClass="admin-edit-box" Visible="false"></asp:TextBox>
-                </div>
-                <div class="feature-desc">
-                    <asp:Label ID="lblFeat3Desc" runat="server"></asp:Label>
-                    <asp:TextBox ID="txtFeat3Desc" runat="server" CssClass="admin-edit-box" TextMode="MultiLine" Rows="3" Visible="false"></asp:TextBox>
-                </div>
+                <a id="linkFeat3" runat="server" onserverclick="linkFeat3_ServerClick" class="card-link restricted-card">
+                    <i class="fas fa-book feature-icon"></i>
+                    <div class="feature-title">
+                        <asp:Label ID="lblFeat3Title" runat="server"></asp:Label>
+                        <asp:TextBox ID="txtFeat3Title" runat="server" CssClass="admin-edit-box" Visible="false"></asp:TextBox>
+                    </div>
+                    <div class="feature-desc">
+                        <asp:Label ID="lblFeat3Desc" runat="server"></asp:Label>
+                        <asp:TextBox ID="txtFeat3Desc" runat="server" CssClass="admin-edit-box" TextMode="MultiLine" Rows="3" Visible="false"></asp:TextBox>
+                    </div>
+                </a>
+            </div>
+
+            <div class="feature-card">
+                <a id="linkFeat4" runat="server" onserverclick="linkFeat4_ServerClick" class="card-link restricted-card">
+                    <i class="fas fa-question-circle feature-icon"></i>
+                    <div class="feature-title">
+                        <asp:Label ID="lblFeat4Title" runat="server"></asp:Label>
+                        <asp:TextBox ID="txtFeat4Title" runat="server" CssClass="admin-edit-box" Visible="false"></asp:TextBox>
+                    </div>
+                    <div class="feature-desc">
+                        <asp:Label ID="lblFeat4Desc" runat="server"></asp:Label>
+                        <asp:TextBox ID="txtFeat4Desc" runat="server" CssClass="admin-edit-box" TextMode="MultiLine" Rows="3" Visible="false"></asp:TextBox>
+                    </div>
+                </a>
             </div>
 
         </div>
@@ -123,4 +143,33 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var isLoggedIn = <%= Session["UserID"] != null ? "true" : "false" %>;
+
+            var restrictedCards = document.querySelectorAll(".restricted-card");
+            restrictedCards.forEach(function (card) {
+                card.addEventListener("click", function (e) {
+                    if (!isLoggedIn) {
+                        e.preventDefault();
+                        var isDarkMode = document.body.getAttribute("data-theme") === "dark";
+                        Swal.fire({
+                            icon: 'lock',
+                            title: 'Members Only',
+                            text: 'Please log in to access this feature.',
+                            confirmButtonText: 'Go to Login',
+                            confirmButtonColor: '#e11d48',
+                            background: isDarkMode ? '#1e293b' : '#ffffff',
+                            color: isDarkMode ? '#f8fafc' : '#334155',
+                            backdrop: `rgba(0,0,0,0.7)`
+                        }).then((result) => {
+                            if (result.isConfirmed) window.location.href = '/ZerotoAI/Login.aspx';
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
 </asp:Content>

@@ -159,6 +159,15 @@ namespace ZerotoAI
         protected global::System.Web.UI.WebControls.Image aboutLogo;
 
         /// <summary>
+        /// linkFeat1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor linkFeat1;
+
+        /// <summary>
         /// lblFeat1Title control.
         /// </summary>
         /// <remarks>
@@ -193,6 +202,15 @@ namespace ZerotoAI
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFeat1Desc;
+
+        /// <summary>
+        /// linkFeat2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor linkFeat2;
 
         /// <summary>
         /// lblFeat2Title control.
@@ -231,6 +249,15 @@ namespace ZerotoAI
         protected global::System.Web.UI.WebControls.TextBox txtFeat2Desc;
 
         /// <summary>
+        /// linkFeat3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor linkFeat3;
+
+        /// <summary>
         /// lblFeat3Title control.
         /// </summary>
         /// <remarks>
@@ -265,6 +292,51 @@ namespace ZerotoAI
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFeat3Desc;
+
+        /// <summary>
+        /// linkFeat4 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor linkFeat4;
+
+        /// <summary>
+        /// lblFeat4Title control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFeat4Title;
+
+        /// <summary>
+        /// txtFeat4Title control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFeat4Title;
+
+        /// <summary>
+        /// lblFeat4Desc control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFeat4Desc;
+
+        /// <summary>
+        /// txtFeat4Desc control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFeat4Desc;
 
         /// <summary>
         /// lblStat1Num control.

@@ -7,9 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zero to AI</title>
     
-    <link href="~/Content/style.css?v=2" rel="stylesheet" />
+    <link href="~/Content/style.css?v=3" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
@@ -71,25 +72,25 @@
             <div class="sidebar collapsed" id="sidebar">
                 <ul class="menu">
                     <li>
-                        <asp:LinkButton ID="dashboardBtn" runat="server" OnClick="dashboardBtn_Click">
+                        <asp:LinkButton ID="dashboardBtn" runat="server" OnClick="dashboardBtn_Click" CssClass="restricted-link">
                             <i class="fas fa-th-large"></i> <span>Dashboard</span>
                         </asp:LinkButton>
                     </li>
-                    
+        
                     <li>    
-                        <asp:LinkButton ID="simBtn" runat="server" OnClick="simBtn_Click">
+                        <asp:LinkButton ID="simBtn" runat="server" OnClick="simBtn_Click" CssClass="restricted-link">
                             <i class="fas fa-vial"></i> <span>Simulations</span>
                         </asp:LinkButton>
                     </li>
 
                     <li>
-                        <asp:LinkButton ID="coursesBtn" runat="server" OnClick="coursesBtn_Click">
+                        <asp:LinkButton ID="coursesBtn" runat="server" OnClick="coursesBtn_Click" CssClass="restricted-link">
                             <i class="fas fa-book"></i> <span>Courses</span>
                         </asp:LinkButton>
                     </li>
 
                     <li>
-                        <asp:LinkButton ID="quizzesBtn" runat="server" OnClick="quizzesBtn_Click">
+                        <asp:LinkButton ID="quizzesBtn" runat="server" OnClick="quizzesBtn_Click" CssClass="restricted-link">
                             <i class="fas fa-question-circle"></i> <span>Quizzes</span>
                         </asp:LinkButton>
                     </li>
@@ -181,6 +182,48 @@
                 }
             }
         }
+        // --- RESTRICTED LINK POPUP LOGIC (Now with Dark Mode Support!) ---
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // 1. Ask the server if the user is logged in right now
+            var isLoggedIn = <%= Session["UserID"] != null ? "true" : "false" %>;
+
+            // 2. Find all the sidebar links we tagged
+            var restrictedLinks = document.querySelectorAll(".restricted-link");
+
+            // 3. Watch for clicks on those links
+            restrictedLinks.forEach(function (link) {
+                link.addEventListener("click", function (e) {
+
+                    if (!isLoggedIn) {
+                        e.preventDefault(); // STOP the button from loading the page
+
+                        // 4. Check if the site is currently in Dark Mode
+                        var isDarkMode = document.body.getAttribute("data-theme") === "dark";
+
+                        // 5. Pick the colors based on the theme
+                        var popupBg = isDarkMode ? '#1e293b' : '#ffffff'; // Dark slate vs White
+                        var popupText = isDarkMode ? '#f8fafc' : '#334155'; // White text vs Dark text
+
+                        // Show the Theme-Aware SweetAlert popup
+                        Swal.fire({
+                            icon: 'lock',
+                            title: 'Members Only',
+                            text: 'Please log in to access this feature.',
+                            confirmButtonText: 'Go to Login',
+                            confirmButtonColor: '#e11d48', // Matches your red theme
+                            background: popupBg,           // Dynamic Background
+                            color: popupText,              // Dynamic Text Color
+                            backdrop: `rgba(0,0,0,0.7)`
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/ZerotoAI/Login.aspx';
+                            }
+                        });
+                    }
+                });
+            });
+        });
       
     </script>
 </body>

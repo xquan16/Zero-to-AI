@@ -13,22 +13,6 @@ namespace ZerotoAI
         {
             CheckLoginStatus();
 
-            // Add the Guest Popup logic ONLY if they are not logged in
-            if (Session["UserRole"] == null)
-            {
-                string loginUrl = ResolveClientUrl("~/ZerotoAI/Login.aspx");
-                string guestPopupJS = $"if(confirm('You haven\\'t logged in yet. Go to the Login page?')) {{ window.location.href='{loginUrl}'; }} return false;";
-
-                dashboardBtn.OnClientClick = guestPopupJS;
-                quizzesBtn.OnClientClick = guestPopupJS;
-                coursesBtn.OnClientClick = guestPopupJS;
-                simBtn.OnClientClick = guestPopupJS;
-            }
-            else
-            {
-                // 3. Clear the popup if they ARE logged in, so they can click normally
-                quizzesBtn.OnClientClick = "";
-            }
         }
 
         private void CheckLoginStatus()

@@ -1,29 +1,30 @@
 ﻿/* ----------------------- Variables & Theme ------------------------------- */
 
-/* --- Root Variables (Light Mode & Defaults) --- */
+/* --- Root Variables (Light Mode & Defaults: Member/Guest) --- */
 :root {
     /* Layout & Sizes */
     --sidebar-width: 200px;
     --sidebar-collapsed: 60px;
     --header-height: 60px;
-    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth snapping animation */
-    --shadow: 0 4px 12px rgba(0,0,0,0.08);
-    /* Light Mode Base Colors */
-    --bg-body: #ffffff;
-    --bg-card: #f4f6f8;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow: 0 4px 12px rgba(0,0,0,0.06);
+    /* THE FIX: Soft blue background, with slightly deeper blue cards/textboxes */
+    --bg-body: #e8f2fc; /* Very soft, comfortable sky blue */
+    --bg-card: #d3e6f8; /* Noticeably deeper blue for textboxes to stand out without white! */
+
     --text-main: #000000;
     --text-sidebar: #ffffff;
     --text-topbar: #ffffff;
-    --text-muted: #636e72;
-    --border-color: #e0e0e0;
+    --text-muted: #57606f; /* Slightly darker muted text for better reading on tinted backgrounds */
+    --border-color: #bdd5ed;
     /* Default Brand Colors (Member/Guest: Blue) */
     --bg-sidebar: #0096FF;
     --bg-topbar: #0077CC;
     --bg-hero: rgba(0, 150, 255, 0.15);
+    --bg-soft: rgba(0, 150, 255, 0.04);
 }
 
 /* --- Dark Mode Base --- */
-/* Applied automatically via JS when the moon icon is clicked */
 [data-theme="dark"] {
     --bg-body: #121212;
     --bg-card: #1e1e1e;
@@ -32,39 +33,54 @@
     --text-muted: #b2bec3;
     --border-color: #333333;
     --shadow: 0 4px 15px rgba(0,0,0,0.5);
-    /* Subtle brand shift to deeper blues for Dark Mode to reduce eye strain */
+    --bg-soft: rgba(0, 150, 255, 0.08);
     --bg-sidebar: #0F52BA;
     --bg-topbar: #0A3A7A;
 }
 
-
 /* --- Role-Based Theme Overrides --- */
-/* Admin Theme (Red) - Applied via JS when Admin logs in */
+
+/* Admin Theme (Red) */
 [data-role="admin"] {
+    --bg-body: #fcebeb; /* Very soft blush background */
+    --bg-card: #f2d3d6; /* Noticeably deeper soft pink for textboxes/cards */
     --bg-sidebar: #FB2C36;
     --bg-topbar: #C01128;
     --bg-hero: rgba(251, 44, 54, 0.15);
+    --bg-soft: rgba(251, 44, 54, 0.04);
+    --border-color: #e8babb;
 }
 
-    /* Admin Dark Mode Theme (Deep Red) */
+    /* Admin Dark Mode Theme */
     [data-role="admin"][data-theme="dark"] {
+        --bg-body: #121212;
+        --bg-card: #1e1e1e;
         --bg-sidebar: #C11007;
         --bg-topbar: #82181A;
+        --bg-soft: rgba(251, 44, 54, 0.08);
+        --border-color: #333333;
     }
 
-/* Editor Theme (Purple) - Applied via JS when Editor logs in */
+/* Editor Theme (Purple) */
 [data-role="editor"] {
+    --bg-body: #f3ebfc; /* Very soft lavender background */
+    --bg-card: #e2d1f8; /* Noticeably deeper lavender for textboxes/cards */
     --bg-sidebar: #A82EFF;
     --bg-topbar: #7809C8;
     --bg-hero: rgba(168, 46, 255, 0.15);
+    --bg-soft: rgba(168, 46, 255, 0.04);
+    --border-color: #d0b8f0;
 }
 
-    /* Editor Dark Mode Theme (Deep Purple) */
+    /* Editor Dark Mode Theme */
     [data-role="editor"][data-theme="dark"] {
+        --bg-body: #121212;
+        --bg-card: #1e1e1e;
         --bg-sidebar: #7809C8;
         --bg-topbar: #5E079C;
+        --bg-soft: rgba(168, 46, 255, 0.08);
+        --border-color: #333333;
     }
-
 
 /* --- Browser Specific Fixes --- */
 [data-theme="dark"] input[type="password"]::-ms-reveal,
@@ -457,6 +473,12 @@ form#form1 {
 
 
 
+
+
+
+
+
+
 /* ----------------------- Auth.Master ------------------------------- */
 
 /* --- Split Container --- */
@@ -465,6 +487,7 @@ form#form1 {
     display: flex;
     height: calc(100vh - var(--header-height));
     margin-top: 0;
+    background-color: var(--bg-card);
 }
 
 
@@ -545,13 +568,13 @@ form#form1 {
         padding: 18px;
         font-size: 1.1rem;
         border-radius: 12px;
-        background-color: var(--bg-card);
+        background-color: var(--bg-body);
         border: 2px solid transparent;
     }
 
         /* Highlighting the input field when the user clicks to type */
         .form-wrapper-large .form-control:focus {
-            background-color: var(--bg-body);
+            background-color: var(--bg-card);
             border-color: var(--bg-sidebar);
         }
 
@@ -810,90 +833,110 @@ form#form1 {
 }
 
 
-/* --- Features Grid --- */
-
-/* CSS Grid layout that automatically wraps the 3 feature cards based on screen size */
+/* --- UNIFIED FEATURES GRID --- */
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 30px;
-    margin-bottom: 80px;
-    max-width: 1400px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 40px auto;
+    max-width: 1200px;
 }
 
-/* The individual feature boxes (Interactive Simulations, Analytics, etc.) */
 .feature-card {
-    background: var(--bg-body);
-    padding: 40px 30px;
-    border-radius: 20px;
-    text-align: center;
+    background: var(--bg-soft); /* Uses your new role-based color! */
     border: 1px solid var(--border-color);
-    transition: 0.3s ease;
+    border-radius: 16px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
 }
 
-    /* Hover effect making the feature cards float up and glow with the theme border */
     .feature-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        border-color: var(--bg-sidebar);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        border-color: var(--bg-sidebar); /* Lights up the border based on role */
     }
 
-/* The FontAwesome icons inside the feature cards */
+/* Makes the ENTIRE card fully clickable and strips link formatting */
+.card-link {
+    text-decoration: none !important; /* Forces the underline away */
+    color: inherit !important; /* Forces the blue text away */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 40px 30px; /* Padding is here so the edges are clickable! */
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .feature-icon {
     font-size: 45px;
-    color: var(--bg-sidebar);
-    margin-bottom: 25px;
-    display: inline-block;
+    color: var(--bg-sidebar); /* Icon matches role color */
+    margin-bottom: 20px;
 }
 
-/* The bold titles inside the feature cards */
 .feature-title {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+    font-weight: 800;
     margin-bottom: 15px;
-    font-weight: 700;
     color: var(--text-main);
 }
 
-/* The descriptive text underneath the feature titles */
 .feature-desc {
-    color: var(--text-muted);
-    font-size: 1rem;
+    font-size: 1.05rem;
     line-height: 1.6;
+    color: var(--text-muted);
+}
+
+/* Stacks to 1 column on mobile phones */
+@media (max-width: 768px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 
-/* --- Stats Row --- */
+/* --- Home Page Stats Row --- */
 .stats-row {
     display: flex;
-    justify-content: center;
-    gap: 150px;
+    justify-content: space-around;
+    align-items: center;
     flex-wrap: wrap;
-    padding-top: 40px;
-    border-top: 1px solid var(--border-color);
+    margin: 80px auto 40px;
+    max-width: 1500px;
+    text-align: center;
 }
 
-.stat-item h2 {
-    font-size: 4.5rem;
-    margin: 0;
-    color: var(--text-main);
-    font-weight: 800;
+.stat-item {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 30px;
 }
 
-    .stat-item h2 span {
-        font-size: inherit;
-        color: inherit;
-        font-weight: inherit;
+    .stat-item h2 {
+        font-size: 4rem; /* Giant numbers */
+        font-weight: 900;
+        color: var(--text-main);
+        margin: 0 0 10px 0;
+        line-height: 1;
     }
 
-.stat-desc {
-    color: var(--text-muted);
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    font-weight: 600;
-    display: inline-block;
+    .stat-item .stat-desc {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 3px; /* Stretches the text out cleanly */
+        font-weight: 700;
+    }
+
+/* Stacks neatly on mobile phones */
+@media (max-width: 768px) {
+    .stats-row {
+        flex-direction: column;
+        gap: 40px;
+    }
 }
 
 
@@ -1004,7 +1047,7 @@ textarea.admin-edit-box {
     padding: 10px;
     border: 1px solid var(--border-color);
     border-radius: 6px;
-    background: var(--bg-body);
+    background-color: var(--bg-body);
     color: var(--text-main);
     font-size: 1rem;
 }
@@ -1149,7 +1192,7 @@ textarea.admin-edit-box {
     width: calc(100% + 60px);
     min-height: calc(100% + 60px);
     margin: -30px -30px 0 -30px;
-    background: var(--bg-body);
+    background: var(--bg-card);
     border: none;
     box-shadow: none;
     border-radius: 0;
@@ -1158,7 +1201,7 @@ textarea.admin-edit-box {
 /* LEFT SIDE: Thin sidebar (45%) containing the large avatar and upload button */
 .profile-left-pane {
     flex: 0 0 45%;
-    background: var(--bg-hero-overlay); /* Uses theme color overlay */
+    background: transparent;
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
@@ -1171,7 +1214,7 @@ textarea.admin-edit-box {
 /* RIGHT SIDE: Wide main area (65%) containing the actual form */
 .profile-right-pane {
     flex: 1;
-    background: var(--bg-body);
+    background: var(--bg-card);
     padding: 60px 80px;
     display: flex;
     flex-direction: column;

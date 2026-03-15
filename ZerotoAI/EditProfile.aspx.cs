@@ -248,48 +248,7 @@ namespace Zero_to_AI.ZerotoAI
                 }
             }
 
-            else if (fuProfilePic.HasFile)
-            {
-                try
-                {
-                    // Use uploaded file. Generate filename as: {UserID}_{sanitizedOriginal}
-                    int userId = GetUserIdByUsername(currentUsername);
-                    if (userId == 0) { ShowError("User not found."); return; }
-
-                    string original = fuProfilePic.FileName;
-                    string safe = SanitizeFileName(original);
-                    string newFilename = userId + "_" + safe;
-
-                    // Ensure extension is jpg or png; convert if necessary by saving as uploaded bytes
-                    string ext = Path.GetExtension(safe).ToLowerInvariant();
-                    if (ext != ".jpg" && ext != ".jpeg" && ext != ".png")
-                    {
-                        // default to jpg
-                        ext = ".jpg";
-                    }
-                    filename = newFilename + ext;
-                    string savePath = Server.MapPath("~/images/") + filename;
-
-                    // Delete old image if exists
-                    string oldPic = GetCurrentProfilePic(currentUsername);
-                    if (!string.IsNullOrEmpty(oldPic) && oldPic != "default_user.png")
-                    {
-                        string oldPath = Server.MapPath("~/images/") + oldPic;
-                        if (File.Exists(oldPath))
-                        {
-                            try { File.Delete(oldPath); } catch { }
-                        }
-                    }
-
-                    // Save file to images folder
-                    fuProfilePic.SaveAs(savePath);
-                }
-                catch (Exception ex)
-                {
-                    ShowError("Upload Error: " + ex.Message);
-                    return;
-                }
-            }
+            
 
             // 4. DATABASE UPDATE
             try
@@ -314,6 +273,36 @@ namespace Zero_to_AI.ZerotoAI
                     if (filename != null) cmd.Parameters.AddWithValue("@Pic", filename);
 
                     cmd.ExecuteNonQuery();
+
+                    // --- NEW SECURITY FEATURE: Check if password was changed ---
+                    if (passwordHash != null)
+                    {
+                        // 1. Instantly destroy their active session
+                        Session.Clear();
+                        Session.Abandon();
+
+                        // 2. Trigger a beautiful SweetAlert popup, then redirect to Login
+                        string script = @"
+                            var isDarkMode = document.body.getAttribute('data-theme') === 'dark';
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Password Updated',
+                                text: 'For your security, please log in again with your new password.',
+                                confirmButtonText: 'Go to Login',
+                                confirmButtonColor: '#0d9488',
+                                background: isDarkMode ? '#1e293b' : '#ffffff',
+                                color: isDarkMode ? '#f8fafc' : '#334155',
+                                backdrop: 'rgba(0,0,0,0.7)',
+                                allowOutsideClick: false 
+                            }).then((result) => {
+                                window.location.href = '/ZerotoAI/Login.aspx';
+                            });";
+
+                        ClientScript.RegisterStartupScript(this.GetType(), "PwdChanged", script, true);
+                        return; // Stop the code here so it doesn't redirect to dashboard!
+                    }
+
+                    // --- NORMAL PROFILE UPDATE (If they didn't change their password) ---
 
                     // 5. UPDATE SESSION
                     Session["Username"] = newUsername;

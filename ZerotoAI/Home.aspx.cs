@@ -45,6 +45,9 @@ namespace ZerotoAI
                     lblFeat3Title.Text = txtFeat3Title.Text = content.ContainsKey("Feature3Title") ? content["Feature3Title"] : "";
                     lblFeat3Desc.Text = txtFeat3Desc.Text = content.ContainsKey("Feature3Desc") ? content["Feature3Desc"] : "";
 
+                    lblFeat4Title.Text = txtFeat4Title.Text = content.ContainsKey("Feature4Title") ? content["Feature4Title"] : "";
+                    lblFeat4Desc.Text = txtFeat4Desc.Text = content.ContainsKey("Feature4Desc") ? content["Feature4Desc"] : "";
+
                     // Stats Row
                     lblStat1Num.Text = txtStat1Num.Text = content.ContainsKey("Stat1Num") ? content["Stat1Num"] : "";
                     lblStat1Text.Text = txtStat1Text.Text = content.ContainsKey("Stat1Label") ? content["Stat1Label"] : "";
@@ -56,6 +59,48 @@ namespace ZerotoAI
                     lblStat3Text.Text = txtStat3Text.Text = content.ContainsKey("Stat3Label") ? content["Stat3Label"] : "";
                 }
             }
+        }
+
+
+        // --- FEATURE CARD ROUTING LOGIC ---
+        protected void linkFeat1_ServerClick(object sender, EventArgs e)
+        {
+            if (Session["UserRole"] == null) { Response.Redirect("~/ZerotoAI/Login.aspx"); return; }
+            string role = Session["UserRole"].ToString();
+
+            if (role == "Admin") Response.Redirect("~/Admin/AdminDashboard.aspx");
+            else if (role == "Editor") Response.Redirect("~/Editor/EditorDashboard.aspx");
+            else Response.Redirect("~/Member/Dashboard.aspx");
+        }
+
+        protected void linkFeat2_ServerClick(object sender, EventArgs e)
+        {
+            if (Session["UserRole"] == null) { Response.Redirect("~/ZerotoAI/Login.aspx"); return; }
+            string role = Session["UserRole"].ToString();
+
+            if (role == "Admin") Response.Redirect("~/Admin/AdminSimulations.aspx");
+            else if (role == "Editor") Response.Redirect("~/Editor/EditorSimulations.aspx");
+            else Response.Redirect("~/Member/Simulations.aspx");
+        }
+
+        protected void linkFeat3_ServerClick(object sender, EventArgs e)
+        {
+            if (Session["UserRole"] == null) { Response.Redirect("~/ZerotoAI/Login.aspx"); return; }
+            string role = Session["UserRole"].ToString();
+
+            if (role == "Admin") Response.Redirect("~/Admin/AdminCourses.aspx");
+            else if (role == "Editor") Response.Redirect("~/Editor/EditorCourses.aspx");
+            else Response.Redirect("~/Member/Courses.aspx");
+        }
+
+        protected void linkFeat4_ServerClick(object sender, EventArgs e)
+        {
+            if (Session["UserRole"] == null) { Response.Redirect("~/ZerotoAI/Login.aspx"); return; }
+            string role = Session["UserRole"].ToString();
+
+            if (role == "Admin") Response.Redirect("~/Admin/AdminMonitorQuiz.aspx");
+            else if (role == "Editor") Response.Redirect("~/Editor/EditorEditQuiz.aspx");
+            else Response.Redirect("~/Member/QuizTopic.aspx");
         }
 
 
@@ -77,6 +122,8 @@ namespace ZerotoAI
                 { "Feature2Desc", txtFeat2Desc.Text },
                 { "Feature3Title", txtFeat3Title.Text },
                 { "Feature3Desc", txtFeat3Desc.Text },
+                { "Feature4Title", txtFeat4Title.Text },
+                { "Feature4Desc", txtFeat4Desc.Text },
 
                 { "Stat1Num", txtStat1Num.Text },
                 { "Stat1Label", txtStat1Text.Text },
@@ -120,6 +167,25 @@ namespace ZerotoAI
 
             lblFeat3Title.Visible = !isEdit; txtFeat3Title.Visible = isEdit;
             lblFeat3Desc.Visible = !isEdit; txtFeat3Desc.Visible = isEdit;
+
+            lblFeat4Title.Visible = !isEdit; txtFeat4Title.Visible = isEdit;
+            lblFeat4Desc.Visible = !isEdit; txtFeat4Desc.Visible = isEdit;
+
+            // Prevent clicking the cards from navigating away while the Admin is editing
+            if (isEdit)
+            {
+                linkFeat1.Attributes["onclick"] = "return false;";
+                linkFeat2.Attributes["onclick"] = "return false;";
+                linkFeat3.Attributes["onclick"] = "return false;";
+                linkFeat4.Attributes["onclick"] = "return false;";
+            }
+            else
+            {
+                linkFeat1.Attributes.Remove("onclick");
+                linkFeat2.Attributes.Remove("onclick");
+                linkFeat3.Attributes.Remove("onclick");
+                linkFeat4.Attributes.Remove("onclick");
+            }
 
             // Toggle Stats
             lblStat1Num.Visible = !isEdit; txtStat1Num.Visible = isEdit;
