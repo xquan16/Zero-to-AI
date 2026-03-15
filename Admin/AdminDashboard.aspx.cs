@@ -73,7 +73,7 @@ namespace Zero_to_AI.Admin
         private void LoadFeedback()
         {
             string filter = ViewState["FbTab"].ToString();
-            string sql = "SELECT f.FeedbackID, f.Message, f.Date, f.Status, f.AdminReply, u.Username FROM Feedback f INNER JOIN Users u ON f.UserID = u.UserID";
+            string sql = "SELECT F.FeedbackID, U.Username, F.Message, F.Date, F.Status, F.AdminReply, ISNULL(U.IsBanned, 0) AS IsBanned FROM Feedback F INNER JOIN Users U ON F.UserID = U.UserID";
 
             if (filter == "Unread") sql += " WHERE f.Status = 'Unread'";
             else if (filter == "Read") sql += " WHERE f.Status = 'Read'";
@@ -92,16 +92,36 @@ namespace Zero_to_AI.Admin
             rptAdminFeedback.Visible = dt.Rows.Count > 0;
         }
 
+        // --- UNIFIED REPEATER COMMAND (Fixes the page jumping and broken buttons) ---
         protected void rptAdminFeedback_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
-            if (e.CommandName == "Reply")
+            // --- 1. THE TOGGLE READ/UNREAD BUTTON ---
+            if (e.CommandName == "ToggleStatus")
+            {
+                int feedbackId = Convert.ToInt32(e.CommandArgument);
+
+                string sql = "UPDATE Feedback SET Status = CASE WHEN Status = 'Unread' THEN 'Read' ELSE 'Unread' END WHERE FeedbackID = @fid";
+                using (SqlConnection conn = new SqlConnection(_conn))
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@fid", feedbackId);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                lblMessage.Text = "<i class='fas fa-envelope-open-text'></i> Message status updated!";
+                lblMessage.Visible = true;
+            }
+            // --- 2. THE SAVE REPLY BUTTON ---
+            else if (e.CommandName == "Reply")
             {
                 int feedbackId = Convert.ToInt32(e.CommandArgument);
                 TextBox txtAdminReply = (TextBox)e.Item.FindControl("txtAdminReply");
-                string replyText = txtAdminReply.Text.Trim();
 
+                string replyText = txtAdminReply.Text.Trim();
                 if (string.IsNullOrEmpty(replyText)) return;
 
+                // FIXED: Added "Status = 'Read'" so saving a reply automatically marks it as read!
                 string sql = "UPDATE Feedback SET AdminReply = @reply, Status = 'Read' WHERE FeedbackID = @fid";
                 using (SqlConnection conn = new SqlConnection(_conn))
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
@@ -112,10 +132,13 @@ namespace Zero_to_AI.Admin
                     cmd.ExecuteNonQuery();
                 }
 
-                lblMessage.Text = "<i class='fas fa-check'></i> Reply sent successfully!";
+                lblMessage.Text = "<i class='fas fa-check'></i> Reply saved and marked as read!";
                 lblMessage.Visible = true;
-                LoadFeedback();
             }
+
+            // Refresh the panel data quietly in the background
+            LoadFeedback();
+            upFeedback.Update();
         }
 
         // ── USER MANAGEMENT TABS & LOGIC ───────────────────────────────────
@@ -195,6 +218,10 @@ namespace Zero_to_AI.Admin
                 lblMessage.Visible = true;
 
                 LoadUsers(txtSearchUser.Text.Trim()); // Refresh grid
+                LoadFeedback();
+
+                upUsers.Update();
+                upFeedback.Update();
             }
         }
     }

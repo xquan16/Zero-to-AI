@@ -1,6 +1,8 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EditorEditQuiz.aspx.cs" Inherits="Zero_to_AI.Editor.EditorEditQuiz" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EditorEditQuiz.aspx.cs" Inherits="Zero_to_AI.Editor.EditorEditQuiz" Async="true" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <div class="editor-container">
@@ -41,11 +43,20 @@
 
 
         <div class="add-section">
-            <div class="add-title">➕ Add New Question</div>
-            
-            <div class="form-row">
+            <div class="add-title">Add New Question</div>
+
+            <div class="ai-panel">
+                <div class="ai-title">✨ AI Question Copilot</div>
+                <div class="ai-input-group">
+                    <asp:TextBox ID="txtAITopic" runat="server" placeholder="Enter a topic (e.g., Neural Networks, Arduino)..." CssClass="form-input" style="flex: 1; border: none;"></asp:TextBox>
+                    <asp:Button ID="btnGenerateAI" runat="server" Text="Generate" OnClick="btnGenerateAI_Click" CssClass="btn-ai" />
+                </div>
+                <asp:Label ID="lblAIStatus" runat="server" style="display: block; margin-top: 10px; font-size: 14px; font-weight: bold;"></asp:Label>
+            </div>
+
+            <div class="form-row" style="margin-bottom: 20px;">
                 <span class="form-label">Question Text:</span>
-                <asp:TextBox ID="txtNewQuestion" runat="server" CssClass="form-input" placeholder="Enter the question..."></asp:TextBox>
+                <asp:TextBox ID="txtNewQuestion" runat="server" CssClass="form-input" TextMode="MultiLine" Rows="3" placeholder="Enter the main question here..."></asp:TextBox>
             </div>
 
             <div class="form-grid">

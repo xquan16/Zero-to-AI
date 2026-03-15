@@ -27,7 +27,7 @@
 
         <div class="dash-panel-grid">
             
-            <asp:UpdatePanel ID="upFeedback" runat="server"><ContentTemplate>
+            <asp:UpdatePanel ID="upFeedback" runat="server" UpdateMode="Conditional"><ContentTemplate>
                 <div class="panel panel-fixed-height">
                     <h2><i class="fas fa-comments"></i> Member Feedback</h2>
                     <asp:Label ID="lblMessage" runat="server" Visible="false" CssClass="lbl-alert"></asp:Label>
@@ -44,27 +44,54 @@
                                 <div class="fb-item">
                                     <div class="fb-date">
                                         <strong><%# Eval("Username") %></strong> &bull; <%# Eval("Date", "{0:MMM dd, yyyy HH:mm}") %>
-                                        <span class='float-right <%# Eval("Status").ToString() == "Unread" ? "text-danger" : "text-success" %>'><%# Eval("Status") %></span>
+                
+                                        <div class="float-right" style="display: flex; align-items: center; gap: 8px;">
+                                            <span class='<%# Eval("Status").ToString() == "Unread" ? "text-danger" : "text-success" %>'>
+                                                <%# Eval("Status") %>
+                                            </span>
+                    
+                                            <asp:LinkButton ID="btnToggleStatus" runat="server" 
+                                                CommandName="ToggleStatus" 
+                                                CommandArgument='<%# Eval("FeedbackID") %>'
+                                                CssClass="btn-transparent" style="padding: 0;"
+                                                CausesValidation="false"
+                                                ToolTip='<%# Eval("Status").ToString() == "Unread" ? "Mark as Read" : "Mark as Unread" %>'>
+                                                <i class='<%# Eval("Status").ToString() == "Unread" ? "fas fa-envelope" : "fas fa-envelope-open-text" %>'></i>
+                                            </asp:LinkButton>
+                                        </div>
                                     </div>
+            
                                     <div class="fb-msg"><%# Eval("Message") %></div>
-                                    
+
                                     <asp:Panel runat="server" Visible='<%# Eval("Status").ToString() == "Unread" %>'>
-                                        <asp:TextBox ID="txtAdminReply" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="2" placeholder="Type your reply here..."></asp:TextBox>
-                                        <asp:Button ID="btnReply" runat="server" Text="Reply & Mark Read" CssClass="btn-admin btn-mini" CommandName="Reply" CommandArgument='<%# Eval("FeedbackID") %>' />
+                                        <asp:TextBox ID="txtAdminReply" runat="server" 
+                                            Text='<%# Eval("AdminReply") %>'
+                                            CssClass='<%# (Convert.ToBoolean(Eval("IsBanned")) || Eval("Message").ToString().Contains("[BANNED APPEAL]")) ? "form-control banned-reply-box" : "form-control" %>' 
+                                            TextMode="MultiLine" Rows="2" 
+                                            placeholder='<%# Convert.ToBoolean(Eval("IsBanned")) ? "User is banned. Replies are disabled." : (Eval("Message").ToString().Contains("[BANNED APPEAL]") ? "Replies are disabled for banned appeals." : "Type your reply here...") %>'
+                                            Enabled='<%# !(Convert.ToBoolean(Eval("IsBanned")) || Eval("Message").ToString().Contains("[BANNED APPEAL]")) %>'></asp:TextBox>
+
+                                        <asp:Button ID="btnReply" runat="server" Text="Save Reply" CssClass="btn-admin btn-mini" 
+                                            CommandName="Reply" 
+                                            CommandArgument='<%# Eval("FeedbackID") %>'
+                                            CausesValidation="false"
+                                            Visible='<%# !(Convert.ToBoolean(Eval("IsBanned")) || Eval("Message").ToString().Contains("[BANNED APPEAL]")) %>' />
                                     </asp:Panel>
 
                                     <asp:Panel runat="server" Visible='<%# Eval("Status").ToString() == "Read" %>' CssClass="fb-reply">
-                                        <strong>Your Reply:</strong><br /><%# Eval("AdminReply") %>
+                                        <strong>Your Reply:</strong><br />
+                                        <%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("AdminReply"))) ? "N/A" : Eval("AdminReply") %>
                                     </asp:Panel>
                                 </div>
-                             </ItemTemplate>
+                            </ItemTemplate>
                         </asp:Repeater>
+
                         <asp:Label ID="lblNoFeedbackAdmin" runat="server" Visible="false" Text="No feedback found for this filter." ForeColor="#94a3b8" Font-Bold="true"></asp:Label>
                     </div>
                 </div>
             </ContentTemplate></asp:UpdatePanel>
 
-            <asp:UpdatePanel ID="upUsers" runat="server"><ContentTemplate>
+            <asp:UpdatePanel ID="upUsers" runat="server" UpdateMode="Conditional"><ContentTemplate>
                 <div class="panel panel-fixed-height">
                     <div class="dash-panel-header">
                         <h2><i class="fas fa-user-shield"></i> User Management</h2>

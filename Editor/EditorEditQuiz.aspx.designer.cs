@@ -42,6 +42,33 @@ namespace Zero_to_AI.Editor
         protected global::System.Web.UI.WebControls.Label lblNoData;
 
         /// <summary>
+        /// txtAITopic control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAITopic;
+
+        /// <summary>
+        /// btnGenerateAI control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGenerateAI;
+
+        /// <summary>
+        /// lblAIStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAIStatus;
+
+        /// <summary>
         /// txtNewQuestion control.
         /// </summary>
         /// <remarks>
