@@ -7,6 +7,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
     <div class="dashboard-container">
+        <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         
         <div class="card">
             <h3>📊 Questions Breakdown</h3>
@@ -28,6 +29,40 @@
                 Last Activity: <b><asp:Label ID="lblLastUpdate" runat="server" Text="No activity yet"></asp:Label></b>
             </div>
         </div>
+
+        <asp:UpdatePanel ID="upAI" runat="server" class="full-width">
+            <ContentTemplate>
+                <div class="ai-insight-card">
+                    <div style="display:flex; justify-content: space-between; align-items: center;">
+                        <h3 style="margin:0; border:none; padding:0; color:white;">✨ AI Command Center</h3>
+                        <div style="display:flex; gap: 10px;">
+                            <asp:Button ID="btnGenerateReport" runat="server" Text="📊 System Report" OnClick="btnGenerateReport_Click" style="background:#fff; color:#764ba2; border:none; padding:10px 15px; border-radius:8px; cursor:pointer; font-weight:bold; transition:0.3s;" />
+                            <asp:Button ID="btnFindAtRisk" runat="server" Text="🎯 Find At-Risk Student" OnClick="btnFindAtRisk_Click" style="background:#ff7675; color:#fff; border:none; padding:10px 15px; border-radius:8px; cursor:pointer; font-weight:bold; transition:0.3s; box-shadow: 0 4px 10px rgba(255,118,117,0.4);" />
+                        </div>
+                    </div>
+
+                    <div class="ai-result-box">
+                        <asp:Label ID="lblAIReport" runat="server" Text="Select an AI action above to analyze the database."></asp:Label>
+
+                        <asp:Panel ID="pnlEmailDraft" runat="server" Visible="false" style="margin-top:15px; border-top:2px dashed #eee; padding-top:15px;">
+                            <div style="font-weight:bold; color:#d63031; margin-bottom:10px; font-size:16px;">
+                                <asp:Label ID="lblAtRiskWarning" runat="server"></asp:Label>
+                            </div>
+
+                            <div style="margin-bottom: 15px; background: #f0f8ff; padding: 10px; border-radius: 8px;">
+                                <span style="font-weight: bold; color: #0984e3; font-size: 14px;">✉️ Send To: </span>
+                                <asp:TextBox ID="txtRecipientEmail" runat="server" placeholder="student@gmail.com" style="width: 70%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; outline: none;"></asp:TextBox>
+                            </div>
+                            <asp:TextBox ID="txtEmailDraft" runat="server" TextMode="MultiLine" Rows="7" style="width:100%; border-radius:8px; padding:15px; border:1px solid #ccc; font-family:inherit; font-size:14px; line-height:1.5; outline:none; box-sizing:border-box; background:#f9f9f9;"></asp:TextBox>
+
+                            <div style="text-align:right; margin-top:12px;">
+                                <asp:Button ID="btnSendEmail" runat="server" Text="🚀 Send REAL Email" OnClick="btnSendEmail_Click" style="background:#0984e3; color:white; padding:10px 20px; border:none; border-radius:6px; cursor:pointer; font-weight:bold; transition:0.2s;" />
+                            </div>
+                        </asp:Panel>
+                    </div>
+                </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
 
         <div class="card full-width">
             <h3>📝 Editor Audit Log</h3>

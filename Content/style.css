@@ -1764,6 +1764,259 @@ textarea.admin-edit-box {
 }
 
 
+/* ----------------------- AI Chat & Admin Panels ------------------------------- */
+
+/* Quiz Chatbot Transitions */
+.main-wrapper {
+    transition: all 0.4s ease-in-out;
+    position: relative;
+}
+
+.mode-center {
+    max-width: 900px;
+    margin: 40px auto;
+    display: block;
+}
+
+    .mode-center .quiz-container-left {
+        height: auto;
+        overflow: visible;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+    }
+
+/* Split Screen layout for Chatbot */
+.mode-split {
+    max-width: 1400px;
+    margin: 20px auto;
+    display: flex;
+    gap: 25px;
+    height: 78vh;
+    align-items: stretch;
+}
+
+    .mode-split .quiz-container-left {
+        flex: 1;
+        height: 100%;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+    }
+
+    .mode-split .ai-chat-right {
+        width: 400px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background: #f8faff;
+        border: 2px solid #d1e3ff;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+.quiz-container-left {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+}
+
+    /* Scrollbars */
+    .quiz-container-left::-webkit-scrollbar, .chat-messages::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .quiz-container-left::-webkit-scrollbar-track, .chat-messages::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .quiz-container-left::-webkit-scrollbar-thumb, .chat-messages::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 8px;
+    }
+
+/* Correct/Wrong Highlighting */
+.opt-correct {
+    background-color: #e8f5e9;
+    border: 1px solid #a5d6a7;
+    color: #1b5e20;
+    font-weight: bold;
+}
+
+.opt-wrong {
+    background-color: #ffebee;
+    border: 1px solid #ef9a9a;
+    color: #b71c1c;
+    font-weight: bold;
+}
+
+.btn-explain {
+    background: #ff9f43;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+    .btn-explain:hover {
+        background: #ee5253;
+        transform: translateY(-2px);
+    }
+
+/* Chatbot Inner UI */
+.chat-header {
+    background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+    padding: 15px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.msg-bubble {
+    padding: 12px 16px;
+    border-radius: 15px;
+    max-width: 85%;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.msg-user {
+    background: #3498db;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 3px;
+}
+
+.msg-ai {
+    background: #fff;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    align-self: flex-start;
+    border-bottom-left-radius: 3px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.chat-input-area {
+    padding: 12px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 8px;
+    background: #fff;
+    border-radius: 0 0 10px 10px;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+}
+
+.btn-send {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Admin AI Insight Panel */
+.ai-insight-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(118, 75, 162, 0.3);
+}
+
+.ai-result-box {
+    margin-top: 15px;
+    background: rgba(255,255,255,0.95);
+    padding: 20px;
+    border-radius: 12px;
+    color: #333;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 60px;
+}
+
+
+/* ----------------------- Gorgeous Quiz UI Overrides ------------------------------- */
+.question-block {
+    background: var(--bg-card); /* Makes the question block a clean white card */
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: var(--shadow);
+    border-bottom: none;
+    border-left: 5px solid var(--bg-sidebar); /* Adds a clean role-colored accent line on the left */
+}
+
+.q-text {
+    font-size: 1.15rem;
+    color: var(--text-main);
+    margin-bottom: 20px;
+    line-height: 1.5;
+    font-weight: 700;
+}
+
+.marks-label {
+    float: right;
+    background: rgba(14, 165, 233, 0.1);
+    color: #0ea5e9; /* Light blue pill badge */
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.options-box label {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    margin-bottom: 12px;
+    background: var(--bg-body); /* Slightly inset background for the options */
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+    /* Beautiful hover effect when the user mouses over an answer */
+    .options-box label:hover {
+        background: var(--bg-card);
+        border-color: var(--bg-sidebar);
+        box-shadow: 0 4px 12px rgba(0, 150, 255, 0.1);
+        transform: translateY(-2px);
+    }
+
+/* Makes the little radio dot bigger and matches your theme color */
+.options-box input[type="radio"] {
+    margin-right: 15px;
+    transform: scale(1.2);
+    accent-color: var(--bg-sidebar);
+}
+
+
 
 
 /* ----------------------- Editor Edit Quiz (EditorEditQuiz.aspx) ------------------------------- */
