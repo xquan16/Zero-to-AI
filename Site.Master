@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zero to AI</title>
     
-    <link href="~/Content/style.css?v=3" rel="stylesheet" />
+    <link href="~/Content/style.css?v=4" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    
@@ -17,6 +17,7 @@
 
 
 <body id="masterBody" runat="server">
+
     <form id="form1" runat="server">
 
         <div class="top-bar">
@@ -106,9 +107,9 @@
                             <span>&copy; <%= DateTime.Now.Year %> Zero to AI. All rights reserved.</span>
                             <div class="footer-links">
                                 <a href="https://xquan16.github.io/About-me/" target="_blank" rel="noopener noreferrer">CHAN XIN QUAN</a>
-                                <a href="#" target="_blank" rel="noopener noreferrer">CHEN ZHENG HAO</a>
-                                <a href="#" target="_blank" rel="noopener noreferrer">KAEMON NG</a>
-                                <a href="#" target="_blank" rel="noopener noreferrer">SAWRAW MADUB</a>
+                                <a href="https://www.linkedin.com/in/chen-zheng-hao-66b552347/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BeNo5GXLHQZKpJqJ%2FQ33V2A%3D%3D" target="_blank" rel="noopener noreferrer">CHEN ZHENG HAO</a>
+                                <a href="https://github.com/Kaemon" target="_blank" rel="noopener noreferrer">KAEMON NG</a>
+                                <a href="https://www.linkedin.com/in/sawraw-madub-0591b4347/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BLtRhndzBSCyK1mXKc8NcyA%3D%3D" target="_blank" rel="noopener noreferrer">SAWRAW MADUB</a>
                             </div>
                         </div>
                     </footer>
@@ -116,9 +117,137 @@
             </div>
         </div>
 
+
+        <asp:Panel ID="zoaPanel" runat="server" Visible="false">
+            <div class="zoa-container">
+                <div id="zoaWindow" class="zoa-window">
+                    <div class="zoa-header">
+                        <div class="zoa-title">
+                            <i class="fas fa-robot"></i>  Zoa AI Tutor
+                        </div>
+                        <button type="button" class="zoa-close" onclick="toggleZoa()">&times;</button>
+                    </div>
+                
+                    <div id="zoaMessages" class="zoa-messages">
+                        <div style="font-size:0.75rem; text-align:center; color:var(--text-muted); margin-bottom:10px;">
+                            <i class="fas fa-info-circle"></i> Chat history is temporary and clears on sign out.
+                        </div>
+
+                        <div class="zoa-msg zoa-ai">
+                            Hi! I’m Zoa👋, your AI tutor. Ask me something to get started!
+                        </div>
+                    </div>
+                
+                    <div class="zoa-input-area">
+                        <input type="text" id="zoaInput" class="zoa-input" placeholder="Ask Zoa a question..." onkeypress="handleZoaEnter(event)" autocomplete="off" />
+                        <button type="button" class="zoa-send" onclick="sendZoaMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="button" class="zoa-btn" onclick="toggleZoa()" title="Chat with Zoa!">
+                    <i class="fas fa-robot"></i>
+                </button>
+            </div>
+        </asp:Panel>
+
     </form>
 
     <script>
+        // --- ZOA CHATBOT LOGIC ---
+        function toggleZoa() {
+            const win = document.getElementById('zoaWindow');
+            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function handleZoaEnter(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Stop form submission
+                sendZoaMessage();
+            }
+        }
+
+        async function sendZoaMessage() {
+            const input = document.getElementById('zoaInput');
+            const msgText = input.value.trim();
+            if (!msgText) return;
+
+            input.value = '';
+            appendZoaMsg(msgText, 'zoa-user');
+
+            const typingId = 'typing-' + Date.now();
+            appendZoaMsg('Typing...', 'zoa-ai zoa-typing', typingId);
+
+            try {
+                const response = await fetch(chatApiUrl + '/SendMessage', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userMessage: msgText })
+                });
+
+                const data = await response.json();
+                document.getElementById(typingId).remove();
+                const reply = data.d;
+
+                if (reply.startsWith('ZOA_ERROR:')) {
+                    appendZoaMsg(reply.replace('ZOA_ERROR:', '⚠️ Error:'), 'zoa-ai');
+                } else {
+                    appendZoaMsg(reply, 'zoa-ai');
+                }
+            } catch (err) {
+                document.getElementById(typingId).remove();
+                appendZoaMsg('⚠️ Network error connecting to brain.', 'zoa-ai');
+            }
+        }
+
+
+        function appendZoaMsg(text, className, id = null) {
+            const chat = document.getElementById('zoaMessages');
+            const div = document.createElement('div');
+            div.className = 'zoa-msg ' + className;
+            if (id) div.id = id;
+            div.innerText = text;
+            chat.appendChild(div);
+
+            // Auto-scroll to bottom
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // ✨ THE MISSING FIX: Automatically load memory when the page changes!
+        document.addEventListener('DOMContentLoaded', function () {
+            if (document.getElementById('zoaWindow')) {
+                loadZoaHistory();
+            }
+        });
+
+        // ✨ THE URL FIX: Automatically resolves the correct root path!
+        const chatApiUrl = '<%= ResolveUrl("~/ZerotoAI/ChatService.asmx") %>';
+
+        async function loadZoaHistory() {
+            try {
+                const response = await fetch(chatApiUrl + '/GetChatHistory', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({}) // ✨ CRITICAL FIX: ASMX demands an empty body!
+                });
+                const data = await response.json();
+                const history = data.d;
+
+                if (history && history.length > 0) {
+                    const chat = document.getElementById('zoaMessages');
+                    chat.innerHTML = `<div style="font-size:0.75rem; text-align:center; color:var(--text-muted); margin-bottom:10px;"><i class="fas fa-info-circle"></i> Chat history is temporary and clears on sign out.</div>`;
+
+                    history.forEach(msg => {
+                        const className = msg.Role === 'user' ? 'zoa-user' : 'zoa-ai';
+                        appendZoaMsg(msg.Text, className);
+                    });
+                }
+            } catch (err) {
+                console.log("Memory API not reachable yet.");
+            }
+        }
+
         // Sidebar Toggle
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('collapsed');

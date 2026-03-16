@@ -156,6 +156,7 @@
     <Content Include="Member\Quiz.aspx" />
     <Content Include="Member\QuizTopic.aspx" />
     <Content Include="Member\Simulations.aspx" />
+    <Content Include="ZerotoAI\ChatService.asmx" />
     <Content Include="ZerotoAI\EditProfile.aspx" />
     <Content Include="ZerotoAI\Home.aspx" />
     <Content Include="ZerotoAI\Login.aspx" />
@@ -331,6 +332,10 @@
     </Compile>
     <Compile Include="Member\Simulations.aspx.designer.cs">
       <DependentUpon>Simulations.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ZerotoAI\ChatService.asmx.cs">
+      <DependentUpon>ChatService.asmx</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ZerotoAI\EditProfile.aspx.cs">
       <DependentUpon>EditProfile.aspx</DependentUpon>

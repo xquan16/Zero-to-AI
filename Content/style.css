@@ -42,8 +42,8 @@
 
 /* Admin Theme (Red) */
 [data-role="admin"] {
-    --bg-body: #fcebeb; /* Very soft blush background */
-    --bg-card: #f2d3d6; /* Noticeably deeper soft pink for textboxes/cards */
+    --bg-body: #fdf5f5; 
+    --bg-card: #fcebeb; 
     --bg-sidebar: #FB2C36;
     --bg-topbar: #C01128;
     --bg-hero: rgba(251, 44, 54, 0.15);
@@ -63,8 +63,8 @@
 
 /* Editor Theme (Purple) */
 [data-role="editor"] {
-    --bg-body: #f3ebfc; /* Very soft lavender background */
-    --bg-card: #e2d1f8; /* Noticeably deeper lavender for textboxes/cards */
+    --bg-body: #f3ebfc;
+    --bg-card: #ede3fa;
     --bg-sidebar: #A82EFF;
     --bg-topbar: #7809C8;
     --bg-hero: rgba(168, 46, 255, 0.15);
@@ -87,6 +87,8 @@
 [data-theme="dark"] input[type="password"]::-ms-clear {
     filter: invert(1);
 }
+
+
 
 
 /* ----------------------- Global Resets & Layout ------------------------------- */
@@ -472,6 +474,174 @@ form#form1 {
         }
 
 
+
+/* ----------------------- Zoa AI Chatbot ------------------------------- */
+.zoa-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999; /* Forces Zoa to sit on top of everything */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* The Floating Robot Button */
+.zoa-btn {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2); /* Cool AI Purple Gradient */
+    color: white;
+    font-size: 1.8rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(118, 75, 162, 0.4);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+    justify-content: center;
+}
+
+    .zoa-btn:hover {
+        transform: scale(1.1) translateY(-5px);
+    }
+
+/* The Chat Window */
+.zoa-window {
+    display: none; /* Hidden until clicked */
+    width: 430px;
+    height: 580px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+    margin-right: 15px;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideUpFade 0.3s ease;
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+.zoa-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 800;
+}
+
+.zoa-close {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .zoa-close:hover {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+
+/* Message Area */
+.zoa-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--bg-body);
+}
+
+/* Chat Bubbles */
+.zoa-msg {
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    line-height: 1.5;
+    word-wrap: break-word;
+    text-align: justify;
+}
+
+.zoa-ai {
+    align-self: flex-start;
+    background: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-bottom-left-radius: 4px;
+}
+
+.zoa-user {
+    align-self: flex-end;
+    background: var(--bg-sidebar); /* Adapts to role color! */
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.zoa-typing {
+    font-style: italic;
+    opacity: 0.7;
+}
+
+/* Input Box */
+.zoa-input-area {
+    display: flex;
+    padding: 15px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    gap: 10px;
+}
+
+.zoa-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 25px;
+    background: var(--bg-body);
+    color: var(--text-main);
+    outline: none;
+    transition: 0.2s;
+}
+
+    .zoa-input:focus {
+        border-color: var(--bg-sidebar);
+    }
+
+.zoa-send {
+    background: var(--bg-sidebar); /* Adapts to role color! */
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .zoa-send:hover {
+        transform: scale(1.05) rotate(10deg);
+    }
 
 
 
@@ -1254,6 +1424,27 @@ textarea.admin-edit-box {
 }
 
 
+/* --- AI Random Prompt Dice Button (Inside Textbox) --- */
+.btn-random-prompt {
+    position: absolute;
+    right: 5px; /* Pins it to the right inside edge */
+    top: 50%; /* Pushes it exactly halfway down */
+    transform: translateY(-50%); /* Pulls it perfectly into the vertical center */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 5px;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    /* Fun little dice roll animation on hover! */
+    .btn-random-prompt:hover {
+        transform: translateY(-50%) scale(1.15) rotate(15deg);
+    }
 
 
 /* ----------------------- Edit Profile Elements (EditProfile.aspx) ------------------------------- */

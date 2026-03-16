@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -23,6 +24,84 @@ namespace Zero_to_AI.ZerotoAI
             lblMsg.CssClass = "lbl-message text-error";
             lblMsg.Visible = true;
         }
+
+        protected async void btnGenerateAI_Click(object sender, EventArgs e)
+        {
+            string prompt = txtAIPrompt.Text.Trim();
+
+            if (string.IsNullOrEmpty(prompt))
+            {
+                // 1. Reset the button
+                string resetScript = "document.getElementById('" + btnGenerateAI.ClientID + "').disabled = false; document.getElementById('" + btnGenerateAI.ClientID + "').value = '✨ Generate Image';";
+
+                // 2. ✨ THE FIX: Dynamic Dark-Mode SweetAlert!
+                string alertScript = @"
+                    var isDark = localStorage.getItem('theme') === 'dark';
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Prompt Required',
+                        text: 'Please type what you want to generate, or click the 🎲 dice button for a surprise idea!',
+                        background: isDark ? '#1e293b' : '#ffffff',
+                        color: isDark ? '#f8fafc' : '#334155',
+                        confirmButtonColor: 'var(--bg-sidebar)'
+                    });";
+
+                ScriptManager.RegisterStartupScript(this, GetType(), "EmptyPrompt", resetScript + alertScript, true);
+                return;
+            }
+
+            try
+            {
+                string hfToken = System.Configuration.ConfigurationManager.AppSettings["HuggingFaceToken"];
+
+                // ✨ THE URL FIX: Hugging Face permanently moved to this new "router" endpoint!
+                string apiUrl = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell";
+
+                string enhancedPrompt = prompt + ", flat design illustration, minimalist avatar, circular composition, solid background, high quality, vector style";
+                var requestBody = new { inputs = enhancedPrompt };
+                System.Web.Script.Serialization.JavaScriptSerializer js = new System.Web.Script.Serialization.JavaScriptSerializer();
+                string jsonBody = js.Serialize(requestBody);
+
+                using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
+                {
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", hfToken);
+                    System.Net.Http.StringContent content = new System.Net.Http.StringContent(jsonBody, System.Text.Encoding.UTF8, "application/json");
+
+                    System.Net.Http.HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        string errorMsg = await response.Content.ReadAsStringAsync();
+                        // ✨ THE SAFETY FIX 1: Truncate massive HTML error pages so they don't crash the popup
+                        if (errorMsg.Length > 150) errorMsg = errorMsg.Substring(0, 150) + "... (Truncated)";
+                        throw new Exception($"Error {response.StatusCode}: {errorMsg}");
+                    }
+
+                    byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
+                    string mimeType = response.Content.Headers.ContentType?.MediaType ?? "image/png";
+                    string base64String = Convert.ToBase64String(imageBytes);
+                    string dataUrl = $"data:{mimeType};base64,{base64String}";
+
+                    ScriptManager.RegisterStartupScript(this, GetType(), "OpenAICropper", $"openCropperWithAIImage('{dataUrl}');", true);
+
+                    txtAIPrompt.Text = "";
+                }
+            }
+            catch (Exception ex)
+            {
+                // ✨ THE SAFETY FIX 2: Strip out quotes and newlines so it NEVER breaks the JavaScript syntax!
+                string safeError = ex.Message.Replace("'", "\\'").Replace("\"", "\\\"").Replace("\n", " ").Replace("\r", " ");
+                ScriptManager.RegisterStartupScript(this, GetType(), "AIError", $"Swal.fire('API Error', 'Failed to generate image: {safeError}', 'error');", true);
+            }
+            finally
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "ResetBtn2", "document.getElementById('" + btnGenerateAI.ClientID + "').disabled = false; document.getElementById('" + btnGenerateAI.ClientID + "').value = '✨ Generate Image';", true);
+            }
+        }
+
+
+
+
 
         // Load profile and populate controls
         private void LoadUserProfile()

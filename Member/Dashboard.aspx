@@ -19,7 +19,7 @@
                 <div class="stat-icon blue"><i class="fas fa-book-reader"></i></div>
                 <div class="stat-info"><h3 class="big-num"><asp:Label ID="lblMemCourses" runat="server">0</asp:Label></h3><span>Courses Completed</span></div>
             </a>
-            <a href="~/Member/Quiz.aspx" runat="server" class="stat-card">
+            <a href="~/Member/QuizTopic.aspx" runat="server" class="stat-card">
                 <div class="stat-icon teal"><i class="fas fa-brain"></i></div>
                 <div class="stat-info"><h3 class="big-num"><asp:Label ID="lblMemQuizzes" runat="server">0%</asp:Label></h3><span>Avg Quiz Score</span></div>
             </a>

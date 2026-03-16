@@ -1,8 +1,20 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EditProfile.aspx.cs" Inherits="Zero_to_AI.ZerotoAI.EditProfile" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EditProfile.aspx.cs" Inherits="Zero_to_AI.ZerotoAI.EditProfile" Async="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <style>
+        /* Forces the main background and footer to perfectly match the darker profile card */
+        .main-content, .footer {
+            background-color: var(--bg-card) !important;
+        }
+        
+        /* Softens the footer line so it blends beautifully */
+        .footer {
+            border-top: 1px dashed var(--border-color) !important; 
+        }
+    </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -16,16 +28,36 @@
             <asp:Image ID="imgPreview" runat="server" CssClass="avatar-preview-large" ImageUrl="~/images/default_user.png" />
 
             <div class="upload-area">
-            <asp:FileUpload ID="fileUploadProfile" runat="server" CssClass="file-upload-control" accept="image/*" onchange="validateImageUpload(this);" />
+                <asp:FileUpload ID="fileUploadProfile" runat="server" CssClass="file-upload-control" accept="image/*" onchange="validateImageUpload(this);" />
                 <small style="opacity: 0.7; margin-top:5px;">PNG or JPG only</small>
             </div>
 
+            <div class="ai-gen-area" style="margin-top: 30px; border-top: 1px dashed var(--border-color); padding-top: 25px; width: 100%;">
+                <p style="font-weight: 800; color: var(--bg-sidebar); margin-bottom: 15px; font-size: 1.1rem;">
+                    <i class="fas fa-magic"></i> AI Avatar Generator
+                </p>
+                
+                <asp:Panel runat="server" DefaultButton="btnGenerateAI">
+                    
+                    <div style="position: relative; margin-bottom: 15px;">
+                        
+                        <asp:TextBox ID="txtAIPrompt" runat="server" CssClass="form-control" placeholder="e.g. A cute cyberpunk robot" style="margin-bottom: 0; padding-right: 45px;"></asp:TextBox>
+                        
+                        <button type="button" class="btn-random-prompt" onclick="generateRandomPrompt()" title="Surprise Me!">🎲</button>
+                    </div>
+                    
+                    <asp:Button ID="btnGenerateAI" runat="server" Text="✨ Generate Image" CssClass="btn-primary-full" 
+                        OnClick="btnGenerateAI_Click" 
+                        OnClientClick="this.value='Generating... Please wait'; this.disabled=true;" 
+                        UseSubmitBehavior="false" />
+                </asp:Panel>
+            </div>
         </div>
 
         <div id="cropModal" class="crop-modal">
             <div class="crop-container">
                 <div class="crop-image-wrapper">
-                    <img id="imgToCrop" src="" alt="Image to crop" />
+                    <img id="imgToCrop" src="" alt="Image to crop">
                 </div>
                 <div class="crop-controls">
                     <button type="button" class="btn-crop-cancel" onclick="closeCropper()">Cancel</button>
@@ -133,6 +165,65 @@
                 handleFileSelection(input.files[0]);
                 input.value = ''; // Clear so they can re-select the same file if they cancel
             }
+        }
+
+        // --- NEW: Random Prompt Generator ---
+        function generateRandomPrompt() {
+            const prompts = [
+                // Cyberpunk & Tech
+                "A futuristic cyberpunk samurai, neon lighting, highly detailed",
+                "A neon-lit cyberpunk hacker owl wearing a tiny VR headset",
+                "A glowing neon hacker cat typing on a holographic keyboard",
+                "A steampunk robot wearing a top hat and monocle",
+                "An elegant cyborg portrait, gold and white ceramic plating",
+                "A high-tech robot meditating in a peaceful zen garden",
+
+                // Cute & Animals
+                "A cute 3D pixel art brain wearing reading glasses",
+                "A cute fluffy red panda wearing a futuristic spacesuit",
+                "A majestic robotic owl with glowing blue eyes",
+                "A cute golden retriever puppy wearing a futuristic astronaut suit",
+                "A cyberpunk ninja cat with glowing neon pink katanas",
+                "A cute baby dragon sleeping on a pile of glowing computer chips",
+
+                // Sci-Fi & Space
+                "An astronaut drinking coffee on the moon, digital illustration",
+                "A beautiful ethereal AI hologram glowing in the dark",
+                "A glowing neon jellyfish floating in a digital cyberpunk city",
+                "A retro-futuristic synthwave landscape with a glowing neon grid",
+                "A futuristic space pilot looking out of a spaceship window",
+
+                // Abstract & Artistic
+                "A futuristic android painted in watercolor style, pastel colors",
+                "A 3D isometric cute little server room, pastel colors",
+                "A magical glowing spellbook floating inside a modern server rack",
+                "A beautiful stained glass window depicting a futuristic robot",
+                "A glowing artificial intelligence core floating in a dark room"
+            ];
+
+            // Pick a random prompt from the list
+            const randomIndex = Math.floor(Math.random() * prompts.length);
+            const selectedPrompt = prompts[randomIndex];
+
+            // Inject it into the ASP.NET Textbox
+            document.getElementById('<%= txtAIPrompt.ClientID %>').value = selectedPrompt;
+        }
+
+        // --- NEW: Opens Cropper instantly with the AI Generated Image ---
+        function openCropperWithAIImage(imageUrl) {
+
+            // THE FIX: Tells the browser it is allowed to crop a downloaded image
+            imgToCrop.crossOrigin = "anonymous";
+
+            imgToCrop.src = imageUrl;
+            cropModal.style.display = 'flex';
+
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(imgToCrop, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 1
+            });
         }
 
         // 1. Cropper Logic (Runs after validation passes)

@@ -317,7 +317,8 @@ namespace Zero_to_AI.Admin
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             using (HttpClient client = new HttpClient())
             {
-                string url = $"[https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=](https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=){apiKey}";
+                string url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
+
                 var requestBody = new { contents = new[] { new { parts = new[] { new { text = prompt } } } } };
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 string jsonBody = js.Serialize(requestBody);

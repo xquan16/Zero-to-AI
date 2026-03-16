@@ -41,6 +41,15 @@ namespace ZerotoAI
 
                 guestPanel.Visible = false;
                 memberPanel.Visible = true;
+
+                // ✨ THE BULLETPROOF ANTI-CHEAT FIX: 
+                // Checks if it ends with "/Quiz.aspx" OR just "/Quiz" (Friendly URLs)
+                string currentPath = Request.Url.AbsolutePath;
+                bool isQuizPage = currentPath.EndsWith("/Quiz.aspx", StringComparison.OrdinalIgnoreCase) ||
+                                  currentPath.EndsWith("/Quiz", StringComparison.OrdinalIgnoreCase);
+
+                // Only turn Zoa on if the user is a Member AND they are NOT taking a quiz!
+                zoaPanel.Visible = (role == "Member" && !isQuizPage);
             }
             else
             {
@@ -50,8 +59,12 @@ namespace ZerotoAI
 
                 // Remove role attribute (Default Blue)
                 masterBody.Attributes.Remove("data-role");
+
+                // ✨ THE FIX: Make sure Zoa is hidden from guests!
+                zoaPanel.Visible = false;
             }
         }
+
 
         protected void logoutBtn_Click(object sender, EventArgs e)
         {

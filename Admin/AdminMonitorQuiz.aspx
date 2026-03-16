@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AdminMonitorQuiz.aspx.cs" Inherits="Zero_to_AI.Admin.AdminMonitorQuiz" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AdminMonitorQuiz.aspx.cs" Inherits="Zero_to_AI.Admin.AdminMonitorQuiz" Async="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
