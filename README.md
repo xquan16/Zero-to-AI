@@ -8,7 +8,6 @@ Zero to AI is a comprehensive, full-stack web application designed to provide th
 * **Role-Based Access Control (RBAC):** Distinct interfaces, privileges, and database access for Admins, Editors, and Members.
 * **Interactive Modules:** Includes dynamic courses, hands-on simulations, and quizzes.
 * **AI Image Generation:** Integrated with Hugging Face's FLUX.1 model to allow users to generate custom profile avatars.
-=======
 * **Role-Based Access Control (RBAC):** Distinct interfaces and privileges for Admins, Editors, and Members.
 * **Context-Aware AI Tutor (Zoa):** A floating AI chatbot that understands the user's role and current page context to provide tailored assistance.
 * **Interactive Modules:** Includes dynamic courses, hands-on simulations, and quizzes.
