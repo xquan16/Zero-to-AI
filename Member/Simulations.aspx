@@ -4,172 +4,180 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-<div class="sim-page">
-    <div class="sim-hero">
-        <h1>Simulations</h1>
-        <p>Don’t just read about AI. Build and train models directly in your browser with our visual tools. Explore algorithms, watch learning happen live, and interact with robotics-style planning.</p>
-    </div>
+    <asp:ScriptManager ID="ScriptManager1" runat="server" />
+    
+    <asp:UpdatePanel ID="upHiddenLog" runat="server" UpdateMode="Conditional">
+        <ContentTemplate>
+            <asp:HiddenField ID="hfSimId" runat="server" />
+            
+            <asp:Button ID="btnHiddenLog" runat="server" OnClick="btnHiddenLog_Click" style="visibility:hidden; position:absolute;" />
+            
+            <div style="text-align:center; margin-top: 10px;">
+                <asp:Label ID="lblSimDebug" runat="server" Font-Bold="true"></asp:Label>
+            </div>
+        </ContentTemplate>
+    </asp:UpdatePanel>
 
-    <div class="sim-section">
-        <h3 class="sim-section-title"><i class="fas fa-sort-amount-up"></i> Interactive Simulations</h3>
-        <p class="sim-section-sub">Hands-on visualizations to understand core algorithms step-by-step.</p>
+    <div class="sim-page">
+        <div class="sim-hero">
+            <h1>Simulations</h1>
+            <p>Don’t just read about AI. Build and train models directly in your browser with our visual tools. Explore algorithms, watch learning happen live, and interact with robotics-style planning.</p>
+        </div>
 
-        <div class="sim-card">
-            <div class="sim-card-head">
-                <div>
-                    <asp:Label ID="lblSortTitle" runat="server" CssClass="sim-card-title" Text="Sorting Visualizer"></asp:Label>
-                    <asp:Label ID="lblSortDesc" runat="server" CssClass="sim-card-sub" Text="Visualize sorting algorithms step by step."></asp:Label>
+        <div class="sim-section">
+            <h3 class="sim-section-title"><i class="fas fa-sort-amount-up"></i> Interactive Simulations</h3>
+            <p class="sim-section-sub">Hands-on visualizations to understand core algorithms step-by-step.</p>
+
+            <div class="sim-card">
+                <div class="sim-card-head">
+                    <div>
+                        <asp:Label ID="lblSortTitle" runat="server" CssClass="sim-card-title" Text="Sorting Visualizer"></asp:Label>
+                        <asp:Label ID="lblSortDesc" runat="server" CssClass="sim-card-sub" Text="Visualize sorting algorithms step by step."></asp:Label>
+                    </div>
+                    <div class="sim-pill">Interactive</div>
                 </div>
-                <div class="sim-pill">Interactive</div>
+
+                <div class="sim-toolbar">
+                    <label>Algorithm</label>
+                    <select id="algorithmSelect">
+                        <option value="bubble">Bubble Sort</option>
+                        <option value="selection">Selection Sort</option>
+                        <option value="insertion">Insertion Sort</option>
+                        <option value="quick">Quick Sort</option>
+                    </select>
+
+                    <button type="button" class="sim-btn" onclick="generateArray()">Generate New Array</button>
+                    <button type="button" class="sim-btn sim-btn-primary" onclick="startSort()">Start Simulation</button>
+
+                    <label style="margin-left:auto;">Speed</label>
+                    <input type="range" id="speedRange" min="10" max="300" value="100" />
+                </div>
+
+                <div id="arrayContainer"></div>
+
+                <div class="sim-stats-row">
+                    <div class="sim-pill">Comparisons: <span id="compCount">0</span></div>
+                    <div class="sim-pill">Swaps: <span id="swapCount">0</span></div>
+                </div>
+
+                <div class="sim-hint"><i class="fas fa-lightbulb text-warning"></i> Tip: Try Quick Sort with higher speed, then slow it down to see each swap.</div>
             </div>
+        </div>
 
-            <div class="sim-toolbar">
-                <label>Algorithm</label>
-                <select id="algorithmSelect">
-                    <option value="bubble">Bubble Sort</option>
-                    <option value="selection">Selection Sort</option>
-                    <option value="insertion">Insertion Sort</option>
-                    <option value="quick">Quick Sort</option>
-                </select>
+        <div class="sim-section">
+            <h3 class="sim-section-title"><i class="fas fa-brain"></i> Reinforcement Learning (Q-Learning)</h3>
+            <p class="sim-section-sub">Watch learning happen live as the agent improves over training episodes.</p>
 
-                <button type="button" class="sim-btn" onclick="generateArray()">Generate New Array</button>
-                <button type="button" class="sim-btn sim-btn-primary" onclick="startSort()">Start Simulation</button>
+            <div class="sim-card">
+                <div class="sim-card-head">
+                    <div>
+                        <asp:Label ID="lblRlTitle" runat="server" CssClass="sim-card-title" Text="RL Grid World"></asp:Label>
+                        <asp:Label ID="lblRlDesc" runat="server" CssClass="sim-card-sub" Text="Train a reinforcement learning agent using Q-learning."></asp:Label>
+                    </div>
+                    <div class="sim-pill">Machine Learning</div>
+                </div>
 
-                <label style="margin-left:auto;">Speed</label>
-                <input type="range" id="speedRange" min="10" max="300" value="100" />
+                <div class="sim-toolbar">
+                    <label>Mode</label>
+                    <select id="rlMode">
+                        <option value="wall">Draw Walls</option>
+                        <option value="start">Set Start</option>
+                        <option value="goal">Set Goal</option>
+                        <option value="erase">Erase</option>
+                    </select>
+
+                    <label>Episodes</label>
+                    <input type="number" id="rlEpisodes" value="300" min="1" style="width:70px;" />
+
+                    <label>α</label>
+                    <input type="number" id="rlAlpha" value="0.2" step="0.05" min="0" max="1" style="width:65px;" title="Learning Rate" />
+
+                    <label>γ</label>
+                    <input type="number" id="rlGamma" value="0.95" step="0.05" min="0.1" max="0.99" style="width:65px;" title="Discount Factor" />
+
+                    <label>ε</label>
+                    <input type="number" id="rlEpsilon" value="0.35" step="0.05" min="0" max="1" style="width:65px;" title="Exploration Rate" />
+
+                    <button type="button" class="sim-btn" onclick="rlReset()" style="margin-left:auto;">Reset</button>
+                    <button type="button" class="sim-btn sim-btn-primary" onclick="rlTrain()">Train Agent</button>
+                    <button type="button" class="sim-btn" onclick="rlAutoRun()">Auto Run</button>
+                    <button type="button" class="sim-btn" onclick="rlStep()">Step</button>
+                    <button type="button" class="sim-btn text-danger" onclick="rlStop()">Stop</button>
+                </div>
+
+                <div id="rlGrid" class="grid-board"></div>
+
+                <div class="sim-stats-row">
+                    <div class="sim-pill">Episode: <span id="rlEpisodeLbl">0</span></div>
+                    <div class="sim-pill">Total Reward: <span id="rlRewardLbl">0</span></div>
+                    <div class="sim-pill">Epsilon (ε): <span id="rlEpsLbl">0.35</span></div>
+                    <div class="sim-pill">Steps: <span id="rlStepsLbl">0</span></div>
+                </div>
+
+                <div class="sim-hint"><i class="fas fa-lightbulb text-warning"></i> Tip: Draw walls → Click Train → Once trained, click Auto Run to see the learned policy.</div>
             </div>
+        </div>
 
-            <div id="arrayContainer"></div>
+        <div class="sim-section">
+            <h3 class="sim-section-title"><i class="fas fa-robot"></i> Robot Path Planning</h3>
+            <p class="sim-section-sub">Applied AI project simulating autonomous navigation using pathfinding logic.</p>
 
-            <div class="sim-stats-row">
-                <div class="sim-pill">Comparisons: <span id="compCount">0</span></div>
-                <div class="sim-pill">Swaps: <span id="swapCount">0</span></div>
+            <div class="sim-card">
+                <div class="sim-card-head">
+                    <div>
+                        <asp:Label ID="lblRobotTitle" runat="server" CssClass="sim-card-title" Text="Path Planning"></asp:Label>
+                        <asp:Label ID="lblRobotDesc" runat="server" CssClass="sim-card-sub" Text="Simulate robot navigation using pathfinding algorithms."></asp:Label>
+                    </div>
+                    <div class="sim-pill">Robotics</div>
+                </div>
+
+                <div class="sim-toolbar">
+                    <label>Mode</label>
+                    <select id="rbMode">
+                        <option value="wall">Draw Obstacles</option>
+                        <option value="start">Set Robot (Start)</option>
+                        <option value="end">Set Goal</option>
+                        <option value="erase">Erase</option>
+                    </select>
+
+                    <label>Algorithm</label>
+                    <select id="rbAlgo">
+                        <option value="astar">A* Search (Heuristic)</option>
+                        <option value="dijkstra">Dijkstra's (Shortest Path)</option>
+                    </select>
+
+                    <label>Speed</label>
+                    <input type="range" id="rbSpeed" min="10" max="200" value="35" />
+
+                    <button type="button" class="sim-btn" onclick="rbClearBoard()" style="margin-left:auto;">Clear</button>
+                    <button type="button" class="sim-btn" onclick="rbRandomWalls()">Random Maze</button>
+                    <button type="button" class="sim-btn sim-btn-primary" onclick="rbRun()">Plan Path</button>
+                </div>
+
+                <div id="rbGrid" class="grid-board"></div>
+
+                <div class="sim-stats-row">
+                    <div class="sim-pill">Nodes Visited: <span id="rbVisited">0</span></div>
+                    <div class="sim-pill">Path Length: <span id="rbPathLen">0</span></div>
+                </div>
+
+                <div class="sim-hint"><i class="fas fa-lightbulb text-warning"></i> Tip: A* uses heuristics to find the goal faster, while Dijkstra checks equally in all directions.</div>
             </div>
-
-            <div class="sim-hint"><i class="fas fa-lightbulb text-warning"></i> Tip: Try Quick Sort with higher speed, then slow it down to see each swap.</div>
         </div>
     </div>
-
-    <div class="sim-section">
-        <h3 class="sim-section-title"><i class="fas fa-brain"></i> Reinforcement Learning (Q-Learning)</h3>
-        <p class="sim-section-sub">Watch learning happen live as the agent improves over training episodes.</p>
-
-        <div class="sim-card">
-            <div class="sim-card-head">
-                <div>
-                    <asp:Label ID="lblRlTitle" runat="server" CssClass="sim-card-title" Text="RL Grid World"></asp:Label>
-                    <asp:Label ID="lblRlDesc" runat="server" CssClass="sim-card-sub" Text="Train a reinforcement learning agent using Q-learning."></asp:Label>
-                </div>
-                <div class="sim-pill">Machine Learning</div>
-            </div>
-
-            <div class="sim-toolbar">
-                <label>Mode</label>
-                <select id="rlMode">
-                    <option value="wall">Draw Walls</option>
-                    <option value="start">Set Start</option>
-                    <option value="goal">Set Goal</option>
-                    <option value="erase">Erase</option>
-                </select>
-
-                <label>Episodes</label>
-                <input type="number" id="rlEpisodes" value="300" min="1" style="width:70px;" />
-
-                <label>α</label>
-                <input type="number" id="rlAlpha" value="0.2" step="0.05" min="0.01" max="1" style="width:65px;" title="Learning Rate" />
-
-                <label>γ</label>
-                <input type="number" id="rlGamma" value="0.95" step="0.05" min="0.1" max="0.99" style="width:65px;" title="Discount Factor" />
-
-                <label>ε</label>
-                <input type="number" id="rlEpsilon" value="0.35" step="0.05" min="0" max="1" style="width:65px;" title="Exploration Rate" />
-
-                <button type="button" class="sim-btn" onclick="rlReset()" style="margin-left:auto;">Reset</button>
-                <button type="button" class="sim-btn sim-btn-primary" onclick="rlTrain()">Train Agent</button>
-                <button type="button" class="sim-btn" onclick="rlAutoRun()">Auto Run</button>
-                <button type="button" class="sim-btn" onclick="rlStep()">Step</button>
-                <button type="button" class="sim-btn text-danger" onclick="rlStop()">Stop</button>
-            </div>
-
-            <div id="rlGrid" class="grid-board"></div>
-
-            <div class="sim-stats-row">
-                <div class="sim-pill">Episode: <span id="rlEpisodeLbl">0</span></div>
-                <div class="sim-pill">Total Reward: <span id="rlRewardLbl">0</span></div>
-                <div class="sim-pill">Epsilon (ε): <span id="rlEpsLbl">0.35</span></div>
-                <div class="sim-pill">Steps: <span id="rlStepsLbl">0</span></div>
-            </div>
-
-            <div class="sim-hint"><i class="fas fa-lightbulb text-warning"></i> Tip: Draw walls → Click Train → Once trained, click Auto Run to see the learned policy.</div>
-        </div>
-    </div>
-
-    <div class="sim-section">
-        <h3 class="sim-section-title"><i class="fas fa-robot"></i> Robot Path Planning</h3>
-        <p class="sim-section-sub">Applied AI project simulating autonomous navigation using pathfinding logic.</p>
-
-        <div class="sim-card">
-            <div class="sim-card-head">
-                <div>
-                    <asp:Label ID="lblRobotTitle" runat="server" CssClass="sim-card-title" Text="Path Planning"></asp:Label>
-                    <asp:Label ID="lblRobotDesc" runat="server" CssClass="sim-card-sub" Text="Simulate robot navigation using pathfinding algorithms."></asp:Label>
-                </div>
-                <div class="sim-pill">Robotics</div>
-            </div>
-
-            <div class="sim-toolbar">
-                <label>Mode</label>
-                <select id="rbMode">
-                    <option value="wall">Draw Obstacles</option>
-                    <option value="start">Set Robot (Start)</option>
-                    <option value="end">Set Goal</option>
-                    <option value="erase">Erase</option>
-                </select>
-
-                <label>Algorithm</label>
-                <select id="rbAlgo">
-                    <option value="astar">A* Search (Heuristic)</option>
-                    <option value="dijkstra">Dijkstra's (Shortest Path)</option>
-                </select>
-
-                <label>Speed</label>
-                <input type="range" id="rbSpeed" min="10" max="200" value="35" />
-
-                <button type="button" class="sim-btn" onclick="rbClearBoard()" style="margin-left:auto;">Clear</button>
-                <button type="button" class="sim-btn" onclick="rbRandomWalls()">Random Maze</button>
-                <button type="button" class="sim-btn sim-btn-primary" onclick="rbRun()">Plan Path</button>
-            </div>
-
-            <div id="rbGrid" class="grid-board"></div>
-
-            <div class="sim-stats-row">
-                <div class="sim-pill">Nodes Visited: <span id="rbVisited">0</span></div>
-                <div class="sim-pill">Path Length: <span id="rbPathLen">0</span></div>
-            </div>
-
-            <div class="sim-hint"><i class="fas fa-lightbulb text-warning"></i> Tip: A* uses heuristics to find the goal faster, while Dijkstra checks equally in all directions.</div>
-        </div>
-    </div>
-</div>
 
 <script>
     // =========================================================================
     // Core Logic & Simulation Backend Logging
     // =========================================================================
     function logSimulation(simulationId) {
-        fetch("<%= ResolveUrl("~/Member/Simulations.aspx/LogSimulationAjax") %>", {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json; charset=utf-8" },
-            body: JSON.stringify({ simulationId: simulationId })
-        })
-        .then(async r => {
-            const text = await r.text();
-            try { return JSON.parse(text); } 
-            catch { throw new Error("HTTP " + r.status + " - " + text); }
-        })
-        .then(data => console.log("Simulation Logged:", data))
-        .catch(err => console.error("Logging Error:", err));
+        // 1. Put the simulation ID into the ASP.NET Hidden Field
+        document.getElementById('<%= hfSimId.ClientID %>').value = simulationId;
+        
+        // 2. Click the hidden ASP.NET button to trigger the secure backend code
+        document.getElementById('<%= btnHiddenLog.ClientID %>').click();
+
+        console.log("Logging simulation " + simulationId + " securely via UpdatePanel...");
     }
 
     function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }

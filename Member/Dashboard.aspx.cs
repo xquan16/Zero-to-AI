@@ -54,6 +54,7 @@ namespace Zero_to_AI.Member
             int uid = CurrentUserID;
             int coursesCompleted = 0;
             int avgQuizScore = 0;
+            int simsCleared = 0;
 
             using (SqlConnection conn = new SqlConnection(_conn))
             {
@@ -76,11 +77,21 @@ namespace Zero_to_AI.Member
                     object res = cmd.ExecuteScalar();
                     if (res != null && res != DBNull.Value) avgQuizScore = Convert.ToInt32(res);
                 }
+
+                // Count UNIQUE Simulations Cleared
+                string sqlSims = "SELECT COUNT(*) FROM SimulationRuns WHERE UserID = @uid";
+                using (SqlCommand cmd = new SqlCommand(sqlSims, conn))
+                {
+                    cmd.Parameters.AddWithValue("@uid", uid);
+                    object res = cmd.ExecuteScalar();
+                    if (res != null && res != DBNull.Value) simsCleared = Convert.ToInt32(res);
+                }
             }
 
+            // Update the UI labels
             lblMemCourses.Text = coursesCompleted.ToString();
             lblMemQuizzes.Text = avgQuizScore.ToString() + "%";
-            lblMemSims.Text = "0"; // Placeholder for S's future work
+            lblMemSims.Text = simsCleared.ToString();
         }
 
         // 4. Load Feedback History

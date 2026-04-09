@@ -42,6 +42,7 @@ namespace Zero_to_AI.Editor
             int publishedCount = 0;
             int totalViews = 0;
             int totalQuestions = 0;
+            int totalSims = 0;
 
             using (SqlConnection conn = new SqlConnection(_conn))
             {
@@ -54,7 +55,7 @@ namespace Zero_to_AI.Editor
                     publishedCount = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
                 }
 
-                // 2. Sum Total Views (Safely handling DBNull if they have 0 articles)
+                // 2. Sum Total Views
                 using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(SUM(Views), 0) FROM Articles WHERE AuthorID = @uid", conn))
                 {
                     cmd.Parameters.AddWithValue("@uid", CurrentUserID);
@@ -66,9 +67,15 @@ namespace Zero_to_AI.Editor
                 {
                     totalQuestions = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
                 }
+
+                // 4. Total Simulations (THE FIX)
+                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Simulations", conn))
+                {
+                    totalSims = Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
+                }
             }
 
-            lblEdSimTotal.Text = "0"; // Placeholder for your future EditorSimulations logic!
+            lblEdSimTotal.Text = totalSims.ToString();
             lblEdPublished.Text = publishedCount.ToString();
             lblEdQuestions.Text = totalQuestions.ToString();
         }

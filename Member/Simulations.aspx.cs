@@ -40,8 +40,8 @@ namespace Zero_to_AI.Member
                     conn.Open();
 
                     const string sql = @"
-                        INSERT INTO SimulationRuns (UserID, SimulationID)
-                        VALUES (@UserID, @SimulationID);";
+                        INSERT INTO SimulationRuns (UserID, SimulationID, RunTime)
+                        VALUES (@UserID, @SimulationID, GETDATE());";
 
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
@@ -64,6 +64,51 @@ namespace Zero_to_AI.Member
             catch (Exception ex)
             {
                 return new { ok = false, message = ex.Message };
+            }
+        }
+
+        protected void btnHiddenLog_Click(object sender, EventArgs e)
+        {
+            // 1. Double check the user is logged in
+            if (Session["UserID"] == null) return;
+
+            int userId = Convert.ToInt32(Session["UserID"]);
+            int simulationId = 0;
+
+            // 2. Safely grab the Simulation ID from the hidden field
+            if (int.TryParse(hfSimId.Value, out simulationId))
+            {
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(ConnStr))
+                    {
+                        conn.Open();
+
+                        const string sql = @"
+                            INSERT INTO SimulationRuns (UserID, SimulationID, RunTime)
+                            VALUES (@UserID, @SimulationID, GETDATE());";
+
+                        using (SqlCommand cmd = new SqlCommand(sql, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@UserID", userId);
+                            cmd.Parameters.AddWithValue("@SimulationID", simulationId);
+
+                            cmd.ExecuteNonQuery();
+
+                            // SUCCESS MESSAGE
+                            lblSimDebug.Text = "<span style='color:#10b981;'><i class='fas fa-check'></i> Run recorded successfully!</span>";
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // ERROR MESSAGE: Prints the exact SQL failure to your screen
+                    lblSimDebug.Text = "<span style='color:#ef4444;'><i class='fas fa-exclamation-triangle'></i> SQL Error: " + ex.Message + "</span>";
+                }
+            }
+            else
+            {
+                lblSimDebug.Text = "<span style='color:#f59e0b;'>Error: JavaScript failed to send Simulation ID.</span>";
             }
         }
     }

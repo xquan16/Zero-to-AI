@@ -17,7 +17,7 @@ namespace Zero_to_AI.Editor
         {
             if (Session["UserID"] == null)
             {
-                Response.Redirect("~/Login.aspx"); // Double check this path!
+                Response.Redirect("~/ZerotoAI/Login.aspx");
                 return;
             }
 

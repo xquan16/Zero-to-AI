@@ -34,7 +34,7 @@ namespace Zero_to_AI.ZerotoAI
                 // 1. Reset the button
                 string resetScript = "document.getElementById('" + btnGenerateAI.ClientID + "').disabled = false; document.getElementById('" + btnGenerateAI.ClientID + "').value = '✨ Generate Image';";
 
-                // 2. ✨ THE FIX: Dynamic Dark-Mode SweetAlert!
+                // 2. Dynamic Dark-Mode SweetAlert!
                 string alertScript = @"
                     var isDark = localStorage.getItem('theme') === 'dark';
                     Swal.fire({
@@ -54,7 +54,6 @@ namespace Zero_to_AI.ZerotoAI
             {
                 string hfToken = System.Configuration.ConfigurationManager.AppSettings["HuggingFaceToken"];
 
-                // ✨ THE URL FIX: Hugging Face permanently moved to this new "router" endpoint!
                 string apiUrl = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell";
 
                 string enhancedPrompt = prompt + ", flat design illustration, minimalist avatar, circular composition, solid background, high quality, vector style";
@@ -72,7 +71,7 @@ namespace Zero_to_AI.ZerotoAI
                     if (!response.IsSuccessStatusCode)
                     {
                         string errorMsg = await response.Content.ReadAsStringAsync();
-                        // ✨ THE SAFETY FIX 1: Truncate massive HTML error pages so they don't crash the popup
+                        // Truncate massive HTML error pages so they don't crash the popup
                         if (errorMsg.Length > 150) errorMsg = errorMsg.Substring(0, 150) + "... (Truncated)";
                         throw new Exception($"Error {response.StatusCode}: {errorMsg}");
                     }

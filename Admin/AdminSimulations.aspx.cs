@@ -46,14 +46,14 @@ namespace Zero_to_AI.Admin
         {
             if (Session["UserID"] == null)
             {
-                Response.Redirect("~/Login.aspx");
+                Response.Redirect("~/ZerotoAI/Login.aspx");
                 return;
             }
 
             string role = Convert.ToString(Session["UserRole"]);
             if (!role.Equals("Admin", StringComparison.OrdinalIgnoreCase))
             {
-                Response.Redirect("~/Login.aspx");
+                Response.Redirect("~/ZerotoAI/Login.aspx");
                 return;
             }
 

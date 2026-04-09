@@ -1,5 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AdminManageUsers.aspx.cs" Inherits="Zero_to_AI.Admin.AdminManageUsers" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AdminManageUsers.aspx.cs" Inherits="Zero_to_AI.Admin.AdminManageUsers" MaintainScrollPositionOnPostback="true" %><asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -50,11 +49,13 @@
                         </asp:DropDownList>
                     </div>
                     <div>
-                        <label>Password <small class="text-muted">(Leave blank to keep existing if editing)</small></label>
+                        <label>Password</label>
                         <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password"></asp:TextBox>
                     </div>
                 </div>
-                
+                <div style="margin-top: 15px; margin-bottom: 15px; width: 100%;">
+                    <asp:Label ID="lblFormMessage" runat="server" Visible="false" style="display:block; padding: 12px 15px; background-color: #ffe4e6; color: #e11d48; border-radius: 6px; border-left: 5px solid #e11d48; font-weight: bold; text-align: left;"></asp:Label>
+                </div>
                 <div class="form-actions-right">
                     <asp:Button ID="btnCancelForm" runat="server" Text="Cancel" CssClass="btn-manager" OnClick="btnCancelForm_Click" />
                     <asp:Button ID="btnSaveUser" runat="server" Text="Save User" CssClass="btn-admin" OnClick="btnSaveUser_Click" />
@@ -62,6 +63,7 @@
             </asp:Panel>
 
             <div class="panel">
+                <asp:Label ID="lblGridMessage" runat="server" Visible="false" style="display:block; margin-bottom: 15px; padding: 12px 15px; background-color: #dcfce7; color: #15803d; border-radius: 6px; border-left: 5px solid #22c55e; font-weight: bold; text-align: left;"></asp:Label>
                 <div class="top-actions">
                     <div class="dash-tabs filter-control">
                         <asp:LinkButton ID="tabAll" runat="server" CssClass="tab-btn admin-active" CommandArgument="All" OnClick="tabStatus_Click">All Users</asp:LinkButton>
@@ -122,4 +124,29 @@
             </div>
         </ContentTemplate></asp:UpdatePanel>
     </div>
+
+<script type="text/javascript">
+    var msgTimer; // Create a global variable to hold our timer
+
+    // 'pageLoad' is a special ASP.NET function that automatically runs after every click/update
+    function pageLoad() {
+
+        // 1. Kill any "ghost timers" running from previous clicks
+        if (msgTimer) {
+            clearTimeout(msgTimer);
+        }
+
+        // 2. Look for the success messages
+        var globalMsg = document.getElementById('<%= lblMessage.ClientID %>');
+            var gridMsg = document.getElementById('<%= lblGridMessage.ClientID %>');
+
+        // 3. Only start the 5-second countdown IF a message is actually rendered on the screen
+        if (globalMsg || gridMsg) {
+            msgTimer = setTimeout(function () {
+                if (globalMsg) globalMsg.style.display = 'none';
+                if (gridMsg) gridMsg.style.display = 'none';
+            }, 5000); // 5000 milliseconds = 5 seconds
+        }
+    }
+</script>
 </asp:Content>

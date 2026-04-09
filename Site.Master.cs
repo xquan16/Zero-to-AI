@@ -28,7 +28,7 @@ namespace ZerotoAI
                 // Apply Theme Color
                 masterBody.Attributes["data-role"] = role.ToLower();
 
-                // --- NEW: Load Profile Picture ---
+                // --- Load Profile Picture ---
                 if (Session["UserProfilePic"] != null && !string.IsNullOrEmpty(Session["UserProfilePic"].ToString()))
                 {
                     imgUserProfile.ImageUrl = "~/images/" + Session["UserProfilePic"].ToString();
@@ -39,11 +39,10 @@ namespace ZerotoAI
                     imgUserProfile.ImageUrl = "~/images/default_user.png";
                 }
 
+                // Logged In Mode (Admin, Editor, Member)
                 guestPanel.Visible = false;
                 memberPanel.Visible = true;
 
-                // ✨ THE BULLETPROOF ANTI-CHEAT FIX: 
-                // Checks if it ends with "/Quiz.aspx" OR just "/Quiz" (Friendly URLs)
                 string currentPath = Request.Url.AbsolutePath;
                 bool isQuizPage = currentPath.EndsWith("/Quiz.aspx", StringComparison.OrdinalIgnoreCase) ||
                                   currentPath.EndsWith("/Quiz", StringComparison.OrdinalIgnoreCase);
@@ -60,7 +59,7 @@ namespace ZerotoAI
                 // Remove role attribute (Default Blue)
                 masterBody.Attributes.Remove("data-role");
 
-                // ✨ THE FIX: Make sure Zoa is hidden from guests!
+                // Make sure Zoa is hidden from guests!
                 zoaPanel.Visible = false;
             }
         }
@@ -75,7 +74,6 @@ namespace ZerotoAI
 
         protected void quizzesBtn_Click(object sender, EventArgs e)
         {
-            // Read the role and redirect to the correct module
             string role = Session["UserRole"].ToString();
 
             if (role == "Admin")

@@ -52,7 +52,9 @@ namespace Zero_to_AI.Admin
                 using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Questions", conn))
                     lblAdQuizTotal.Text = (cmd.ExecuteScalar() ?? 0).ToString();
 
-                lblAdSimTotal.Text = "0"; // Placeholder
+                // Count Total Simulations
+                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Simulations", conn))
+                    lblAdSimTotal.Text = (cmd.ExecuteScalar() ?? 0).ToString();
             }
         }
 

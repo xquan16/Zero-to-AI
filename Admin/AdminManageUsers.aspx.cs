@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using BCrypt.Net;
 
 namespace Zero_to_AI.Admin
 {
@@ -27,7 +28,10 @@ namespace Zero_to_AI.Admin
                 ViewState["StatusTab"] = "All";
                 LoadUsers();
             }
+
             lblMessage.Visible = false;
+            lblGridMessage.Visible = false;
+            lblFormMessage.Visible = false;
         }
 
         // --- FILTERS & TABS ---
@@ -106,6 +110,10 @@ namespace Zero_to_AI.Admin
         {
             int targetUserId = Convert.ToInt32(e.CommandArgument);
 
+            // Hide previous messages on new clicks
+            lblMessage.Visible = false;
+            lblGridMessage.Visible = false;
+
             if (e.CommandName == "ToggleBan")
             {
                 string sql = "UPDATE Users SET IsBanned = CASE WHEN IsBanned = 1 THEN 0 ELSE 1 END WHERE UserID = @uid";
@@ -116,8 +124,11 @@ namespace Zero_to_AI.Admin
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
-                lblMessage.Text = "<i class='fas fa-check'></i> User status updated!";
-                lblMessage.Visible = true;
+
+                // Use the new localized Grid Message panel!
+                lblGridMessage.Text = "<i class='fas fa-check-circle'></i> User status updated successfully!";
+                lblGridMessage.Visible = true;
+
                 LoadUsers(txtSearch.Text.Trim());
             }
             else if (e.CommandName == "EditUser")
@@ -129,6 +140,7 @@ namespace Zero_to_AI.Admin
         // --- ADD/EDIT FORM LOGIC ---
         protected void btnShowAddUser_Click(object sender, EventArgs e)
         {
+            lblFormMessage.Visible = false;
             hfEditUserID.Value = "";
             txtFirst.Text = "";
             txtLast.Text = "";
@@ -139,15 +151,18 @@ namespace Zero_to_AI.Admin
 
             lblFormTitle.Text = "Add New User";
             pnlUserForm.Visible = true;
+            txtPassword.Attributes["placeholder"] = "Default: password123 (Please inform the user to change password)";
         }
 
         protected void btnCancelForm_Click(object sender, EventArgs e)
         {
+            lblFormMessage.Visible = false;
             pnlUserForm.Visible = false;
         }
 
         private void LoadUserIntoForm(int userId)
         {
+            lblFormMessage.Visible = false;
             string sql = "SELECT FirstName, LastName, Username, Email, Role FROM Users WHERE UserID = @uid";
             using (SqlConnection conn = new SqlConnection(_conn))
             using (SqlCommand cmd = new SqlCommand(sql, conn))
@@ -168,6 +183,7 @@ namespace Zero_to_AI.Admin
                         lblFormTitle.Text = "Edit User: " + txtUsername.Text;
                         txtPassword.Text = "";
                         pnlUserForm.Visible = true;
+                        txtPassword.Attributes["placeholder"] = "Leave blank to keep existing";
                     }
                 }
             }
@@ -182,16 +198,66 @@ namespace Zero_to_AI.Admin
             string role = ddlRole.SelectedValue;
             string password = txtPassword.Text.Trim();
 
-            // Prevent save if NOT NULL columns are empty
-            if (string.IsNullOrEmpty(first) || string.IsNullOrEmpty(last) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email)) return;
+            // Clear previous messages
+            lblFormMessage.Visible = false;
+            lblMessage.Visible = false;
+
+            // 1. Basic Input Validation (ERROR -> Show in Form as RED)
+            if (string.IsNullOrEmpty(first) || string.IsNullOrEmpty(last) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email))
+            {
+                lblFormMessage.Text = "<i class='fas fa-exclamation-triangle'></i> All fields except password are required.";
+                lblFormMessage.ForeColor = System.Drawing.Color.Red;
+                lblFormMessage.Visible = true;
+                return;
+            }
 
             using (SqlConnection conn = new SqlConnection(_conn))
             {
                 conn.Open();
+
+                // 2. Duplicate Username & Email Check (ERROR -> Show in Form as RED)
+                string checkQuery = "SELECT Username, Email FROM Users WHERE (Username = @un OR Email = @email)";
+                if (!string.IsNullOrEmpty(hfEditUserID.Value))
+                {
+                    checkQuery += " AND UserID != @uid";
+                }
+
+                using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                {
+                    checkCmd.Parameters.AddWithValue("@un", username);
+                    checkCmd.Parameters.AddWithValue("@email", email);
+                    if (!string.IsNullOrEmpty(hfEditUserID.Value))
+                    {
+                        checkCmd.Parameters.AddWithValue("@uid", Convert.ToInt32(hfEditUserID.Value));
+                    }
+
+                    bool isUserTaken = false;
+                    bool isEmailTaken = false;
+
+                    using (SqlDataReader dr = checkCmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            if (dr["Username"].ToString().Equals(username, StringComparison.OrdinalIgnoreCase)) isUserTaken = true;
+                            if (dr["Email"].ToString().Equals(email, StringComparison.OrdinalIgnoreCase)) isEmailTaken = true;
+                        }
+                    }
+
+                    if (isUserTaken || isEmailTaken)
+                    {
+                        lblFormMessage.Text = isUserTaken ? "<i class='fas fa-exclamation-triangle'></i> Username is already taken." : "<i class='fas fa-exclamation-triangle'></i> Email is already registered.";
+                        lblFormMessage.ForeColor = System.Drawing.Color.Red;
+                        lblFormMessage.Visible = true;
+                        return; // Stop the save process so the form stays open
+                    }
+                }
+
+                // 3. Insert or Update Logic (SUCCESS -> Close Form, Show Global Message as GREEN)
                 if (string.IsNullOrEmpty(hfEditUserID.Value))
                 {
-                    // INSERT NEW USER (PasswordHash is NOT NULL, must provide a default)
+                    // INSERT NEW USER
                     if (string.IsNullOrEmpty(password)) password = "password123";
+                    string hashedPass = BCrypt.Net.BCrypt.HashPassword(password);
 
                     string sqlInsert = "INSERT INTO Users (FirstName, LastName, Username, Email, PasswordHash, Role, CreatedAt, IsBanned) VALUES (@fn, @ln, @un, @email, @pass, @role, GETDATE(), 0)";
                     using (SqlCommand cmd = new SqlCommand(sqlInsert, conn))
@@ -200,7 +266,7 @@ namespace Zero_to_AI.Admin
                         cmd.Parameters.AddWithValue("@ln", last);
                         cmd.Parameters.AddWithValue("@un", username);
                         cmd.Parameters.AddWithValue("@email", email);
-                        cmd.Parameters.AddWithValue("@pass", password); // Apply BCrypt Hash here if needed later!
+                        cmd.Parameters.AddWithValue("@pass", hashedPass);
                         cmd.Parameters.AddWithValue("@role", role);
                         cmd.ExecuteNonQuery();
                     }
@@ -212,7 +278,10 @@ namespace Zero_to_AI.Admin
                     int userId = Convert.ToInt32(hfEditUserID.Value);
                     string sqlUpdate = "UPDATE Users SET FirstName = @fn, LastName = @ln, Username = @un, Email = @email, Role = @role";
 
-                    if (!string.IsNullOrEmpty(password)) sqlUpdate += ", PasswordHash = @pass";
+                    if (!string.IsNullOrEmpty(password))
+                    {
+                        sqlUpdate += ", PasswordHash = @pass";
+                    }
                     sqlUpdate += " WHERE UserID = @uid";
 
                     using (SqlCommand cmd = new SqlCommand(sqlUpdate, conn))
@@ -223,14 +292,22 @@ namespace Zero_to_AI.Admin
                         cmd.Parameters.AddWithValue("@email", email);
                         cmd.Parameters.AddWithValue("@role", role);
                         cmd.Parameters.AddWithValue("@uid", userId);
-                        if (!string.IsNullOrEmpty(password)) cmd.Parameters.AddWithValue("@pass", password);
+
+                        if (!string.IsNullOrEmpty(password))
+                        {
+                            string hashedPass = BCrypt.Net.BCrypt.HashPassword(password);
+                            cmd.Parameters.AddWithValue("@pass", hashedPass);
+                        }
+
                         cmd.ExecuteNonQuery();
                     }
                     lblMessage.Text = "<i class='fas fa-check'></i> User updated successfully!";
                 }
             }
 
+            // Close the form on success and show the green success message globally
             pnlUserForm.Visible = false;
+            lblMessage.ForeColor = System.Drawing.Color.Green;
             lblMessage.Visible = true;
             LoadUsers();
         }

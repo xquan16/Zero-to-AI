@@ -2,20 +2,17 @@
 
 /* --- Root Variables (Light Mode & Defaults: Member/Guest) --- */
 :root {
-    /* Layout & Sizes */
     --sidebar-width: 200px;
     --sidebar-collapsed: 60px;
     --header-height: 60px;
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --shadow: 0 4px 12px rgba(0,0,0,0.06);
-    /* THE FIX: Soft blue background, with slightly deeper blue cards/textboxes */
     --bg-body: #e8f2fc; /* Very soft, comfortable sky blue */
-    --bg-card: #d3e6f8; /* Noticeably deeper blue for textboxes to stand out without white! */
-
+    --bg-card: #d3e6f8; /* Noticeably deeper blue  */
     --text-main: #000000;
     --text-sidebar: #ffffff;
     --text-topbar: #ffffff;
-    --text-muted: #57606f; /* Slightly darker muted text for better reading on tinted backgrounds */
+    --text-muted: #57606f;
     --border-color: #bdd5ed;
     /* Default Brand Colors (Member/Guest: Blue) */
     --bg-sidebar: #0096FF;
@@ -124,7 +121,7 @@ form#form1 {
     font-weight: 500;
 }
 
-/* Standardized green text for successful actions (like saving profiles) */
+/* Standardized green text for successful actions  */
 .text-success {
     color: #2ecc71;
     font-size: 0.9rem;

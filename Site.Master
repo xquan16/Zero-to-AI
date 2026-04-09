@@ -70,6 +70,7 @@
             
 
         <div class="layout-container">    
+
             <div class="sidebar collapsed" id="sidebar">
                 <ul class="menu">
                     <li>
@@ -229,14 +230,15 @@
                 const response = await fetch(chatApiUrl + '/GetChatHistory', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({}) // ✨ CRITICAL FIX: ASMX demands an empty body!
+                    body: JSON.stringify({}) 
                 });
                 const data = await response.json();
                 const history = data.d;
 
                 if (history && history.length > 0) {
                     const chat = document.getElementById('zoaMessages');
-                    chat.innerHTML = `<div style="font-size:0.75rem; text-align:center; color:var(--text-muted); margin-bottom:10px;"><i class="fas fa-info-circle"></i> Chat history is temporary and clears on sign out.</div>`;
+                    chat.innerHTML = `<div style="font-size:0.75rem; text-align:center; color:var(--text-muted); margin-bottom:10px;">
+                    <i class="fas fa-info-circle"></i> Chat history is temporary and clears on sign out.</div>`;
 
                     history.forEach(msg => {
                         const className = msg.Role === 'user' ? 'zoa-user' : 'zoa-ai';
@@ -248,15 +250,10 @@
             }
         }
 
-        // Sidebar Toggle
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-        }
-
         // Theme Toggle
         function toggleTheme() {
             var body = document.body;
-            var icon = document.getElementById('themeIcon'); // Find the icon
+            var icon = document.getElementById('themeIcon');
             var current = body.getAttribute("data-theme");
 
             if (current === "dark") {
@@ -297,7 +294,13 @@
                 if (icon) icon.setAttribute("title", "Switch to Dark Mode");
             }
         })();
-        
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        }
+
+        // User Profile Dropdown Toggle
         function toggleUserMenu() {
             document.getElementById("userDropdown").classList.toggle("show");
         }
@@ -311,7 +314,7 @@
                 }
             }
         }
-        // --- RESTRICTED LINK POPUP LOGIC (Now with Dark Mode Support!) ---
+        // --- RESTRICTED LINK POPUP LOGIC  ---
         document.addEventListener("DOMContentLoaded", function () {
 
             // 1. Ask the server if the user is logged in right now
@@ -327,20 +330,20 @@
                     if (!isLoggedIn) {
                         e.preventDefault(); // STOP the button from loading the page
 
-                        // 4. Check if the site is currently in Dark Mode
+                        // Check if the site is currently in Dark Mode
                         var isDarkMode = document.body.getAttribute("data-theme") === "dark";
 
-                        // 5. Pick the colors based on the theme
+                        // Pick the colors based on the theme
                         var popupBg = isDarkMode ? '#1e293b' : '#ffffff'; // Dark slate vs White
                         var popupText = isDarkMode ? '#f8fafc' : '#334155'; // White text vs Dark text
 
-                        // Show the Theme-Aware SweetAlert popup
+                        // Show the Theme-Aware SweetAlert2 popup
                         Swal.fire({
                             icon: 'lock',
                             title: 'Members Only',
                             text: 'Please log in to access this feature.',
                             confirmButtonText: 'Go to Login',
-                            confirmButtonColor: '#e11d48', // Matches your red theme
+                            confirmButtonColor: '#e11d48', 
                             background: popupBg,           // Dynamic Background
                             color: popupText,              // Dynamic Text Color
                             backdrop: `rgba(0,0,0,0.7)`

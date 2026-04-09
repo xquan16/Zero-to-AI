@@ -23,7 +23,7 @@ namespace ZerotoAI
             msgLbl.Visible = true;
         }
 
-        // Event: Signup button clicked
+        // Signup button clicked
         protected void signupBtn_Click(object sender, EventArgs e)
         {
             // 1. INPUT VALIDATION
@@ -47,15 +47,42 @@ namespace ZerotoAI
                 {
                     conn.Open();
 
-                    // Check if User exists
-                    string checkQuery = "SELECT COUNT(*) FROM [Users] WHERE Username = @Username";
+                    // Check if Username or Email already exists
+                    string checkQuery = "SELECT Username, Email FROM [Users] WHERE Username = @Username OR Email = @Email";
                     SqlCommand checkCmd = new SqlCommand(checkQuery, conn);
-                    checkCmd.Parameters.AddWithValue("@Username", userTxt.Text);
-                    int count = (int)checkCmd.ExecuteScalar();
+                    checkCmd.Parameters.AddWithValue("@Username", userTxt.Text.Trim());
+                    checkCmd.Parameters.AddWithValue("@Email", emailTxt.Text.Trim());
 
-                    if (count > 0)
+                    bool isUserTaken = false;
+                    bool isEmailTaken = false;
+
+                    // Use a reader to see exactly which field triggered the match
+                    using (SqlDataReader reader = checkCmd.ExecuteReader())
                     {
-                        ShowMessage("Username is already taken.", Color.Red);
+                        while (reader.Read())
+                        {
+                            if (reader["Username"].ToString().Equals(userTxt.Text.Trim(), StringComparison.OrdinalIgnoreCase))
+                                isUserTaken = true;
+
+                            if (reader["Email"].ToString().Equals(emailTxt.Text.Trim(), StringComparison.OrdinalIgnoreCase))
+                                isEmailTaken = true;
+                        }
+                    }
+
+                    // Provide specific error messages based on what was found
+                    if (isUserTaken && isEmailTaken)
+                    {
+                        ShowMessage("Both this Username and Email are already registered.", Color.Red);
+                        return;
+                    }
+                    else if (isUserTaken)
+                    {
+                        ShowMessage("Username is already taken. Please choose another.", Color.Red);
+                        return;
+                    }
+                    else if (isEmailTaken)
+                    {
+                        ShowMessage("This Email is already registered. Please log in.", Color.Red);
                         return;
                     }
 
@@ -89,7 +116,6 @@ namespace ZerotoAI
             }
         }
 
-        // Keep Page_Load empty for now (UI-only logic can be added later)
         protected void Page_Load(object sender, EventArgs e)
         {
         }

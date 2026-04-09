@@ -13,7 +13,7 @@
         <div class="stat-grid">
             <a href="~/Member/Simulations.aspx" runat="server" class="stat-card">
                 <div class="stat-icon purple"><i class="fas fa-gamepad"></i></div>
-                <div class="stat-info"><h3 class="big-num"><asp:Label ID="lblMemSims" runat="server">0</asp:Label></h3><span>Simulations Cleared</span></div>
+                <div class="stat-info"><h3 class="big-num"><asp:Label ID="lblMemSims" runat="server">0</asp:Label></h3><span>Total Simulation Runs</span></div>
             </a>
             <a href="~/Member/Courses.aspx" runat="server" class="stat-card">
                 <div class="stat-icon blue"><i class="fas fa-book-reader"></i></div>

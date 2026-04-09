@@ -21,7 +21,7 @@ namespace Zero_to_AI.ZerotoAI
             public string Text { get; set; }
         }
 
-        // ✨ THE MEMORY ENDPOINT
+        // THE MEMORY ENDPOINT
         [WebMethod(EnableSession = true)]
         public List<ChatMessage> GetChatHistory()
         {
@@ -29,7 +29,7 @@ namespace Zero_to_AI.ZerotoAI
             return history ?? new List<ChatMessage>();
         }
 
-        // ✨ THE CHAT ENDPOINT
+        // THE CHAT ENDPOINT
         [WebMethod(EnableSession = true)]
         public string SendMessage(string userMessage)
         {

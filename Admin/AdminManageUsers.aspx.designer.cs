@@ -123,6 +123,15 @@ namespace Zero_to_AI.Admin
         protected global::System.Web.UI.WebControls.TextBox txtPassword;
 
         /// <summary>
+        /// lblFormMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFormMessage;
+
+        /// <summary>
         /// btnCancelForm control.
         /// </summary>
         /// <remarks>
@@ -139,6 +148,15 @@ namespace Zero_to_AI.Admin
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSaveUser;
+
+        /// <summary>
+        /// lblGridMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblGridMessage;
 
         /// <summary>
         /// tabAll control.

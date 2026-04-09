@@ -144,6 +144,8 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\style.css" />
+    <Content Include="demoAuth.aspx" />
+    <Content Include="demoSite.aspx" />
     <Content Include="Editor\EditorCourses.aspx" />
     <Content Include="Editor\EditorDashboard.aspx" />
     <Content Include="Editor\EditorEditQuiz.aspx" />
@@ -266,6 +268,20 @@
     </Compile>
     <Compile Include="Auth.Master.designer.cs">
       <DependentUpon>Auth.Master</DependentUpon>
+    </Compile>
+    <Compile Include="demoAuth.aspx.cs">
+      <DependentUpon>demoAuth.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="demoAuth.aspx.designer.cs">
+      <DependentUpon>demoAuth.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="demoSite.aspx.cs">
+      <DependentUpon>demoSite.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="demoSite.aspx.designer.cs">
+      <DependentUpon>demoSite.aspx</DependentUpon>
     </Compile>
     <Compile Include="Editor\EditorCourses.aspx.cs">
       <DependentUpon>EditorCourses.aspx</DependentUpon>

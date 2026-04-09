@@ -143,6 +143,29 @@
 
         </div>
     </div>
+
+    <script type="text/javascript">
+    var msgTimer; // Global variable to hold the timer
+
+    // 'pageLoad' automatically runs after page load AND after every UpdatePanel click
+    function pageLoad() {
+
+        // 1. Kill any "ghost timers" from previous clicks
+        if (msgTimer) {
+            clearTimeout(msgTimer);
+        }
+
+        // 2. Look for the success/alert message on the dashboard
+        var globalMsg = document.getElementById('<%= lblMessage.ClientID %>');
+
+        // 3. Start the 5-second countdown if the message is visible
+        if (globalMsg && globalMsg.style.display !== 'none' && globalMsg.innerHTML.trim() !== "") {
+            msgTimer = setTimeout(function () {
+                globalMsg.style.display = 'none';
+            }, 5000); // 5000 ms = 5 seconds
+        }
+    }
+    </script>
 </asp:Content>
 
 
